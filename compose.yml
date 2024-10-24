@@ -1,0 +1,10 @@
+services:
+  astro-app:
+    build: .
+    volumes:
+      - .:/app:rw
+    ports:
+      - '4321:4321'
+    stdin_open: true
+    tty: true
+
