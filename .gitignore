@@ -1,0 +1,32 @@
+# Dependencias de node_modules (generadas por npm/yarn)
+node_modules/
+
+# Archivos de logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Archivos temporales
+*.tmp
+*.temp
+
+# Cache
+.cache/
+.astro/
+dist/
+.pnpm-store
+# Archivo de entorno
+.env
+.env.local
+.env.*.local
+
+# Directorio de salida para las builds (se genera al compilar)
+build/
+
+# Configuración de editores de código
+.vscode/
+.idea/
+
+# Archivos de sistema
+.DS_Store
+Thumbs.db
