@@ -6,7 +6,7 @@ Si todavia no creaste la red externa, ejecutar el siguiente comando
 
     docker network create suffgo-network
 
-Luego arranar el contenedor que tiene instalado node 20 y pnpm
+Luego arrancar el contenedor que tiene instalado node 20 y pnpm
 
     docker compose run astro-app sh
     
