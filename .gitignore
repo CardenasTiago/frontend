@@ -14,7 +14,7 @@ yarn-error.log*
 .cache/
 .astro/
 dist/
-
+.pnpm-store
 # Archivo de entorno
 .env
 .env.local

@@ -10,4 +10,4 @@ WORKDIR /app
 EXPOSE 4321 
 
 # Comando por defecto para iniciar el contenedor
-CMD [ "pnpm", "run", "dev" ]
+CMD [ "pnpm", "run", "dev", "--host" ]
