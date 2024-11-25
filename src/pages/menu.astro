@@ -1,0 +1,31 @@
+---
+import Layout from "../layouts/Layout.astro"
+import Card from "../components/Card.astro";
+
+const response = await fetch("http://go-app:3000/v1/rooms/myRooms");
+const rooms = await response.json();
+---
+
+<Layout title="Menu principal">
+    <h1>
+        Autenticado pa!
+    </h1>
+
+
+
+<Layout title="Probando pegarle a la API.">
+  <main>
+    <h1>Pegandole a la <span class="text-gradient">API</span></h1>
+    <p class="instructions"></p>
+    <ul role="list" class="link-card-grid">
+		{rooms.map((sala: { link_invite: any; is_formal: any; name: any; admin_id: any; }) => (
+			<Card
+			  href=""
+			  title={`${sala.name} ${sala.admin_id}`}
+			  body={`Username: ${sala.admin_id}`}
+			/>
+		  ))}
+    </ul>
+  </main>
+</Layout>
+</Layout>
