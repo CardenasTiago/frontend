@@ -1,31 +1,14 @@
 ---
-import Layout from "../layouts/Layout.astro"
-import Card from "../components/Card.astro";
-
-const response = await fetch("http://go-app:3000/v1/rooms/myRooms");
-const rooms = await response.json();
+import CheckAuth from "../components/CheckAuth.jsx";
+import WelcomeMessage from "../components/WelcomeMessage.jsx";
+import Layout from "../layouts/Layout.astro";
 ---
 
-<Layout title="Menu principal">
-    <h1>
-        Autenticado pa!
-    </h1>
-
-
-
-<Layout title="Probando pegarle a la API.">
+<Layout title="Menu.">
   <main>
-    <h1>Pegandole a la <span class="text-gradient">API</span></h1>
-    <p class="instructions"></p>
-    <ul role="list" class="link-card-grid">
-		{rooms.map((sala: { link_invite: any; is_formal: any; name: any; admin_id: any; }) => (
-			<Card
-			  href=""
-			  title={`${sala.name} ${sala.admin_id}`}
-			  body={`Username: ${sala.admin_id}`}
-			/>
-		  ))}
-    </ul>
+    <WelcomeMessage client:load />
+    <CheckAuth client:load />
   </main>
 </Layout>
-</Layout>
+
+
