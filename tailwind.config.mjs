@@ -6,8 +6,22 @@ export default {
   },
   plugins: [require("daisyui")],
 
-  daisy :[
-	
-  ]
+  daisyui: {
+    themes: [
+      {
+        mytheme: {
+          "primary": "#6B48FF",
+          "secondary": "#a78bfa",
+          "accent": "#111827",
+          "neutral": "#f3f4f6",
+          "base-100": "#f3f4f6",
+          "info": "#0ea5e9",
+          "success": "#6ee7b7",
+          "warning": "#fde047",
+          "error": "#f87171",  
+        },
+      },
+    ],
+  },
 };
 
