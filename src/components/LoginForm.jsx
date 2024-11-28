@@ -94,7 +94,7 @@ const LoginForm = () => {
       </div>
       {error && <div className="mt-2 font-bold" style={{ color: "red" }}>{error}</div>}
       <div className="flex justify-end items-center p-5">
-      <a className="btn btn-secondary bg-secondary mx-4" href="/register">Registrarse</a>
+      <a className="btn btn-secondary mx-4" href="/register">Registrarse</a>
       <button type="submit" className="btn btn-primary">
         Iniciar Sesión
       </button>
