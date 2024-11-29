@@ -1,0 +1,42 @@
+---
+import CheckAuth from "../../components/CheckAuth.jsx";
+import WelcomeMessage from "../../components/WelcomeMessage.jsx";
+import Layout from "../../layouts/Layout.astro";
+---
+
+<Layout title="Menu">
+  <div class="mt-5 place-items-center min-h-fit flex h-screen">
+    <div class="h-fit p-10 main-container bg-white">
+      <h1 class="text-center font-bold">
+        <WelcomeMessage client:load/>
+      </h1>
+      <div class="text-center items-center mt-10">
+      
+      <div>
+        <a class="btn btn-primary mb-4 w-60">Unirse a sala</a>
+      </div>
+      
+      <div>
+        <a class="btn btn-primary mb-4 w-60">Crear sala</a>
+      </div>
+      
+      <div>
+        <a class="btn btn-primary mb-4 w-60">Mis salas</a>
+      </div>
+      
+      </div>
+    </div>
+  </div>
+</Layout>
+
+
+<style>
+  h1 {
+    font-size: 32px;
+  }
+
+  .main-container{
+    border-radius: 15px;
+    box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 2px 6px 2px;
+  }
+</style>

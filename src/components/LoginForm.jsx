@@ -35,7 +35,7 @@ const LoginForm = () => {
         const userName = data.user.name;
         localStorage.setItem("userName", userName);
 
-        window.location.href = "/menu";
+        window.location.href = "/protected/menu";
       } else {
         const data = await response.json();
         setError(data.error || "Credenciales invalidas");

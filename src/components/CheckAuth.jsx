@@ -26,13 +26,13 @@ const AuthCheck = () => {
   }, []);
 
   if (isAuthenticated === null) {
-    return <div class="bg-white ">Verificando autenticación...</div>;
+    return <div className="bg-white ">Verificando autenticación...</div>;
   }
 
   if (isAuthenticated) {
-    return <div class="bg-green-200">¡Éxito! Estás autenticado.</div>;
+    return <div className="bg-green-200">¡Éxito! Estás autenticado.</div>;
   } else {
-    return <div class="bg-blue-500">No estás autenticado. <a href="/login">Iniciar sesión</a></div>;
+    return <div className="bg-blue-500">No estás autenticado. <a href="/login">Iniciar sesión</a></div>;
   }
 };
 
