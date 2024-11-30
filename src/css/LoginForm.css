@@ -10,3 +10,8 @@ button {
 a {
     color: white !important;
 }
+
+.register-text {
+    background-color: white;
+    color: #6B48FF !important;
+}

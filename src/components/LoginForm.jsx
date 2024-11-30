@@ -38,7 +38,7 @@ const LoginForm = () => {
         window.location.href = "/protected/menu";
       } else {
         const data = await response.json();
-        setError(data.error || "Credenciales invalidas");
+        setError("Usuario o contraseña incorrectos");
       }
     } catch (err) {
       setError("Error en la conexión con el servidor");
@@ -92,14 +92,14 @@ const LoginForm = () => {
           />
         </label>
       </div>
-      {error && <div className="mt-2 font-bold" style={{ color: "red" }}>{error}</div>}
-      <div className="flex justify-end items-center p-5">
-      <a className="btn btn-secondary mx-4" href="/register">Registrarse</a>
-      <button type="submit" className="btn btn-primary">
+      {error && <div className="mt-2 font-semibold" style={{ color: "red" }}>{error}</div>}
+      <div className="flex justify-center items-center p-5">
+      <button type="submit" className="btn btn-primary"> 
         Iniciar Sesión
       </button>
       </div>
-
+      <p className="text-slate-600">Todavía no tienes cuenta? <a href="/auth/register" className="register-text"> Registrese aqui</a></p>
+      
     </form>
   );
 };
