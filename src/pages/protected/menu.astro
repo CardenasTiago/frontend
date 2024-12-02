@@ -1,44 +1,48 @@
 ---
 import WelcomeMessage from "../../components/WelcomeMessage.jsx";
 import Layout from "../../layouts/Layout.astro";
+import ProtectedRoute from "../../components/ProtectedRoute.vue";
+import LogoutButton from "../../components/LogoutButton.vue";
 ---
 
 <Layout title="Menu">
-  <div class="mt-5 place-items-center min-h-fit flex h-screen">
-    <div class="h-fit p-10 main-container ">
-      <h1 class="text-center font-bold">
-        <WelcomeMessage client:load/>
-      </h1>
-      <div class="text-center items-center mt-10">
-      
-      <div>
-        <a class="btn btn-primary mb-4">Unirse a sala</a>
+  <ProtectedRoute client:load>
+    <div class="mt-5 place-items-center min-h-fit flex h-screen">
+      <div class="h-fit p-10 main-container">
+        <h1 class="text-center font-bold">
+          <WelcomeMessage client:load />
+        </h1>
+        <div class="text-center items-center mt-10">
+          <div>
+            <a class="btn btn-primary mb-4">Unirse a sala</a>
+          </div>
+
+          <div>
+            <a class="btn btn-primary mb-4">Crear sala</a>
+          </div>
+
+          <div>
+            <a class="btn btn-primary mb-4">Mis salas</a>
+          </div>
+        </div>
       </div>
-      
-      <div>
-        <a class="btn btn-primary mb-4">Crear sala</a>
-      </div>
-      
-      <div>
-        <a class="btn btn-primary mb-4">Mis salas</a>
-      </div>
-      
-      </div>
+
+      <LogoutButton client:load />
     </div>
-  </div>
+  </ProtectedRoute>
+
+  <style>
+    a {
+      color: white;
+      font-weight: 800;
+      width: 15rem;
+    }
+
+    .main-container {
+      border-radius: 15px;
+      box-shadow:
+        rgba(60, 64, 67, 0.3) 0px 1px 2px 0px,
+        rgba(60, 64, 67, 0.15) 0px 2px 6px 2px;
+    }
+  </style>
 </Layout>
-
-
-<style>
-  a {
-    color: white;
-    font-weight: 800;
-    width: 15rem;
-  }
-
-  .main-container{
-    border-radius: 15px;
-    box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 2px 6px 2px;
-  }
-
-</style>
