@@ -20,6 +20,9 @@ export default {
           "warning": "#fde047",
           "error": "#f87171",  
         },
+        mytheme2: {
+          
+        },
       },
     ],
   },
