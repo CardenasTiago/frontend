@@ -1,7 +1,7 @@
 ---
 import Layout from "../../layouts/Layout.astro";
-import LoginForm from "../../components/LoginForm.jsx";
-import LoginFormVue from "../../components/LoginVue.vue";
+import LoginForm from "../../components/authentication/LoginForm.jsx";
+import LoginFormVue from "../../components/authentication/LoginVue.vue";
 ---
 
 <Layout title="Iniciar sesion">
@@ -9,8 +9,8 @@ import LoginFormVue from "../../components/LoginVue.vue";
     <div class="h-fit p-10 main-container bg-white">
       <h1 class="text-center font-bold">Bienvenido nuevamente</h1>
       <div class="text-center items-center mt-10">
-        <LoginForm client:load />
-        <!-- <LoginFormVue client:load /> -->
+        <!-- <LoginForm client:load /> -->
+        <LoginFormVue client:load />
       </div>
     </div>
   </div>

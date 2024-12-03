@@ -1,10 +1,7 @@
 <!-- src/components/ProtectedRoute.vue -->
 <template>
-    <div>
       <slot v-if="isAuthenticated"></slot>
-      <div v-else>Redirigiendo al inicio de sesión...</div>
-    </div>
-  </template>
+</template>
   
   <script setup>
   import { ref, onMounted } from 'vue';

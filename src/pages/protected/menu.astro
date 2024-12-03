@@ -1,8 +1,9 @@
 ---
-import WelcomeMessage from "../../components/WelcomeMessage.jsx";
+// import WelcomeMessage from "../../components/WelcomeMessage.jsx";
+import WelcomeMessage from "../../components/WelcomeMessage.vue";
 import Layout from "../../layouts/Layout.astro";
-import ProtectedRoute from "../../components/ProtectedRoute.vue";
-import LogoutButton from "../../components/LogoutButton.vue";
+import ProtectedRoute from "../../components/authentication/ProtectedRoute.vue";
+import LogoutButton from "../../components/authentication/LogoutButton.vue";
 ---
 
 <Layout title="Menu">
@@ -28,8 +29,6 @@ import LogoutButton from "../../components/LogoutButton.vue";
           <LogoutButton client:load />
         </div>
       </div>
-
-     
     </div>
   </ProtectedRoute>
 
