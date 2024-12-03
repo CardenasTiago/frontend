@@ -40,7 +40,7 @@
       <input
         type="password"
         class="grow"
-        placeholder="assword"
+        placeholder="Password"
         v-model="form.password"
         required
       />
