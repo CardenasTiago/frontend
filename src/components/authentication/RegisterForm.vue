@@ -21,7 +21,7 @@
     <div>
       <label class="input input-bordered flex items-center gap-2">
         DNI
-        <input v-model="form.dni" type="text" required />
+        <input v-model="form.dni" type="text" required maxlength="10" minlength="8"/>
       </label>
     </div>
     <div>
@@ -48,7 +48,7 @@
         <input v-model="form.confirmPassword" type="password" required />
       </label>
     </div>
-    <div v-if="error.value" style="color: red">{{ error.value }}</div>
+    <div v-if="error" style="color: red">{{ error }}</div>
     <div>
       <div>
         <button type="submit" class="btn btn-primary">Registrarse</button>
@@ -60,6 +60,15 @@
           <a href="/auth/login">Inicie sesion</a>
         </p>
       </div>
+
+      <div v-if="successMessage">
+      <div style="color: green; font-weight: bold;">{{ successMessage }}</div>
+      <div>
+        <!-- Opcional: Proporcionar un enlace para iniciar sesión inmediatamente -->
+        <p>Si no eres redirigido automáticamente, <a href="/auth/login">haz clic aquí para iniciar sesión</a>.</p>
+      </div>
+    </div>
+
     </div>
   </form>
 </template>
@@ -80,34 +89,50 @@ const form = ref({
 
 const error = ref("");
 
+const successMessage = ref("");
+
 const handleSubmit = async () => {
   error.value = "";
 
-  if (form.email != form.confirmEmail) {
-    error.value = "los correos no coinciden";
+  if (form.value.email != form.value.confirmEmail) {
+    error.value = "Los correos no coinciden";
     return;
   }
 
-  if (form.password != form.confirmPassword) {
-    error.value = "las contraseñas no coinciden";
+  if (form.value.password != form.value.confirmPassword) {
+    error.value = "Las contraseñas no coinciden";
     return;
   }
+
+  const dataToSend = {
+    name: form.value.name,
+    lastname: form.value.lastname,
+    username: form.value.username,
+    dni: form.value.dni,
+    email: form.value.email,
+    password: form.value.password,
+  };
+
 
   try {
+
     const response = await fetch("http://localhost:3000/v1/users", {
       method: "POST",
       credentials: "include",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(form.value),
+      body: JSON.stringify(dataToSend),
     });
 
     if (response.ok) {
-      const data = await response.json();
-      const userName = data.user.name;
-      localStorage.setItem("userName", userName);
-      window.location.href = "/protected/menu"; // Redirige al menú principal
+      successMessage.value =
+        "Registro exitoso. Serás redirigido al inicio de sesión en unos momentos.";
+
+      // Opcional: Redirigir automáticamente después de unos segundos
+      setTimeout(() => {
+        window.location.href = "/auth/login";
+      }, 3000); // Redirige después de 3 segundos
     } else {
       const data = await response.json();
       error.value = data.error || "Usuario o contraseña incorrectos";

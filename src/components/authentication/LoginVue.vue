@@ -40,7 +40,7 @@
       <input
         type="password"
         class="grow"
-        placeholder="Password"
+        placeholder="assword"
         v-model="form.password"
         required
       />
@@ -80,7 +80,7 @@ const handleSubmit = async () => {
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(form.value),
+      body: JSON.stringify(dataToSend),
     });
 
     if (response.ok) {
