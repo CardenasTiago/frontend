@@ -1,49 +1,49 @@
 <template>
   <form @submit.prevent="handleSubmit">
     <div>
-      <label class="input input-bordered flex items-center gap-2"
+      <label class="input input-bordered input-primary flex items-center gap-2"
         >Nombre
         <input v-model="form.name" type="text" required />
       </label>
     </div>
     <div>
-      <label class="input input-bordered flex items-center gap-2"
+      <label class="input input-bordered input-primary flex items-center gap-2"
         >Apellido
         <input v-model="form.lastname" type="text" required />
       </label>
     </div>
     <div>
-      <label class="input input-bordered flex items-center gap-2"
+      <label class="input input-bordered input-primary flex items-center gap-2"
         >Nombre de Usuario
         <input v-model="form.username" type="text" required />
       </label>
     </div>
     <div>
-      <label class="input input-bordered flex items-center gap-2">
+      <label class="input input-bordered input-primary flex items-center gap-2">
         DNI
         <input v-model="form.dni" type="text" required maxlength="10" minlength="8"/>
       </label>
     </div>
     <div>
-      <label class="input input-bordered flex items-center gap-2"
+      <label class="input input-bordered input-primary flex items-center gap-2"
         >Email
         <input v-model="form.email" type="email" required />
       </label>
     </div>
     <div>
-      <label class="input input-bordered flex items-center gap-2"
+      <label class="input input-bordered input-primary flex items-center gap-2"
         >Confirmar Email
         <input v-model="form.confirmEmail" type="email" required />
       </label>
     </div>
     <div>
-      <label class="input input-bordered flex items-center gap-2"
+      <label class="input input-bordered input-primary flex items-center gap-2"
         >Contraseña
         <input v-model="form.password" type="password" required />
       </label>
     </div>
     <div>
-      <label class="input input-bordered flex items-center gap-2"
+      <label class="input input-bordered input-primary flex items-center gap-2"
         >Confirmar Contraseña
         <input v-model="form.confirmPassword" type="password" required />
       </label>
