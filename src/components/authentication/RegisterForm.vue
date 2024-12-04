@@ -151,17 +151,17 @@ form {
 }
 
 .btn-primary {
-  color: white;
+  @apply text-neutral;
 }
 
 a {
-  background-color: white;
-  color: #6b48ff;
+  @apply bg-neutral;
+  @apply text-primary
 }
 
 label {
   font-weight: 600;
-  color: #a78bfa;
+  @apply text-secondary;
 }
 
 input {

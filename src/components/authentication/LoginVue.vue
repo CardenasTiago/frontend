@@ -121,7 +121,7 @@ form {
 }
 
 a {
-  background-color: white;
-  color: #6b48ff;
+  @apply bg-neutral;
+  @apply text-primary;
 }
 </style>
