@@ -1,61 +1,64 @@
 ---
-import "../global.css"
+import "../global.css";
 
 import ViewTransitions from "astro/components/ViewTransitions.astro";
 import { fade } from "astro:transitions";
 
 interface Props {
-	title: string;
+  title: string;
 }
 
 const { title } = Astro.props;
 ---
 
 <!doctype html>
-<html lang="es" class="mytheme bg-base-100">
-	<head>
-		<meta charset="UTF-8" />
-		<meta name="description" content="Astro description" />
-		<meta name="viewport" content="width=device-width" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<meta name="generator" content={Astro.generator} />
-		<title>{title}</title>
-		<ViewTransitions />
-	</head>
-	<body class="items-center flex justify-center" transition:animate={fade({ duration: '0.7s' })}>
-		
-		<slot />
-	</body>
+<html lang="es" data-theme="mytheme">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="description" content="Astro description" />
+    <meta name="viewport" content="width=device-width" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="generator" content={Astro.generator} />
+    <title>{title}</title>
+    <ViewTransitions />
+  </head>
+  <body
+    class="items-center flex justify-center"
+    transition:animate={fade({ duration: "0.7s" })}
+  >
+    <slot />
+  </body>
 </html>
+
+
 <style is:global>
-
-	html {
+  html {
     font-family: system-ui, sans-serif;
-	}
+  }
 
-	code {
-		font-family:
-			Menlo,
-			Monaco,
-			Lucida Console,
-			Liberation Mono,
-			DejaVu Sans Mono,
-			Bitstream Vera Sans Mono,
-			Courier New,
-			monospace;
-	}
+  code {
+    font-family:
+      Menlo,
+      Monaco,
+      Lucida Console,
+      Liberation Mono,
+      DejaVu Sans Mono,
+      Bitstream Vera Sans Mono,
+      Courier New,
+      monospace;
+  }
 
-	body {
-		background-color: white;
-	}
-	h1 {
-		color: #6B48FF;
-		font-size: 24px;
-	}
+  body {
+    @apply bg-base-100;
+  }
 
-	a {
-		background-color: #6B48FF;
-		color: white;
-	}
+  h1 {
+    @apply text-primary;
+    font-size: 24px;
+  }
 
+  a {
+    @apply bg-primary;
+    @apply bg-neutral;
+  }
 </style>
