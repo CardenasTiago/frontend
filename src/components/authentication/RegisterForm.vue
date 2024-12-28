@@ -61,16 +61,12 @@
         </p>
       </div>
 
-      <div v-if="successMessage">
-      <div style="color: green; font-weight: bold;">{{ successMessage }}</div>
-      <div>
-        <!-- Opcional: Proporcionar un enlace para iniciar sesión inmediatamente -->
-        <p>Si no eres redirigido automáticamente, <a href="/auth/login">haz clic aquí para iniciar sesión</a>.</p>
-      </div>
-    </div>
-
     </div>
   </form>
+
+  <div v-if="successMessage" class="chat chat-end">
+    <div class="chat-bubble chat-bubble-success">{{ successMessage }}</div>
+  </div>
 </template>
 
 <script setup>

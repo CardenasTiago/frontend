@@ -80,7 +80,7 @@ const handleSubmit = async () => {
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(dataToSend),
+      body: JSON.stringify(form.value),
     });
 
     if (response.ok) {
