@@ -14,8 +14,3 @@
     userName.value = localStorage.getItem('userName') || 'Usuario';
   });
   </script>
-  
-  <style scoped>
-  /* Estilos opcionales */
-  </style>
-  

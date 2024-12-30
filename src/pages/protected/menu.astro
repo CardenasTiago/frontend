@@ -8,14 +8,14 @@ import LogoutButton from "../../components/authentication/LogoutButton.vue";
 
 <Layout title="Menu">
   <ProtectedRoute client:load>
-    <div class="mt-5 place-items-center min-h-fit flex h-screen bg-secondary">
-      <div class="h-fit p-10 main-container bg-secondary">
+    <div class="mt-5 place-items-center min-h-fit flex h-screen">
+      <div class="h-fit p-10 main-container bg-white">
         <h1 class="text-center font-bold">
           <WelcomeMessage client:load />
         </h1>
         <div class="text-center items-center mt-10">
           <div>
-            <a class="btn btn-primary mb-4">Unirse a sala</a>
+            <a href="/protected/joinRoom" class="btn btn-primary mb-4">Unirse a sala</a>
           </div>
 
           <div>
@@ -34,8 +34,7 @@ import LogoutButton from "../../components/authentication/LogoutButton.vue";
 
   <style>
     a {
-      @apply text-neutral
-      font-weight: 800;
+      @apply text-neutral;
       width: 15rem;
     }
 
