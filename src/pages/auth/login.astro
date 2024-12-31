@@ -1,24 +1,21 @@
 ---
-import Layout from "../layouts/Layout.astro";
-import LoginForm from "../components/LoginForm.jsx";
+import Layout from "../../layouts/Layout.astro";
+import LoginFormVue from "../../components/authentication/LoginVue.vue";
 ---
 
 <Layout title="Iniciar sesion">
   <div class="mt-5 place-items-center min-h-fit flex h-screen">
     <div class="h-fit p-10 main-container bg-white">
-      <h1 class="text-center font-bold">Bienvenido</h1>
+      <h1 class="text-center font-bold">Bienvenido nuevamente</h1>
       <div class="text-center items-center mt-10">
-        <LoginForm client:load />
+        <!-- <LoginForm client:load /> -->
+        <LoginFormVue client:load />
       </div>
     </div>
   </div>
 </Layout>
 
 <style>
-  h1 {
-    font-size: 32px;
-  }
-
   .main-container{
     border-radius: 15px;
     box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 2px 6px 2px;
