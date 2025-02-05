@@ -1,0 +1,13 @@
+---
+const { title = "Suffgo" } = Astro.props;
+---
+<header class="flex justify-between items-center mb-4">
+    <div class="text-xl font-bold text-primary">{title}</div>
+    <nav>
+        <ul class="flex gap-4">
+            <li><a href="/inicio" class="text-m font-bold text-primary">Inicio</a></li>
+            <li><a href="/mis-salas" class="text-m font-bold text-primary">Mis salas</a></li>
+            <li><a href="mi-perfil" class="text-m font-bold text-primary">Mi perfil</a></li>
+        </ul>
+    </nav>
+</header>

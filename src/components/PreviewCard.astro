@@ -1,0 +1,45 @@
+---
+interface Props {
+  title: string;
+  description: string;
+  date: string;
+  time: string;
+  admin: string;
+  imageAlt?: string;
+}
+
+const { title, description, date, time, admin, imageAlt = "Preview de la sala" } = Astro.props;
+import BackButton from './BackButton2.vue';
+import InfoSection from './InfoSection.astro';
+---
+<div class="bg-white rounded-lg shadow-lg p-6">
+  <div class="flex items-center mb-6">
+    <BackButton />
+  </div>
+
+  <div class="aspect-video bg-gray-200 mb-6 rounded-lg flex items-center justify-center">
+    {imageAlt}
+  </div>
+
+  <h1 class="text-2xl font-bold text-purple-600 text-center mb-4">
+    {title}
+  </h1>
+
+  <div class="space-y-4">
+    <InfoSection 
+      title="Descripción"
+      content={description}
+    />
+
+    <InfoSection 
+      title="Fecha y hora programada"
+      content={[date, time]}
+      textColor="text-purple-600 font-semibold"
+    />
+
+    <InfoSection 
+      title="Administrador"
+      content={admin}
+    />
+  </div>
+</div>

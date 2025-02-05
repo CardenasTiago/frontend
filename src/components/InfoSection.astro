@@ -1,0 +1,17 @@
+---
+interface Props {
+  title: string;
+  content: string | string[];
+  textColor?: string;
+}
+
+const { title, content, textColor = "text-gray-700" } = Astro.props;
+---
+<div>
+  <h2 class="text-sm text-gray-500">{title}</h2>
+  {Array.isArray(content) ? (
+    content.map(line => <p class={`${textColor}`}>{line}</p>)
+  ) : (
+    <p class={`${textColor}`}>{content}</p>
+  )}
+</div>
