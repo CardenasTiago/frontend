@@ -1,18 +1,16 @@
 <template>
-      <h1 class="font-semibold m-3 text-center">Votaciones del congreso de estudiantes</h1>
-  
-      <!-- Solo mostrar la información de la sala si room no es null -->
       <div v-if="room">
+        <h1 class="font-semibold m-3 text-center">{{ room.room_title }}</h1>
         <h2 class="mb-2">Descripción</h2>
         <p class="mb-4">
           {{ room.description || 'Sin descripción' }}
         </p>
         
         <h2 class="mb-2">Fecha y hora programada</h2>
-        <h1 class="font-semibold mb-4">diciembre 6, 2024 15:00</h1>
+        <h1 class="font-semibold mb-4">{{ room.start_time}}</h1>
         
         <h2 class="mb-2">Administrador</h2>
-        <h1 class="font-semibold">{{ room.admin_id }}</h1>
+        <h1 class="font-semibold">{{ room.admin_name }}</h1>
       </div>
       <div v-else>
         <p>No se encontraron datos de la sala. Por favor, únete a una sala primero.</p>
@@ -22,12 +20,10 @@
   
   <script setup>
   import { ref, onMounted } from 'vue';
-  
-  // Definimos una variable reactiva para almacenar la información de la sala
+
   const room = ref(null);
   const error = ref('');
   
-  // Al montar el componente, leer los datos del almacenamiento local
   onMounted(() => {
     const storedRoom = localStorage.getItem('currentRoom');
     if (storedRoom) {
@@ -62,5 +58,6 @@
   .room-info-container p {
     margin: 0.5rem 0;
   }
+
   </style>
   
