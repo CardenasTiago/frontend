@@ -79,10 +79,9 @@
 		const data = await response.json();
   
 		// Guardar los datos de la sala en localStorage
-		localStorage.setItem("currentRoom", JSON.stringify(data));
+		localStorage.setItem("currentRoom", JSON.stringify(data.room));
   
-		// Redireccionar a la página de la sala
-		window.location.href = `/protected/roomInfo`; 
+		window.location.href = `/protected/roomInfo/${data.room.id}`; 
 	  } else {
 		const data = await response.json();
 		error.value = data.message || "Error al ingresar a la sala.";

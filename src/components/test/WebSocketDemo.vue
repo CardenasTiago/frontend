@@ -80,7 +80,7 @@ const connect = () => {
   };
 
   socket.value.onmessage = (event) => {
-    messages.value.push(`Servidor: ${event.data}`);
+    messages.value.push(`${event.data}`);
   };
 
   socket.value.onerror = (error) => {
@@ -194,6 +194,7 @@ onBeforeUnmount(() => {
 
 .messages li {
   padding: 0.25rem 0;
+  color: black;
 }
 
 .send-message {
