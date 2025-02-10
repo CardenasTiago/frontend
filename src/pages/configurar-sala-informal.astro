@@ -18,10 +18,16 @@ import FormButton from '../components/FormButton.vue';
                     </div>
 
                     <div class="max-w-2xl mx-auto h-[240px] bg-gray-200 mb-8 rounded-lg flex items-center justify-center text-lg">
-                        <input type="file" class="file-input file-input-ghost w-full max-w-xs" />
+                        <label class="flex flex-col items-center justify-center cursor-pointer">
+                            <i class="fi fi-ss-add-image text-4xl text-accent mb-2"></i>
+                            <span class="text-accent/80 text-lg">Agregar archivo</span>
+                            <input type="file" class="hidden" />
+                        </label>
                     </div>
+                    
+                    
 
-                    <form class="space-y-6">
+                    <form class="space-y-8">
                         <div>
                             <label class="form-control w-full">
                                 <div class="label">
@@ -52,7 +58,7 @@ import FormButton from '../components/FormButton.vue';
 
                         <div class="grid grid-cols-2 gap-6 pt-4">
                             <a href="/propuestas" class="w-full">
-                            <FormButton client:load variant="secondary">Agregar propuesta</FormButton>
+                            <FormButton client:load variant="secondary">Propuestas</FormButton>
                             </a>
                             <FormButton client:load variant="primary">Guardar</FormButton>
                         </div>
