@@ -1,0 +1,45 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Header from '../../components/Navbar.astro';
+import RoomCard from '../../components/RoomCard.astro';
+import BackButton from '../../components/BackButton2.vue';
+---
+
+<Layout title="Crear sala - Suffgo">
+  <main class="max-w-6xl mx-auto p-4 bg-base-100 min-h-screen">
+    <Header />
+    
+    <div class="grid grid-cols-12 gap-6">
+      <div class="col-span-12">
+          <div class="bg-base-100 p-8 rounded-lg shadow-lg">
+              <div class="mb-8">
+                  <BackButton client:load />
+              </div>
+    
+    <div class="text-center mb-12">
+      <h1 class="text-4xl font-bold text-primary mb-4">Crear sala</h1>
+      <p class="text-accent/80">Selecciona el tipo de sala que deseas crear</p>
+    </div>
+
+    <div class="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+      <RoomCard
+        title="Sala formal"
+        description="Pensada para votaciones serias, oficiales e importantes donde la organización y las reglas son estrictas."
+        type="formal"
+      />
+      
+      <RoomCard
+        title="Sala informal"
+        description="Diseñada para situaciones casuales donde las reglas no son estrictas y el enfoque está en la rapidez y la simplicidad."
+        type="informal"
+      />
+    </div>
+  </main>
+</Layout>
+
+<style>
+  main {
+      min-height: 100vh;
+      background-color:base-100;
+  }
+</style>
