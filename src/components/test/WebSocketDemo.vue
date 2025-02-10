@@ -21,12 +21,7 @@
     </div>
 
     <div class="send-message">
-      <input
-        v-model="inputMessage"
-        type="text"
-        placeholder="Escribe un mensaje..."
-        @keyup.enter="sendMessage"
-      />
+      <input v-model="inputMessage" type="text" placeholder="Escribe un mensaje..." @keyup.enter="sendMessage" />
       <button @click="sendMessage">Enviar</button>
     </div>
 
@@ -40,8 +35,8 @@
 <script setup>
 import { ref, onMounted, onBeforeUnmount } from 'vue';
 
-// URL del servidor WebSocket
-const WS_URL = 'ws://localhost:3000/v1/rooms/ws';
+// URL del servidor WebSocket (se incluye el room_id en la URL)
+const WS_URL = 'ws://localhost:3000/v1/rooms/ws/3';
 
 // Referencia al objeto WebSocket
 const socket = ref(null);
@@ -80,7 +75,7 @@ const connect = () => {
   };
 
   socket.value.onmessage = (event) => {
-    messages.value.push(`${event.data}`);
+    messages.value.push(event.data);
   };
 
   socket.value.onerror = (error) => {
@@ -91,9 +86,15 @@ const connect = () => {
   socket.value.onclose = (event) => {
     connected.value = false;
     socket.value = null;
-    messages.value.push('Conexión cerrada.');
+    // Verificar si el código de cierre indica que la sala no existe
+    if (event.code === 4001) {
+      messages.value.push('La sala no existe. No se reintentará la conexión.');
+      // Se sale sin llamar a la función de reconexión
+      return;
+    }
 
-    // Iniciar reconexión si no se ha alcanzado el máximo de intentos
+    messages.value.push('Conexión cerrada.');
+    // Si el código no es el personalizado, se puede proceder con la reconexión
     if (reconnectAttempts.value < maxReconnectAttempts) {
       attemptReconnect();
     } else {
@@ -108,7 +109,16 @@ const sendMessage = () => {
     const msg = inputMessage.value.trim();
     if (msg === '') return;
 
-    socket.value.send(msg);
+    // Declarar la variable data correctamente y sin referencia a selectedAction
+    const data = {
+      action: 'send_message',
+      payload: {
+        message: msg
+      }
+    };
+
+    // Enviar el mensaje en formato JSON
+    socket.value.send(JSON.stringify(data));
     messages.value.push(`Tú: ${msg}`);
     inputMessage.value = '';
   } else {
@@ -116,6 +126,7 @@ const sendMessage = () => {
     messages.value.push('No estás conectado al servidor WebSocket.');
   }
 };
+
 
 // Función para cerrar la conexión
 const closeConnection = () => {
