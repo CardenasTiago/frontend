@@ -20,29 +20,27 @@ import JoinByCode from "../../components/room/JoinByCode.vue";
                 </div>
 
                 <div class="mt-5">
-                    <JoinByCode />
+                    <JoinByCode client:load/>
                 </div>
-                
             </div>
         </div>
-    </ProtectedRoute>    
+    </ProtectedRoute>
 </Layout>
 
 <style>
-    a {
-        @apply text-neutral;
-        width: 15rem;
-    }
+a {
+    @apply text-neutral;
+    width: 15rem;
+}
 
-    h1 {
-      font-weight: 600;  
-    }
+h1 {
+    font-weight: 600;
+}
 
-    .main-container {
-        border-radius: 15px;
-        box-shadow:
-            rgba(60, 64, 67, 0.3) 0px 1px 2px 0px,
-            rgba(60, 64, 67, 0.15) 0px 2px 6px 2px;
-    }
-
+.main-container {
+    border-radius: 15px;
+    box-shadow:
+        rgba(60, 64, 67, 0.3) 0px 1px 2px 0px,
+        rgba(60, 64, 67, 0.15) 0px 2px 6px 2px;
+}
 </style>
