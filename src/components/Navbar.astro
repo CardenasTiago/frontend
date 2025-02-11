@@ -2,7 +2,9 @@
 const { title = "Suffgo" } = Astro.props;
 ---
 <header class="flex justify-between items-center mb-4">
-    <div class="text-xl font-bold text-primary">{title}</div>
+    <div class="text-xl font-bold text-primary">
+        <a href="/protected/menu" class="hover:text-primary/80 transition-colors">{title}</a>
+    </div>
     <nav>
         <ul class="flex gap-4">
             <label class="grid cursor-pointer place-items-center">

@@ -1,6 +1,5 @@
 ---
 import Layout from '../layouts/Layout.astro';
-import Header from '../components/Navbar.astro';
 import BackButton from '../components/BackButton2.vue';
 import AdminField from '../components/AdminField.vue';
 import FormButton from '../components/FormButton.vue'; 
@@ -8,11 +7,10 @@ import FormButton from '../components/FormButton.vue';
 
 <Layout title="Configurar sala informal - Suffgo">
     <main class="max-w-6xl mx-auto p-4 bg-base-100 min-h-screen">
-        <Header />
     
         <div class="grid grid-cols-12 gap-6">
             <div class="col-span-12">
-                <div class="bg-white p-8 rounded-lg shadow-lg">
+                <div class="bg-base-100 p-8 rounded-lg shadow-lg">
                     <div class="mb-8">
                         <BackButton client:load />
                     </div>
@@ -69,9 +67,3 @@ import FormButton from '../components/FormButton.vue';
     </div>
 
 </Layout>
-<style>
-    main {
-        min-height: 100vh;
-        background-color: #f9fafb;
-    }
-</style>
