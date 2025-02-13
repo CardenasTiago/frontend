@@ -1,21 +1,20 @@
 ---
-import RoomInfo from '../../../components/room/RoomInfo.vue';
-import ProtectedRoute from '../../../components/authentication/ProtectedRoute.vue';
-import Layout from '../../../layouts/Layout.astro';
+import RoomInfo from "../../../components/room/RoomInfo.vue";
+import ProtectedRoute from "../../../components/authentication/ProtectedRoute.vue";
+import Layout from "../../../layouts/Layout.astro";
+import StartRoom from "../../../components/test/StartRoom.vue";
 const { id } = Astro.params;
 ---
 
 <Layout title="Sala">
-    <ProtectedRoute client:load />
+  <ProtectedRoute client:load />
 
-    <div class="mt-5 place-items-center min-h-fit flex h-screen">
-      <div class="h-fit p-10 main-container bg-white">
-        <RoomInfo client:load roomId={id} />
-      </div>
-  </div>
-
-</Layout>
-
+  <div class="mt-5 place-items-center min-h-fit flex h-screen">
+    <div class="h-fit p-10 main-container bg-white">
+      <RoomInfo client:load roomId={id} />
+      <StartRoom client:load />
+    </div>
 
     
-
+  </div>
+</Layout>
