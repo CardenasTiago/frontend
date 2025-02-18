@@ -1,0 +1,11 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import LobbyComp from "../../components/room/lobby/Lobby.vue";
+import ProtectedRoute from "../../components/authentication/ProtectedRoute.vue";
+---
+
+<Layout title="Suffgo">
+    <ProtectedRoute client:load>
+        <LobbyComp client:load />
+    </ProtectedRoute>
+</Layout>
