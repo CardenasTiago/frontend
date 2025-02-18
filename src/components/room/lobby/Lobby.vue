@@ -1,21 +1,40 @@
 <template>
-  <div class="main-container">
-    <div role="tablist" class="tabs tabs-lifted">
-      <input type="radio" name="my_tabs_1" role="tab" class="tab" aria-label="Chat" />
-      <div role="tabpanel" class="tab-content p-10">
-        <TabChat ref="tabChatRef"/>        
-      </div>
 
-      <input type="radio" name="my_tabs_1" role="tab" class="tab" aria-label="info" checked="checked" />
-      <div role="tabpanel" class="tab-content p-10">
-        <TabInfo />
-      </div>
+  <div class="main-container h-screen ">
+    <v-card>
+      <v-tabs v-model="tab" align-tabs="center" color="deep-purple-accent-4">
+        <v-tab :value="1">Chat</v-tab>
+        <v-tab :value="2">Info</v-tab>
+        <v-tab :value="3">Usuarios</v-tab>
+      </v-tabs>
 
-      <input type="radio" name="my_tabs_1" role="tab" class="tab" aria-label="usuarios" />
-      <div role="tabpanel" class="tab-content p-10">
-        <TabUsers />
-      </div>
-    </div>
+      <v-tabs-window v-model="tab">
+        <v-tabs-window-item :key="1" :value="1">
+          <v-container fluid>
+            <TabChat ref="tabChatRef" />
+          </v-container>
+        </v-tabs-window-item>
+
+      </v-tabs-window>
+
+      <v-tabs-window v-model="tab">
+        <v-tabs-window-item :key="2" :value="2">
+          <v-container fluid>
+            <TabInfo />
+          </v-container>
+        </v-tabs-window-item>
+
+      </v-tabs-window>
+
+      <v-tabs-window v-model="tab">
+        <v-tabs-window-item :key="3" :value="3">
+          <v-container fluid>
+            <TabUsers />
+          </v-container>
+        </v-tabs-window-item>
+
+      </v-tabs-window>
+    </v-card>
 
     <button v-if="connected" @click="closeConnection">Cerrar Conexión</button>
     <button v-else @click="connect" :disabled="reconnecting">
@@ -24,13 +43,22 @@
   </div>
 </template>
 
-<script setup>
-import { ref, onMounted, onBeforeUnmount, provide } from 'vue';
-import TabChat from './TabChat.vue'
-import TabInfo from './TabInfo.vue'
-import TabUsers from './TabUsers.vue'
+<script>
+export default {
+  data: () => ({
+    tab: null,
+  }),
+}
+</script>
 
-// Declarar la clase Event ANTES de usarla
+
+<script setup>
+
+import { ref, onMounted, onBeforeUnmount, provide } from 'vue';
+import TabChat from './TabChat.vue';
+import TabInfo from './TabInfo.vue';
+import TabUsers from './TabUsers.vue';
+
 class Event {
   constructor(action, payload) {
     this.action = action;
@@ -128,7 +156,7 @@ function receiveEvents(eventData) {
 
   switch (eventData.action) {
     case "send_message":
-    tabChatRef.value.pushMessage(`${eventData.payload.from} : ${eventData.payload.message}`);
+      tabChatRef.value.pushMessage(`${eventData.payload.from} : ${eventData.payload.message}`);
       break;
     default:
       alert("Unsupported action");
@@ -173,7 +201,6 @@ provide('inputMessage', inputMessage);
 <style scoped>
 .main-container {
   width: 600px;
-  height: 600px;
   margin: 0 auto;
   padding: 1rem;
   border: 2px solid #6b48ff;
