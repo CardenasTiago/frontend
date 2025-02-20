@@ -28,7 +28,7 @@
       <v-tabs-window v-model="tab">
         <v-tabs-window-item :key="3" :value="3">
           <v-container fluid>
-            <TabUsers ref="tabUsersRef" />
+            <TabUsers :clients="userList" />
           </v-container>
         </v-tabs-window-item>
 
@@ -87,6 +87,7 @@ onMounted(() => {
   wsUrl = `ws://localhost:3000/v1/rooms/ws/${roomId.value}`;
 });
 
+const userList = ref(null);
 const socket = ref(null);
 
 // Estado de conexión
@@ -98,7 +99,6 @@ const inputMessage = ref('');
 const reconnectBaseDelay = 1000; // 1 segundo
 
 const tabChatRef = ref(null);
-const tabUsersRef = ref(null);
 
 const connect = () => {
   if (socket.value) {
@@ -159,12 +159,20 @@ function receiveEvents(eventData) {
       tabChatRef.value.pushMessage(`${eventData.payload.from} : ${eventData.payload.message}`);
       break;
     case "update_client_list":
-      tabUsersRef.value.updateClientList(eventData.payload);
+      updateClientList(eventData.payload);
       break;
     default:
       alert("Unsupported action");
       break;
   }
+}
+
+function updateClientList(payload) {
+  // Si el servidor envía un payload en formato string, parsearlo
+  const data = typeof payload === 'string' ? JSON.parse(payload) : payload
+  // Se espera una estructura { clients: [] }
+  userList.value = data.clients || []
+  console.log('Lista de usuarios actualizada en el padre:', userList.value)
 }
 
 // Función para cerrar la conexión

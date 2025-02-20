@@ -1,26 +1,40 @@
 <template>
+    <div class="w-full">
+        <ul class="users flex justify-between font-semibold" v-for="client in clients" :key="client">
+            <li class="text-start">
+                {{ client }} 
+            </li>
+            <li class="text-end">
+                <span class="status">en línea</span>
+                <span class="inline-block ml-2 w-3 h-3 bg-[#71F260] rounded-full mr-1"></span>
+            </li>
+        </ul>
+    </div>
 
-    <h2>Usuarios conectados</h2>
-    <ul>
-        <li v-for="client in clients" :key="client">{{ client }}</li>
-    </ul>
 </template>
 
 <script setup>
-import { ref, defineExpose  } from 'vue';
+import { defineProps } from 'vue'
 
-const clients = ref([])
+// Definimos las props que recibirá este componente
+const props = defineProps({
+    clients: {
+        type: Array,
+        default: () => []
+    }
+})
+</script>
 
-function updateClientList(payload) {
-    // Si payload es una cadena, se puede parsear
-    const data = typeof payload === 'string' ? JSON.parse(payload) : payload
-    // Se espera que data tenga la estructura: { clients: [ ... ] }
-    clients.value = data.clients || []
-    console.log("Lista actualizada:", clients.value)
+<style>
+.users {
+    @apply text-primary bg-slate-50;
+    padding: 8px;
+    margin: 8px;
+    box-shadow: rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px;
+    border-radius: 10px;
 }
 
-defineExpose({
-    updateClientList
-});
-
-</script>
+.status {
+    color: #8F8F8F;
+}
+</style>

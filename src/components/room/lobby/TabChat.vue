@@ -1,9 +1,8 @@
 <template>
     <div class="chat-container">
-        <h2>Demo de WebSocket con Reconexión Automática</h2>
 
         <div v-if="connected" class="status connected">
-            Conectado al servidor WebSocket.
+            Conectado
         </div>
         <div v-else-if="reconnecting" class="status reconnecting">
             Intentando reconectar... (Intento {{ reconnectAttempts }})
