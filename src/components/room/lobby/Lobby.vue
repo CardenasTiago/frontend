@@ -1,6 +1,5 @@
 <template>
-
-  <div class="main-container h-screen ">
+  <div class="main-container h-screen">
     <v-card>
       <v-tabs v-model="tab" align-tabs="center" color="deep-purple-accent-4">
         <v-tab :value="1">Chat</v-tab>
@@ -29,7 +28,7 @@
       <v-tabs-window v-model="tab">
         <v-tabs-window-item :key="3" :value="3">
           <v-container fluid>
-            <TabUsers />
+            <TabUsers ref="tabUsersRef" />
           </v-container>
         </v-tabs-window-item>
 
@@ -99,6 +98,7 @@ const inputMessage = ref('');
 const reconnectBaseDelay = 1000; // 1 segundo
 
 const tabChatRef = ref(null);
+const tabUsersRef = ref(null);
 
 const connect = () => {
   if (socket.value) {
@@ -157,6 +157,9 @@ function receiveEvents(eventData) {
   switch (eventData.action) {
     case "send_message":
       tabChatRef.value.pushMessage(`${eventData.payload.from} : ${eventData.payload.message}`);
+      break;
+    case "update_client_list":
+      tabUsersRef.value.updateClientList(eventData.payload);
       break;
     default:
       alert("Unsupported action");
