@@ -1,10 +1,15 @@
 <template>
-   <v-card class="main-container h-screen w-screen items-center justify-center">	
-    <v-tabs v-model="tab" align-tabs="center" active-color="primary" hide-slider="true" class="">	
-      <v-tab :value="1" class="custom-tab " style="border-radius: 40px;">Chat</v-tab>
-      <v-tab :value="2" class="custom-tab" style="border-radius: 40px;">Info</v-tab>
-      <v-tab :value="3" class="custom-tab" style="border-radius: 40px;">Usuarios</v-tab>
+  <v-card class="main-container h-screen w-screen items-center justify-center">
+    <v-tabs v-model="tab" align-tabs="center" hide-slider="true" class="">
+      <div class="custom-buttons">
+        <button :class="{ 'active-button': tab === 1 }" @click="tab = 1">Chat</button>
+        <button :class="{ 'active-button': tab === 2 }" @click="tab = 2">Info</button>
+        <button :class="{ 'active-button': tab === 3 }" @click="tab = 3">Usuarios</button>
+      </div>
+
     </v-tabs>
+
+
     <v-tabs-window v-model="tab">
       <v-tabs-window-item :key="1" :value="1">
         <v-container>
@@ -23,7 +28,7 @@
 
     <v-tabs-window v-model="tab">
       <v-tabs-window-item :key="3" :value="3">
-        <v-container >
+        <v-container>
           <TabUsers :clients="userList" />
         </v-container>
       </v-tabs-window-item>
@@ -31,16 +36,16 @@
   </v-card>
 
 
-    <button v-if="connected" @click="closeConnection">Cerrar Conexión</button>
-    <button v-else @click="connect" :disabled="reconnecting">
-      Conectar
-    </button>
+  <button v-if="connected" @click="closeConnection">Cerrar Conexión</button>
+  <button v-else @click="connect" :disabled="reconnecting">
+    Conectar
+  </button>
 </template>
 
 <script>
 export default {
   data: () => ({
-    tab: null,
+    tab: 2,
   }),
 }
 </script>
@@ -209,6 +214,7 @@ provide('inputMessage', inputMessage);
   margin: 0 auto;
   padding: 1rem;
   border-radius: 8px;
+  @apply bg-neutral
 }
 
 .custom-tab {
@@ -218,22 +224,30 @@ provide('inputMessage', inputMessage);
 
 button {
   padding: 0.5rem 1rem;
+  margin: 0.5rem;
   font-weight: 700;
-  border: 10px;
   border-radius: 30px;
   cursor: pointer;
   @apply text-primary;
 }
 
-
-
-.v-tab-item--selected {
-  color: white;
+button:active {
   @apply bg-primary;
+  @apply text-neutral;
 }
 
-.v-tab:hover {
-  @apply text-secondary;
+button:hover {
+  @apply bg-primary;
+  @apply text-neutral;
 }
 
+.custom-buttons button.active-button {
+  @apply bg-primary text-neutral;
+}
+
+/* Opcional: estilos para hover */
+.custom-buttons button:hover {
+  @apply bg-primary text-neutral;
+  transition: all 0.3s;
+}
 </style>
