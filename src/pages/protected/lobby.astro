@@ -6,6 +6,18 @@ import ProtectedRoute from "../../components/authentication/ProtectedRoute.vue";
 
 <Layout title="Suffgo">
     <ProtectedRoute client:load>
-        <LobbyComp client:load />
+        <div class="mt-5 place-items-center h-full">
+            <div class="p-10">
+                <LobbyComp client:load />
+            </div>
+        </div>
     </ProtectedRoute>
 </Layout>
+
+<style>
+    .main-container {
+        width: 100%;
+        max-width: 800px;
+        margin: 0 auto;
+    }
+</style>

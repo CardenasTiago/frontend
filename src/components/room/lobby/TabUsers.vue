@@ -1,6 +1,6 @@
 <template>
     <div class="w-full">
-        <ul class="users flex justify-between font-semibold" v-for="client in clients" :key="client">
+        <ul class="users flex justify-between font-semibold " v-for="client in clients" :key="client">
             <li class="text-start">
                 {{ client }} 
             </li>
@@ -29,10 +29,12 @@ const props = defineProps({
 .users {
     @apply text-primary bg-slate-50;
     padding: 8px;
-    margin: 8px;
+    margin: 8px auto; /* Auto en los laterales centra el elemento */
     box-shadow: rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px;
-    border-radius: 10px;
+    border-radius: 10px; 
+    max-width: 500px;
 }
+
 
 .status {
     color: #8F8F8F;

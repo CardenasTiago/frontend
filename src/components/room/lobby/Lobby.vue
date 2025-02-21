@@ -1,45 +1,40 @@
 <template>
-  <div class="main-container h-screen">
-    <v-card>
-      <v-tabs v-model="tab" align-tabs="center" color="deep-purple-accent-4">
-        <v-tab :value="1">Chat</v-tab>
-        <v-tab :value="2">Info</v-tab>
-        <v-tab :value="3">Usuarios</v-tab>
-      </v-tabs>
+   <v-card class="main-container h-screen w-screen items-center justify-center">	
+    <v-tabs v-model="tab" align-tabs="center" active-color="primary" hide-slider="true" class="">	
+      <v-tab :value="1" class="custom-tab " style="border-radius: 40px;">Chat</v-tab>
+      <v-tab :value="2" class="custom-tab" style="border-radius: 40px;">Info</v-tab>
+      <v-tab :value="3" class="custom-tab" style="border-radius: 40px;">Usuarios</v-tab>
+    </v-tabs>
+    <v-tabs-window v-model="tab">
+      <v-tabs-window-item :key="1" :value="1">
+        <v-container>
+          <TabChat ref="tabChatRef" />
+        </v-container>
+      </v-tabs-window-item>
+    </v-tabs-window>
 
-      <v-tabs-window v-model="tab">
-        <v-tabs-window-item :key="1" :value="1">
-          <v-container fluid>
-            <TabChat ref="tabChatRef" />
-          </v-container>
-        </v-tabs-window-item>
+    <v-tabs-window v-model="tab">
+      <v-tabs-window-item :key="2" :value="2">
+        <v-container>
+          <TabInfo />
+        </v-container>
+      </v-tabs-window-item>
+    </v-tabs-window>
 
-      </v-tabs-window>
+    <v-tabs-window v-model="tab">
+      <v-tabs-window-item :key="3" :value="3">
+        <v-container >
+          <TabUsers :clients="userList" />
+        </v-container>
+      </v-tabs-window-item>
+    </v-tabs-window>
+  </v-card>
 
-      <v-tabs-window v-model="tab">
-        <v-tabs-window-item :key="2" :value="2">
-          <v-container fluid>
-            <TabInfo />
-          </v-container>
-        </v-tabs-window-item>
-
-      </v-tabs-window>
-
-      <v-tabs-window v-model="tab">
-        <v-tabs-window-item :key="3" :value="3">
-          <v-container fluid>
-            <TabUsers :clients="userList" />
-          </v-container>
-        </v-tabs-window-item>
-
-      </v-tabs-window>
-    </v-card>
 
     <button v-if="connected" @click="closeConnection">Cerrar Conexión</button>
     <button v-else @click="connect" :disabled="reconnecting">
       Conectar
     </button>
-  </div>
 </template>
 
 <script>
@@ -211,29 +206,34 @@ provide('inputMessage', inputMessage);
 
 <style scoped>
 .main-container {
-  width: 600px;
   margin: 0 auto;
   padding: 1rem;
-  border: 2px solid #6b48ff;
   border-radius: 8px;
-  background-color: #f9f9f9;
+}
+
+.custom-tab {
+  margin: 0 20px;
+  padding: 8px 16px;
 }
 
 button {
   padding: 0.5rem 1rem;
-  background-color: #6b48ff;
-  color: white;
-  border: none;
-  border-radius: 4px;
+  font-weight: 700;
+  border: 10px;
+  border-radius: 30px;
   cursor: pointer;
+  @apply text-primary;
 }
 
-button:hover {
-  background-color: #5941d1;
+
+
+.v-tab-item--selected {
+  color: white;
+  @apply bg-primary;
 }
 
-button:disabled {
-  background-color: #a78bfa;
-  cursor: not-allowed;
+.v-tab:hover {
+  @apply text-secondary;
 }
+
 </style>

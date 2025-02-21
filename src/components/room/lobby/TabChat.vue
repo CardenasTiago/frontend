@@ -65,9 +65,6 @@ function pushMessage(msg) {
 </script>
 
 <style scoped>
-.chat-container {
-    box-shadow: 5px;
-}
 
 .status {
     padding: 0.5rem;
