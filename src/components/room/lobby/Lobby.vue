@@ -1,39 +1,50 @@
 <template>
-  <v-card class="main-container h-screen w-screen items-center justify-center">
-    <v-tabs v-model="tab" align-tabs="center" hide-slider="true" class="">
-      <div class="custom-buttons">
-        <button :class="{ 'active-button': tab === 1 }" @click="tab = 1">Chat</button>
-        <button :class="{ 'active-button': tab === 2 }" @click="tab = 2">Info</button>
-        <button :class="{ 'active-button': tab === 3 }" @click="tab = 3">Usuarios</button>
-      </div>
 
-    </v-tabs>
+  <div class="main-container h-screen  w-screen items-center">
+    <div>
+      <v-card class="h-screen flex w-screen items-center justify-center">
+        <v-tabs v-model="tab" align-tabs="center" hide-slider="true" class="">
+          <div class="custom-buttons">
+            <button :class="{ 'active-button': tab === 1 }" @click="tab = 1">Chat</button>
+            <button :class="{ 'active-button': tab === 2 }" @click="tab = 2">Info</button>
+            <button :class="{ 'active-button': tab === 3 }" @click="tab = 3">Usuarios</button>
+          </div>
+
+        </v-tabs>
 
 
-    <v-tabs-window v-model="tab">
-      <v-tabs-window-item :key="1" :value="1">
-        <v-container>
-          <TabChat ref="tabChatRef" />
-        </v-container>
-      </v-tabs-window-item>
-    </v-tabs-window>
+        <v-tabs-window v-model="tab">
+          <v-tabs-window-item :key="1" :value="1">
+            <v-container>
+              <TabChat ref="tabChatRef" />
+            </v-container>
+          </v-tabs-window-item>
+        </v-tabs-window>
 
-    <v-tabs-window v-model="tab">
-      <v-tabs-window-item :key="2" :value="2">
-        <v-container>
-          <TabInfo />
-        </v-container>
-      </v-tabs-window-item>
-    </v-tabs-window>
+        <v-tabs-window v-model="tab">
+          <v-tabs-window-item :key="2" :value="2">
+            <v-container>
+              <TabInfo />
+            </v-container>
+          </v-tabs-window-item>
+        </v-tabs-window>
 
-    <v-tabs-window v-model="tab">
-      <v-tabs-window-item :key="3" :value="3">
-        <v-container>
-          <TabUsers :clients="userList" />
-        </v-container>
-      </v-tabs-window-item>
-    </v-tabs-window>
-  </v-card>
+        <v-tabs-window v-model="tab">
+          <v-tabs-window-item :key="3" :value="3">
+            <v-container>
+              <TabUsers :clients="userList" />
+            </v-container>
+          </v-tabs-window-item>
+        </v-tabs-window>
+        <div v-if="room.privileges" class="flex justify-end m-10">
+          <button class="btn btn-primary initiliaze">Iniciar</button>
+        </div>
+      </v-card>
+
+    </div>
+
+  </div>
+
 
 
   <button v-if="connected" @click="closeConnection">Cerrar Conexión</button>
@@ -216,6 +227,7 @@ provide('inputMessage', inputMessage);
   border-radius: 8px;
   @apply bg-neutral
 }
+
 
 .custom-tab {
   margin: 0 20px;
