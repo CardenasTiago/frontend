@@ -80,11 +80,18 @@
   
 		// Guardar los datos de la sala en localStorage
 		localStorage.setItem("currentRoom", JSON.stringify(data.room));
+		localStorage.setItem("joinedRoomId", JSON.stringify(data.room.id))
   
 		window.location.href = `/protected/roomInfo/${data.room.id}`; 
 	  } else {
 		const data = await response.json();
-		error.value = data.message || "Error al ingresar a la sala.";
+		if (response.status == 400) {
+			error.value = "Codigo de sala invalido.";
+		} else if (response.status == 403) {
+			error.value = "No tienes permiso para unirte a esta sala"
+		} else {
+			error.value = data.message || "Error al ingresar a la sala.";	
+		}
 	  }
 	} catch (err) {
 	  console.error(err);
@@ -92,9 +99,5 @@
 	}
   };
   </script>
-  
-  <style scoped>
 
-  
-  </style>
   
