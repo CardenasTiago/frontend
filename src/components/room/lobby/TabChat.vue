@@ -28,39 +28,37 @@
 
 <script setup>
 import { inject, ref } from 'vue';
+import { useWebSocketStore } from '../stores/socketStore';
+import { storeToRefs } from 'pinia'
 
-const socket = inject('socket');
-const connected = inject('connected');
+const socketStore = useWebSocketStore();
+const socket = socketStore.socket;
 const username = inject('username');
-// Usamos un ref local para el input (no usamos el proporcionado, ya que es mejor manejarlo localmente)
+
+const { 
+  connected, 
+  reconnecting, 
+  reconnectAttempts, 
+  messages, 
+  userList 
+} = storeToRefs(socketStore)
+
 const inputMessageLocal = ref('');
-const messages = ref([]);
-// Si necesitas acceder a más estados (por ejemplo, reconnecting o reconnectAttempts),
-// podrías inyectarlos de la misma manera.
-const reconnecting = inject('reconnecting', ref(false));
-const reconnectAttempts = ref(0); // Si no lo inyectas, podrías pasarlo como prop o inyectarlo si lo provees
+
+
 
 const sendMessage = () => {
     const msg = inputMessageLocal.value.trim();
     if (msg === '') return;
-    if (socket.value && connected.value) {
-        socket.value.sendEvents("send_message", { from: username.value, message: msg });
-        pushMessage(`Tú: ${msg}`);
+    if (socket && connected) {
+        socket.sendEvents("send_message", { from: username.value, message: msg });
+        socketStore.pushMessage(`Tú: ${msg}`);
         inputMessageLocal.value = '';
     } else {
         console.warn('No estás conectado al WebSocket.');
-        pushMessage('No estás conectado al servidor WebSocket.');
+        socketStore.pushMessage('No estás conectado al servidor WebSocket.');
     }
 };
-
-defineExpose({
-  pushMessage
-});
-
-function pushMessage(msg) {
-    messages.value.push(msg);
-}
-
 
 </script>
 

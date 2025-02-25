@@ -1,5 +1,6 @@
 ---
 import Layout from "../../layouts/Layout.astro";
+//import LobbyComp from "../../components/room/lobby/lobbyComponents/Lobby.vue";
 import LobbyComp from "../../components/room/lobby/Lobby.vue";
 import ProtectedRoute from "../../components/authentication/ProtectedRoute.vue";
 ---
@@ -7,7 +8,7 @@ import ProtectedRoute from "../../components/authentication/ProtectedRoute.vue";
 <Layout title="Suffgo">
     <ProtectedRoute client:load>
         <div class="mt-5 place-items-center h-full">
-            <LobbyComp client:load />
+            <LobbyComp client:load/>
         </div>
     </ProtectedRoute>
 </Layout>
