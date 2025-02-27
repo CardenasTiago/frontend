@@ -1,12 +1,12 @@
 <template>
 
-  <div class="main-container h-screen  w-screen items-center">
+  <div class="main-container h-screen w-screen items-center">
     <button v-if="connected" @click="closeConnection">Salir</button>
     <button v-else @click="connect" :disabled="reconnecting">
       Conectar
     </button>
     <div>
-      <v-card class="h-screen flex w-screen items-center justify-center">
+      <v-card class="h-screen flex items-center justify-center">
         <v-tabs v-model="tab" align-tabs="center" class="">
           <div class="custom-buttons">
             <button :class="{ 'active-button': tab === 1 }" @click="tab = 1">Chat</button>
@@ -41,17 +41,11 @@
           </v-tabs-window-item>
         </v-tabs-window>
         <div v-if="room.privileges" class="flex justify-end m-10">
-          <button class="btn btn-primary initiliaze">Iniciar</button>
+          <button class="btn btn-primary initiliaze" @click="startVoting">Iniciar</button>
         </div>
       </v-card>
-
     </div>
-
   </div>
-
-
-
-
 </template>
 
 <script>
@@ -61,23 +55,25 @@ export default {
   }),
 }
 </script>
-
-
 <script setup>
 
-import { ref, onMounted, onBeforeUnmount, provide } from 'vue';
+import { ref, onMounted, provide, watch } from 'vue';
 import { useWebSocketStore } from '../stores/socketStore'
 import { storeToRefs } from 'pinia'
+import { useRouter } from 'vue-router'
 import TabChat from './TabChat.vue';
 import TabInfo from './TabInfo.vue';
 import TabUsers from './TabUsers.vue';
 
 const socketStore = useWebSocketStore();
 const {
+  voting,
   connected,
   reconnecting,
 } = storeToRefs(socketStore)
 
+
+const router = useRouter()
 const room = ref('');
 const roomId = ref('');
 const username = ref('');
@@ -100,10 +96,8 @@ onMounted(() => {
   wsUrl = `ws://localhost:3000/v1/rooms/ws/${roomId.value}`;
 
   socketStore.connect(wsUrl);
-});
 
-onBeforeUnmount(() => {
-  socketStore.close();
+  
 });
 
 function connect() {
@@ -114,6 +108,17 @@ function closeConnection() {
   socketStore.close();
   window.location.href = '/protected/joinRoom'
 };
+
+function startVoting() {
+  socketStore.socket.sendEvents("start_voting", { from: username.value })
+}
+
+
+watch(voting, (val)=> {
+  if (val) {
+    router.push('/voting')
+  }
+})
 
 // Proveer valores para que otros componentes (por ejemplo, TabChat) puedan inyectarlos
 provide('username', username);
@@ -160,5 +165,11 @@ button:hover {
 .custom-buttons button:hover {
   @apply bg-primary text-neutral;
   transition: all 0.3s;
+}
+
+.initiliaze {
+  font-weight: 700;
+  @apply bg-primary;
+  border-radius: 30px;
 }
 </style>

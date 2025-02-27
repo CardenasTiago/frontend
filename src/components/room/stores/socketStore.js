@@ -25,6 +25,9 @@ export const useWebSocketStore = defineStore('webSocketStore', {
 
     userList: [],
     messages: [],
+
+    voting: false,
+    firstProposal: null,
   }),
 
   actions: {
@@ -109,6 +112,10 @@ export const useWebSocketStore = defineStore('webSocketStore', {
           break;
         case "update_client_list":
           this.updateClientList(eventData.payload);
+          break;
+        case "first_proposal":
+          this.voting = true
+          this.firstProposal = eventData.payload;
           break;
         default:
           alert("Unsupported action");
