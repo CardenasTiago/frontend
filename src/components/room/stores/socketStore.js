@@ -27,7 +27,7 @@ export const useWebSocketStore = defineStore('webSocketStore', {
     messages: [],
 
     voting: false,
-    firstProposal: null,
+    currentProposal: null,
   }),
 
   actions: {
@@ -115,7 +115,7 @@ export const useWebSocketStore = defineStore('webSocketStore', {
           break;
         case "first_proposal":
           this.voting = true
-          this.firstProposal = eventData.payload;
+          this.currentProposal = eventData.payload;
           break;
         default:
           alert("Unsupported action");

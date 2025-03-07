@@ -81,7 +81,20 @@
 		// Guardar los datos de la sala en localStorage
 		localStorage.setItem("currentRoom", JSON.stringify(data.room));
 		localStorage.setItem("joinedRoomId", JSON.stringify(data.room.id))
-  
+		
+
+		//obtengo la configuracion
+		let url = "http://localhost:3000/v1/settingsRoom/" +  
+		const response = await fetch("", {
+		method: "GET",
+		credentials: "include",
+		headers: {
+		  "Content-Type": "application/json",
+		},
+		// Enviar el body como un objeto con la clave "room_code"
+		body: JSON.stringify({ room_code: room_code.value }),
+	  });
+
 		window.location.href = `/protected/roomInfo/${data.room.id}`; 
 	  } else {
 		const data = await response.json();
