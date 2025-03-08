@@ -5,7 +5,7 @@
         </div>
         <input 
             type="text" 
-            :value="currentUser" 
+            :value= userName
             disabled 
             class="input input-bordered w-full bg-secondary/10 border-secondary/20" 
         />
@@ -13,6 +13,11 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
-const currentUser = ref('Usuario Actual');
+import { ref, onMounted } from 'vue';
+
+const userName = ref('');
+
+onMounted(() => {
+    userName.value = localStorage.getItem('userName') || 'Usuario';
+});
 </script>
