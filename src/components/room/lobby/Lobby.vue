@@ -139,6 +139,7 @@ provide('username', username);
 }
 
 button {
+  @apply text-accent;
   padding: 0.5rem 1rem;
   margin: 0.5rem;
   font-weight: 700;
@@ -169,7 +170,7 @@ button:hover {
 
 .initiliaze {
   font-weight: 700;
-  @apply bg-primary;
+  @apply bg-primary text-accent;
   border-radius: 30px;
 }
 </style>

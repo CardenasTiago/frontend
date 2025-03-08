@@ -30,7 +30,7 @@ const {
 
 <style>
 .users {
-    @apply text-primary bg-slate-50;
+    @apply text-primary bg-neutral;
     padding: 8px;
     margin: 8px auto;
     /* Auto en los laterales centra el elemento */

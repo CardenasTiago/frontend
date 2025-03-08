@@ -9,7 +9,7 @@ import LogoutButton from "../../components/authentication/LogoutButton.vue";
 <Layout title="Menu">
   <ProtectedRoute client:load>
     <div class="mt-5 place-items-center min-h-fit flex h-screen">
-      <div class="h-fit p-10 main-container bg-white">
+      <div class="h-fit p-10 main-container bg-neutral">
         <h1 class="text-center font-bold">
           <WelcomeMessage client:load />
         </h1>
@@ -43,6 +43,10 @@ import LogoutButton from "../../components/authentication/LogoutButton.vue";
       box-shadow:
         rgba(60, 64, 67, 0.3) 0px 1px 2px 0px,
         rgba(60, 64, 67, 0.15) 0px 2px 6px 2px;
+    }
+
+    button, a{
+      @apply text-accent
     }
   </style>
 </Layout>
