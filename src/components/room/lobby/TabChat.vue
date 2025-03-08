@@ -14,7 +14,7 @@
         <div class="messages">
             <h3>Mensajes:</h3>
             <ul>
-                <li v-for="(msg, index) in messages" :key="index">{{ msg }}</li>
+                <li v-for="(msg, index) in messages" :key="index" class="text-accent">{{ msg }}</li>
             </ul>
         </div>
 
@@ -72,8 +72,7 @@ const sendMessage = () => {
 }
 
 .connected {
-    background-color: #d1fae5;
-    color: #047857;
+    @apply text-success;
 }
 
 .reconnecting {
@@ -87,6 +86,7 @@ const sendMessage = () => {
 }
 
 .messages {
+    @apply text-accent;
     margin-bottom: 1rem;
 }
 
