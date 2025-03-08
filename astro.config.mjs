@@ -9,7 +9,7 @@ import vue from '@astrojs/vue';
 // https://astro.build/config
 export default defineConfig({
     output: 'server',
-    integrations:[react(), tailwind(), vue({appEntrypoint: '/src/pages/_app',})],
+    integrations:[react(), tailwind(), vue({appEntrypoint: '/src/_app',})],
     vite: {
         ssr: {
           noExternal: ['vuetify'],
