@@ -33,7 +33,7 @@ import { useWebSocketStore } from '../stores/socketStore'
 import { storeToRefs } from 'pinia'
 
 const socketStore = useWebSocketStore();
-const { currentProposal } = storeToRefs(socketStore)
+const { currentProposal, socket } = storeToRefs(socketStore)
 
 const selectedIndex = ref(null);
 const error = ref("");
@@ -74,14 +74,15 @@ onMounted(() => {
         clearInterval(timerId);
         timerId = null;
 
-        // Revisar si seleccionaste algo
         if (selectedIndex.value !== null) {
+          socketStore.socket.sendEvents("vote", { option_id:  currentProposal.value.options[selectedIndex.value].id})
           console.log(
             "¡Tiempo agotado! Tu voto fue por:",
             currentProposal.value.options[selectedIndex.value].value
           );
         } else {
           console.log("¡Tiempo agotado! No has seleccionado ninguna opción.");
+          socketStore.socket.sendEvents("vote", { option_id: 0})
         }
       }
     }, 1000);
