@@ -1,7 +1,7 @@
 ---
 import Layout from '../../layouts/Layout.astro';
-import RoomCard from '../../components/RoomCard.astro';
-import BackButton from '../../components/BackButton2.vue';
+import RoomCard from '../../components/room/createRoom/RoomCard.astro';
+import BackButton from '../../components/reusable/BackButton2.vue';
 ---
 
 <Layout title="Crear sala - Suffgo">
@@ -9,16 +9,17 @@ import BackButton from '../../components/BackButton2.vue';
     
     <div class="grid grid-cols-12 gap-6">
       <div class="col-span-12">
-          <div class="bg-base-100 p-8 rounded-lg shadow-lg">
-              <div class="mb-8">
+          <div class="bg-base-100 p-8 rounded-lg shadow-lg  min-h-[400px] flex flex-col justify-center mt-8">
+              <div class="mb-8"> 
                   <BackButton client:load />
               </div>
-    
+
     <div class="text-center mb-12">
-      <h1 class="text-4xl font-bold text-primary mb-4">Crear sala</h1>
+      <h1 class="text-4xl font-bold text-center mb-4">Crear sala</h1>
       <p class="text-accent/80">Selecciona el tipo de sala que deseas crear</p>
     </div>
 
+    <!-- Card para cada tipo de sala -->
     <div class="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
       <RoomCard
         title="Sala formal"

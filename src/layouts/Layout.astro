@@ -1,6 +1,6 @@
 ---
 import "../global.css";
-import Header from "../components/Navbar.astro";
+import Header from "../components/reusable/Navbar.astro";
 import ViewTransitions from "astro/components/ViewTransitions.astro";
 import { fade } from "astro:transitions";
 
@@ -27,8 +27,8 @@ const { title } = Astro.props;
     transition:animate={fade({ duration: "0.7s" })}>
     <div class="px-[160px]">
       <div class="grid grid-cols-12 gap-8">
-        <div class="col-span-12">
-          <Header />
+        <div class="col-span-12 mt-2">
+          <Header/>
         </div>
         <div class="col-span-12">
           <slot />
