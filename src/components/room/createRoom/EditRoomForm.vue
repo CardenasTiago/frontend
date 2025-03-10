@@ -232,7 +232,7 @@ const handleSubmit = async () => {
       window.location.href = `/protected/formalSettingRoom?id=${roomId.value}`;
     } else {
       console.log('Redirigiendo a mis salas');
-      window.location.href = `/protected/roomInfo/rooms`;
+      window.location.href = `/protected/room/${roomId.value}`;
     }
 
   } catch (err) {
