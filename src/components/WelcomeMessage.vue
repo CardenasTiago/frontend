@@ -11,6 +11,6 @@
   const userName = ref('');
   
   onMounted(() => {
-    userName.value = localStorage.getItem('userName') || 'Usuario';
+    userName.value = localStorage.getItem('userName') || 'Usuario';   
   });
   </script>
