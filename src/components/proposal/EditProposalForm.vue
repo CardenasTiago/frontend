@@ -63,7 +63,7 @@
         </label>
       </div>
 
-      <!-- Opciones -->
+
       <div class="space-y-4">
         <div 
           v-for="(option, index) in form.options" 

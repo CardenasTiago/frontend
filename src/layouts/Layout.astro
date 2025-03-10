@@ -25,14 +25,10 @@ const { title } = Astro.props;
   <body
     class=" items-center justify-center"
     transition:animate={fade({ duration: "0.7s" })}>
-    <div class="px-[160px]">
-      <div class="grid grid-cols-12 gap-8">
-        <div class="col-span-12 mt-2">
+    <div class="">
+      <div class="m-4">
           <Header client:load/>
-        </div>
-        <div class="col-span-12">
           <slot />
-        </div>
       </div>
     </div>
   </body>

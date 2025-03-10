@@ -1,4 +1,3 @@
-<!-- src/components/ProtectedRoute.vue -->
 <template>
       <slot v-if="isAuthenticated"></slot>
 </template>
