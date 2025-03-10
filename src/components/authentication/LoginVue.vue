@@ -1,4 +1,3 @@
-<!-- src/components/LoginForm.vue -->
 <template>
   <form @submit.prevent="handleSubmit">
     <div>

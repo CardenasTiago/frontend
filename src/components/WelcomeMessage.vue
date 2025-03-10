@@ -1,4 +1,3 @@
-<!-- src/components/WelcomeMessage.vue -->
 <template>
     <div>
       <h2>¡Bienvenido, {{ userName }}!</h2>

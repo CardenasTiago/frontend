@@ -44,7 +44,7 @@
           <input 
             v-model="form.title"
             type="text"
-            class="input input-bordered w-full bg-secondary/10 border-secondary/20"
+            class="input input-bordered w-full bg-secondary/10"
             required
           />
         </label>
@@ -57,13 +57,13 @@
           </div>
           <textarea 
             v-model="form.description"
-            class="textarea textarea-bordered w-full bg-secondary/10 border-secondary/20 h-32"
+            class="textarea textarea-bordered w-full bg-secondary/10  h-32"
             required
           ></textarea>
         </label>
       </div>
 
-      <!-- Opciones -->
+
       <div class="space-y-4">
         <div 
           v-for="(option, index) in form.options" 
