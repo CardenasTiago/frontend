@@ -47,7 +47,7 @@
               placeholder="Agregue una descripción"
               required
               minlength="5"
-              maxlength="500"
+              maxlength="255"
               @input="validateForm"
             ></textarea>
             <div v-if="descriptionError" class="label">
@@ -107,8 +107,8 @@ const validateForm = () => {
   // Validar descripción
   if (form.value.description.length < 5) {
     descriptionError.value = 'La descripción debe tener al menos 10 caracteres';
-  } else if (form.value.description.length > 500) {
-    descriptionError.value = 'La descripción no puede exceder los 500 caracteres';
+  } else if (form.value.description.length > 255) {
+    descriptionError.value = 'La descripción no puede exceder los 255 caracteres';
   } else {
     descriptionError.value = '';
   }
@@ -119,7 +119,7 @@ const isFormValid = computed(() => {
           form.value.name.length <= 50 &&
           /^[a-zA-Z0-9\s]+$/.test(form.value.name) &&
           form.value.description.length >= 5 &&
-          form.value.description.length <= 500 &&
+          form.value.description.length <= 255 &&
           !nameError.value &&
           !descriptionError.value;
 });

@@ -91,7 +91,7 @@
           v-model.number="form.voterLimit"
           type="number"
           min="2"
-          max="500"
+          max="255"
           class="input input-bordered w-full bg-secondary/10 border-secondary/20 h-12 text-lg"
           required
         />
@@ -187,8 +187,8 @@ const validateForm = () => {
     throw new Error('El quórum debe estar entre 1 y 100%');
   }
 
-  if (form.value.voterLimit < 2 || form.value.voterLimit > 500) {
-    throw new Error('El límite de votantes debe estar entre 2 y 500');
+  if (form.value.voterLimit < 2 || form.value.voterLimit > 255) {
+    throw new Error('El límite de votantes debe estar entre 2 y 255');
   }
 
   const selectedDateTime = new Date(`${form.value.date}T${form.value.time}`);
