@@ -6,8 +6,8 @@
                   
             <div class="card-body p-2 lg:p-3 lg:w-2/3">
               <p class=" text-secondary sm:text-xs sm:font-bold lg:text-sm lg:font-normal">{{ sala.estado }}</p>
-                <h2 class="card-title text-accent opacity-80">{{ sala.nombre || "cargando"}}</h2>
-              <p class="sm:text-xs text-accent opacity-60 lg:text-sm">{{ sala.description }}</p>
+                <h2 class="card-title text-accent opacity-80 ">{{ sala.nombre || "cargando"}}</h2>
+              <p class="sm:text-xs text-accent opacity-60 lg:text-sm hidden sm:block">{{ sala.description }}</p>
               
               <div class="flex justify-end  ">
                                
@@ -47,12 +47,15 @@
             </div>
 
 
-            <figure class="sm:h-full sm:min-h-48 sm:max-h-64 flex ">
-              <img
-                class="rounded-[15px]"
-                :src="sala.imagen  || defaultImage"
-                alt="Foto de la sala" />
-            </figure>        
+            
+              <div class="lg:w-44 lg:h-41 w-32 h-41  rounded-lg flex-shrink-0 overflow-hidden">
+                <img
+                  class="w-full h-full flex items-center justify-center"
+                  :src="sala.imagen  || defaultImage"
+                  alt="Imagen de la sala" />
+              </div>
+  
+    
 
          
 

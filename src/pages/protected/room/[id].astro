@@ -2,7 +2,7 @@
 import CardRoom from '../../../components/room/CardRoom.vue';
 import ProtectedRoute from '../../../components/authentication/ProtectedRoute.vue';
 import Layout from '../../../layouts/Layout.astro';
-//import Header from '../../../components/NavBar.vue';
+
 
 
 const { id } = Astro.params;
@@ -13,11 +13,9 @@ const { id } = Astro.params;
     <ProtectedRoute client:load>
 
 
-        <main class="max-w-6xl mx-auto p-4 bg-base-100 min-h-screen">
-            <!-- <Header client:load /> -->
+        <main class="max-w-6xl mx-auto p-4 bg-base-100 min-h-screen">           
             
-            <CardRoom client:load id={id} />
-            
+            <CardRoom client:load id={id} />            
         
         </main>
     </ProtectedRoute>
