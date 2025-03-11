@@ -1,4 +1,3 @@
-<!-- src/components/LoginForm.vue -->
 <template>
   <form @submit.prevent="handleSubmit">
     <div>
@@ -86,7 +85,7 @@ const handleSubmit = async () => {
     if (response.ok) {
       const data = await response.json();
       const userName = data.user.name;
-      localStorage.setItem("userName", userName);
+      localStorage.setItem("userName", userName);      
       window.location.href = "/protected/menu"; // Redirige al menú principal
     } else {
       const data = await response.json();

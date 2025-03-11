@@ -1,7 +1,5 @@
 ---
 import Layout from "../../layouts/Layout.astro";
-import LoginForm from "../../components/authentication/LoginForm.jsx";
-import LoginFormVue from "../../components/authentication/LoginVue.vue";
 import RegisterForm from "../../components/authentication/RegisterForm.vue";
 ---
 
@@ -10,7 +8,6 @@ import RegisterForm from "../../components/authentication/RegisterForm.vue";
     <div class="h-fit p-10 main-container bg-base-100">
       <h1 class="text-center font-bold">Bienvenido a Suffgo</h1>
       <div class="text-center items-center mt-10">
-        <!-- <LoginForm client:load /> -->
         <RegisterForm client:load/>
       </div>
     </div>
@@ -23,4 +20,3 @@ import RegisterForm from "../../components/authentication/RegisterForm.vue";
     box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 2px 6px 2px;
   }
 </style>
-

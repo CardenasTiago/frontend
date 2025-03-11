@@ -1,8 +1,8 @@
 <template>
     <div class="w-full">
-        <ul class="users flex justify-between font-semibold " v-for="client in clients" :key="client">
+        <ul class="users flex justify-between font-semibold " v-for="client in userList" :key="client">
             <li class="text-start">
-                {{ client }} 
+                {{ client }}
             </li>
             <li class="text-end">
                 <span class="status">en línea</span>
@@ -14,24 +14,28 @@
 </template>
 
 <script setup>
-import { defineProps } from 'vue'
+import { ref, defineProps, onMounted } from 'vue';
+import { useWebSocketStore } from '../stores/socketStore';
+import { storeToRefs } from 'pinia'
+
+const socketStore = useWebSocketStore();
+const { 
+  userList 
+} = storeToRefs(socketStore)
+
 
 // Definimos las props que recibirá este componente
-const props = defineProps({
-    clients: {
-        type: Array,
-        default: () => []
-    }
-})
+
 </script>
 
 <style>
 .users {
-    @apply text-primary bg-slate-50;
+    @apply text-primary bg-neutral;
     padding: 8px;
-    margin: 8px auto; /* Auto en los laterales centra el elemento */
+    margin: 8px auto;
+    /* Auto en los laterales centra el elemento */
     box-shadow: rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px;
-    border-radius: 10px; 
+    border-radius: 10px;
     max-width: 500px;
 }
 

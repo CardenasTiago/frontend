@@ -1,4 +1,3 @@
-<!-- src/components/AuthCheck.vue -->
 <template>
     <div v-if="isAuthenticated === true">
       <slot></slot>

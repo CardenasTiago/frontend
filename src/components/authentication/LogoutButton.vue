@@ -1,4 +1,3 @@
-<!-- src/components/LogoutButton.vue -->
 <template>
     <button @click="handleLogout" class="btn btn-primary">Cerrar Sesión</button>
   </template>
