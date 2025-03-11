@@ -18,7 +18,6 @@
       <span>{{ error }}</span>
     </div>
     
-    <!-- Listado de propuestas -->
     <div v-else class="bg-secondary/20 rounded-lg p-4 space-y-2">
       <div 
         v-for="proposal in proposals" 
@@ -51,7 +50,6 @@
       </div>
     </div>
 
-    <!-- Modal de confirmación -->
     <dialog ref="deleteModal" class="modal">
       <div class="modal-box">
         <h3 class="font-bold text-lg text-error">¿Eliminar propuesta?</h3>
