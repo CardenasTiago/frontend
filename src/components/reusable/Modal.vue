@@ -25,9 +25,11 @@
                     </div>
                   </div>
                 </div>
-                <div class="bg-gray-50 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
-                  <button type="button" class="inline-flex w-full justify-center rounded-md bg-primary px-3 py-2 text-sm font-semibold text-white shadow-xs hover:bg-error sm:ml-3 sm:w-auto" @click="confirmAction">{{ confirmText }}</button>
-                  <button type="button" class="mt-3 inline-flex w-full justify-center rounded-md bg-neutral px-3 py-2 text-sm font-semibold text-gray-900 ring-1 shadow-xs ring-gray-300 ring-inset hover:bg-gray-50 sm:mt-0 sm:w-auto" @click="handleClose" ref="cancelButtonRef">{{ cancelText }}</button>
+                  <div class="bg-gray-50 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
+                    <!-- Botón Confirmar con estilo y condicional -->
+                    <button v-if="confirmText" type="button" class="inline-flex w-full justify-center rounded-md bg-primary px-3 py-2 text-sm font-semibold text-white shadow-xs hover:bg-error sm:ml-3 sm:w-auto" @click="confirmAction">{{ confirmText }}</button>
+                    <!-- Botón Cancelar con estilo y condicional -->
+                    <button v-if="cancelText" type="button" class="mt-3 inline-flex w-full justify-center rounded-md bg-neutral px-3 py-2 text-sm font-semibold text-gray-900 ring-1 shadow-xs ring-gray-300 ring-inset hover:bg-gray-50 sm:mt-0 sm:w-auto" @click="handleClose" ref="cancelButtonRef">{{ cancelText }}</button>
                 </div>
               </DialogPanel>
             </TransitionChild>
@@ -46,9 +48,9 @@
       modelValue: Boolean,
       title: { type: String, default: "Confirmar acción" },
       message: { type: String, default: "¿Estás seguro de que quieres continuar?"},
-      confirmText: { type: String, default: "Aceptar" },
-      cancelText: { type: String, default: "Cancelar" },
-      confirmAction: { type: Function, required: true } // Acción a ejecutar cuando se confirme
+      confirmText: { type: String},
+      cancelText: { type: String},
+      confirmAction: { type: Function} // Acción a ejecutar cuando se confirme
     })
   
     const emit = defineEmits(['update:modelValue'])
@@ -58,9 +60,9 @@
     }
   
     const handleConfirm = () => {
-      // Aquí ejecutamos la función confirmAction pasada como prop
-      if (confirmAction) {
-        confirmAction();  
+      
+      if (props.confirmAction) {
+        props.confirmAction();
       }
       emit('update:modelValue', false);  // Cierra el modal
     };
