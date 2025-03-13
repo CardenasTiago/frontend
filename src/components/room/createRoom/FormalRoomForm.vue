@@ -237,7 +237,7 @@ const handleSubmit = async () => {
     }
 
     // Redireccionar a la página de mis salas
-    window.location.href = `/protected/roomInfo/rooms`;
+    window.location.href = `/protected/myRooms`;
 
   } catch (err) {
     error.value = err.message || 'Error al guardar la configuración de la sala';

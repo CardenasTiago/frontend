@@ -35,8 +35,7 @@
 
 
   // Función para abrir el modal con la sala seleccionada
-    const openModal = (room) => {       
-        console.log(room);
+    const openModal = (room) => {  
         roomDelete.value=room;
         isModalOpen.value = true;
     };

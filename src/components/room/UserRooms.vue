@@ -39,7 +39,10 @@
                 <div class="absolute top-center left-0 h-36 w-px bg-accent opacity-30 "></div>
                 <p class="  text-accent opacity-60 ">{{ new Date(sala.startTime).toLocaleString('default', { month: 'long' }) }}</p>
                 <h2 class="m-3 text-accent opacity-80 lg:text-4xl" >{{ new Date(sala.startTime).getDate() }}</h2>
-                <p class="text-accent opacity-60">{{ new Date(sala.startTime).toLocaleString('default', { hour: '2-digit', minute: '2-digit', hour12: false }) }}</p>
+                <p class="text-accent opacity-60">
+                  {{ new Date(sala.startTime).toLocaleString('default', { hour: '2-digit', minute: '2-digit', hour12: false }) }}
+                </p>
+
                                 
             </div>
             <div v-else class="hidden lg:flex flex-col justify-center items-center lg:w-1/3 p-3 relative">                
