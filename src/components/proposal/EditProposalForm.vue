@@ -46,7 +46,13 @@
             type="text"
             class="input input-bordered w-full bg-secondary/10"
             required
+            maxlength="255"
+            @input="validateTitle"
           />
+          <div class="label">
+            <span class="label-text-alt text-accent/60">{{ form.title.length }}/255 caracteres</span>
+            <span v-if="titleError" class="label-text-alt text-error">{{ titleError }}</span>
+          </div>
         </label>
       </div>
 
@@ -59,7 +65,13 @@
             v-model="form.description"
             class="textarea textarea-bordered w-full bg-secondary/10  h-32"
             required
+            maxlength="255"
+            @input="validateDescription"
           ></textarea>
+          <div class="label">
+            <span class="label-text-alt text-accent/60">{{ form.description.length }}/255 caracteres</span>
+            <span v-if="descriptionError" class="label-text-alt text-error">{{ descriptionError }}</span>
+          </div>
         </label>
       </div>
 
@@ -136,8 +148,30 @@ const error = ref(null);
 const loading = ref(true);
 const proposalId = ref(null);
 const roomId = ref(null);
+const descriptionError = ref('');
+const titleError = ref('');
 
 const isEditing = computed(() => !!proposalId.value);
+
+const isFormValid = computed(() => {
+  return form.value.title.length <= 255 && form.value.description <= 255 && !titleError.value && !descriptionError.value;
+});
+
+const validateTitle = () => {
+  if (form.value.title.length > 255) {
+    titleError.value = 'El título no puede exceder los 255 caracteres';
+  } else {
+    titleError.value = '';
+  }
+};
+
+const validateDescription = () => {
+  if (form.value.description.length > 255) {
+    descriptionError.value = 'La descripción no puede exceder los 255 caracteres';
+  } else {
+    descriptionError.value = '';
+  }
+};
 
 const addOption = () => {
   if (form.value.options.length < 5) {
@@ -197,6 +231,10 @@ const handleSubmit = async () => {
       return;
     }
 
+    if (!isFormValid.value){
+      error.value = 'Por favor, corrige los errores del formulario antes de guardar';
+      return
+    }
     isSubmitting.value = true;
     error.value = null;
 

@@ -26,11 +26,12 @@
               class="input input-bordered w-full bg-secondary/10 border-secondary/20 h-12 text-lg" 
               required
               minlength="3"
-              maxlength="50"
+              maxlength="255"
               @input="validateForm"
             />
-            <div v-if="nameError" class="label">
-              <span class="label-text-alt text-error">{{ nameError }}</span>
+            <div class="label">
+              <span class=" label-text-alt text-accent/60">{{ form.name.length }}/255 caracteres</span>
+              <span v-if="titleError" class="label-text-alt text-error">{{ nameError }}</span>
             </div>
           </label>
         </div>
@@ -50,8 +51,9 @@
               maxlength="255"
               @input="validateForm"
             ></textarea>
-            <div v-if="descriptionError" class="label">
-              <span class="label-text-alt text-error">{{ descriptionError }}</span>
+            <div class="label">
+              <span class="label-text-alt text-accent/60">{{ form.description.length }}/255 caracteres</span>
+              <span v-if="descriptionError" class="label-text-alt text-error">{{ descriptionError }}</span>
             </div>
           </label>
         </div>
@@ -96,8 +98,8 @@ const validateForm = () => {
   // Validar nombre
   if (form.value.name.length < 3) {
     nameError.value = 'El nombre debe tener al menos 3 caracteres';
-  } else if (form.value.name.length > 50) {
-    nameError.value = 'El nombre no puede exceder los 50 caracteres';
+  } else if (form.value.name.length > 255) {
+    nameError.value = 'El nombre no puede exceder los 255 caracteres';
   } else if (!/^[a-zA-Z0-9\s]+$/.test(form.value.name)) {
     nameError.value = 'El nombre solo puede contener letras, números y espacios';
   } else {
@@ -116,7 +118,7 @@ const validateForm = () => {
 
 const isFormValid = computed(() => {
   return form.value.name.length >= 3 &&
-          form.value.name.length <= 50 &&
+          form.value.name.length <= 255 &&
           /^[a-zA-Z0-9\s]+$/.test(form.value.name) &&
           form.value.description.length >= 5 &&
           form.value.description.length <= 255 &&
