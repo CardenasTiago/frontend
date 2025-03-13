@@ -23,8 +23,8 @@
                             <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
                         </svg>
                     </label>
-                    <li><a href="/mis-salas" class="text-m font-bold text-primary">Mis salas</a></li>
-                    <li><a href="mi-perfil" class="text-m font-bold text-primary">Mi perfil</a></li>
+                    <li><a href="/protected/myRooms" class="text-m font-bold text-primary">Mis salas</a></li>
+                    <li><a href="/protected/profile" class="text-m font-bold text-primary">Mi perfil</a></li>
                 </ul>
             </nav>
         </div>
