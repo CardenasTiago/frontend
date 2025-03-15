@@ -1,13 +1,9 @@
 <template>
     
-    <div v-if="sala" class="bg-base-100 rounded-lg shadow-lg mt-3 relative z-10">
+    <div v-if="sala" class="bg-neutral rounded-lg shadow-lg mt-3 relative z-10">
         <div class="relative flex items-center justify-center">
-            <div class="absolute top-0 left-0 hidden sm:block">
-                <a href="../myRooms" class="btn btn-secondary btn-md ">
-                    <svg width="20" height="20" viewBox="0 0 34 34" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M31.727 17H2.50635M2.50635 17L17.1167 31.5833M2.50635 17L17.1167 2.41663" stroke="black" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
-                        </svg>
-                </a>
+            <div class="absolute top-0 left-0 hidden sm:block p-4">
+                <BackButton/>
             </div>
 
 
@@ -48,7 +44,7 @@
                     class="input input-primary lg:text-xl text-xs font-semibold text-center"               
                 />
                 <button @click="isEditing ? updateRoom() : toggleEdit()":class="{
-                                            ' bg-primary text-neutral btn btn-sm': true,  
+                                            ' bg-primary text-neutral btn btn-sm ': true,  
                                             'btn-circle': !isEditing,  
                                             'px-4 py-2 rounded-lg': isEditing  
                                             }">           
@@ -80,7 +76,17 @@
                         <div class="">
                             <h2>Fecha y hora programada</h2>
                             
-                                <h2 class="text-primary font-bold">{{ sala.room.start_time }}    </h2>                                
+                                   <!-- Mostrar la fecha solo si startTime es válido -->
+                                    <h2 v-if="sala.room.start_time" class="text-primary font-bold">
+                                        {{ new Date(sala.room.start_time).toLocaleDateString('default', { month: 'long' }) }} 
+                                        {{ new Date(sala.room.start_time).toLocaleDateString('default', { day: 'numeric' }) }},
+                                        {{ new Date(sala.room.start_time).toLocaleDateString('default', { year: 'numeric' }) }}
+                                    </h2>
+                                    
+                                    <!-- Mostrar la hora solo si startTime es válido -->
+                                    <h2 v-if="sala.room.start_time" class="text-primary font-bold">
+                                        {{ new Date(sala.room.start_time).toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit', hour12: false }) }}
+                                    </h2>                                                   
                                 
                         </div>          
                     
@@ -106,9 +112,9 @@
 
                         </div>
                         <div class="w-full flex  p-2 mt-2 justify-center gap-8 ">
-                            <a href="" class="btn btn-secondary btn-sm w-auto lg:w-56">
-                                <p class="text-neutral">Empezar Sala</p>
-                            </a>
+                            <!-- <a href="" class="btn btn-secondary btn-sm w-auto lg:w-56"> -->
+                                <!-- <p class="text-neutral">Empezar Sala</p> -->
+                            <!-- </a> -->
                             <a @click="openDeleteModal"  class="btn btn-primary btn-sm lg:hidden ">
                                 ELiminar
                             </a>
@@ -144,6 +150,7 @@
 <script setup>
 import { ref, onMounted,onUnmounted } from "vue";
 import DeleteRoom from "../room/deleteRoom/DeleteRoom.vue";
+import BackButton from "../reusable/BackButton2.vue";
 
 
 const props = defineProps({
@@ -172,7 +179,8 @@ if (!response.ok) {
 }
 
 sala.value = await response.json();
-console.log("recibi los datos de ", sala.value);
+localStorage.setItem("currentRoom", JSON.stringify(sala.value));
+
 } catch (err) {
 error.value = err.message;
 }

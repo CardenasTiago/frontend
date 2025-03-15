@@ -1,10 +1,13 @@
-<template>     
-    <div v-for="(sala, index) in salas" :key="index" class="container mx-auto px-4  mt-8 max-w-screen-md">
+<template> 
+  <BackButton/> 
+
+    <div v-for="(sala, index) in paginatedSalas" :key="index" class="container mx-auto px-4  mt-8 max-w-screen-md bg-neutral rounded-lg">
+      
       <a :href= "`/protected/room/${sala.id}`" @click="handleCardClick" >  
         
-        <div class="card card-side bg-white flex items-stretch min-h-[150px] hover:shadow-lg hover:-translate-y-1 transition duration-300 ">        
+        <div class="card card-side bg-neutral flex items-stretch min-h-[150px] hover:shadow-lg hover:-translate-y-1 transition duration-300 border-2 border-secondary/30 ">        
                   
-            <div class="card-body p-2 lg:p-3 lg:w-2/3">
+            <div class="card-body p-2 lg:p-3 lg:w-2/3 " >
               <p class=" text-secondary sm:text-xs sm:font-bold lg:text-sm lg:font-normal">{{ sala.state }}</p>
                 <h2 class="card-title text-accent opacity-80 ">{{ sala.room_title || "cargando"}}</h2>
               <p class="sm:text-xs text-accent opacity-60 lg:text-sm hidden sm:block">{{ sala.description }}</p>
@@ -37,10 +40,12 @@
 
             <div v-if="sala.startTime" class="hidden lg:flex flex-col justify-center items-center lg:w-1/3 p-3 relative ">
                 <div class="absolute top-center left-0 h-36 w-px bg-accent opacity-30 "></div>
-                <p class="  text-accent opacity-60 ">{{ new Date(sala.startTime).toLocaleString('default', { month: 'long' }) }}</p>
-                <h2 class="m-3 text-accent opacity-80 lg:text-4xl" >{{ new Date(sala.startTime).getDate() }}</h2>
+                <p class="  text-accent opacity-60 ">{{sala.startTime.toLocaleString('default', { month: 'long' }) }}</p>
+                <h2 class="m-3 text-accent opacity-80 lg:text-4xl" >{{sala.startTime.getDate() }}</h2>
                 <p class="text-accent opacity-60">
-                  {{ new Date(sala.startTime).toLocaleString('default', { hour: '2-digit', minute: '2-digit', hour12: false }) }}
+                  <span v-if="sala.startTime">
+                              {{ sala.startTime.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit', hour12: false }) }}
+                            </span>
                 </p>
 
                                 
@@ -66,6 +71,28 @@
          </div>
         </a>    
         </div>
+        <!-- Paginador -->
+      <div class="join flex justify-center mt-2">
+        <button 
+          class="join-item btn bg-secondary"
+          :disabled="currentPage === 1"
+          @click="previousPage"
+        >
+          «
+        </button>
+
+        <button class="join-item btn bg-secondary">
+          Page {{ currentPage }}
+        </button>
+
+        <button 
+          class="join-item btn bg-secondary"
+          :disabled="currentPage === totalPages"
+          @click="nextPage"
+        >
+          »
+        </button>
+      </div>
 
         <!-- Insertamos el componente DeleteRoom -->
         <DeleteRoom ref="deleteRoomRef" />
@@ -73,13 +100,41 @@
 </template>
 
 <script setup>
-  import { ref, onMounted } from 'vue' 
+  import { ref, onMounted,computed } from 'vue' 
   import DeleteRoom from "../room/deleteRoom/DeleteRoom.vue";
+  import BackButton from "../reusable/BackButton2.vue"
   
 
-   const salas = ref([]); 
-   const defaultImage = ""; // Imagen por defecto 
-   const deleteRoomRef = ref(null);  // Referencia para el componente DeleteRoom
+  const salas = ref([]); 
+  const defaultImage = "/images/foto.png"; // Imagen por defecto 
+  const deleteRoomRef = ref(null);  // Referencia para el componente DeleteRoom
+
+
+   // Estado de la paginación
+  const currentPage = ref(1);
+  const itemsPerPage = 3; // Número de elementos por página
+
+  // Computed properties para calcular el total de páginas y la lista de elementos por página
+  const totalPages = computed(() => Math.ceil(salas.value.length / itemsPerPage));
+
+  const paginatedSalas = computed(() => {
+    const start = (currentPage.value - 1) * itemsPerPage;
+    const end = start + itemsPerPage;
+    return salas.value.slice(start, end);
+  });
+
+  // Funciones para cambiar de página
+  const nextPage = () => {
+    if (currentPage.value < totalPages.value) {
+      currentPage.value++;
+    }
+  };
+
+  const previousPage = () => {
+    if (currentPage.value > 1) {
+      currentPage.value--;
+    }
+  };
 
 
       // Esta función se ejecuta solo cuando se hace clic en la tarjeta
@@ -116,7 +171,7 @@
       description: item.description || 'sala sin descripción',
       startTime: item.start_time ? new Date(item.start_time) : null,      
       
-    }));   
+    })).reverse();   
 
   } 
 
@@ -128,19 +183,19 @@
 
 
 
-// Llamamos a la función del componente hijo cuando se hace clic en el botón "Eliminar"
-const openDeleteModal = (sala) => {
-  // Usamos la referencia para llamar al método 'openModal' en el hijo
-  deleteRoomRef.value.openModal(sala);
-};
+  // Llamamos a la función del componente hijo cuando se hace clic en el botón "Eliminar"
+  const openDeleteModal = (sala) => {
+    // Usamos la referencia para llamar al método 'openModal' en el hijo
+    deleteRoomRef.value.openModal(sala);
+  };
 
 
 
 
 
-onMounted(() => {
-  obtenerDatosSala();
-});
+  onMounted(() => {
+    obtenerDatosSala();
+  });
 
 
 </script>

@@ -7,25 +7,24 @@ import UserRoom from "../../components/room/UserRooms.vue"
 ---
 
 
-<Layout title="rooms">
-    <main class="max-w-6xl mx-auto p-4 bg-base-100 min-h-screen">
+<Layout title="rooms">    
         <ProtectedRoute client:load>          
 
-                <div class="hidden lg:flex justify-center items-center gab-x-10 sm:gap-x-4">
+                <!-- <div class="hidden lg:flex justify-center items-center gab-x-10 sm:gap-x-4"> -->
                     <!-- Pestaña izquierda -->
-                    <button class="text-primary font-bold text-lg p-8 ">Salas en las que participó</button>
+                    <!-- <button class="text-primary font-bold text-lg p-8 ">Salas en las que participó</button> -->
                     
                     <!-- Separador -->
-                    <div class="w-[2px] h-6 bg-gray-400"></div>
+                    <!-- <div class="w-[2px] h-6 bg-gray-400"></div> -->
                 
                     <!-- Pestaña derecha -->
-                    <button class="text-primary font-bold text-lg p-8">Salas creadas</button>
-                </div>
+                    <!-- <button class="text-primary font-bold text-lg p-8">Salas creadas</button> -->
+                <!-- </div> -->
 
 
             <UserRoom client:load/> 
         </ProtectedRoute>
-     </main>   
+    
 </Layout>
 
 <style>
