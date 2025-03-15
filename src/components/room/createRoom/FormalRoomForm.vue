@@ -236,8 +236,8 @@ const handleSubmit = async () => {
       throw new Error(data.error || data.message || `Error del servidor: ${response.status}`);
     }
 
-    // Redireccionar a la página de mis salas
-    window.location.href = `/protected/roomInfo/rooms`;
+    // Redireccionar a la página de la sala
+    window.location.href = `/protected/room/${roomId.value}`;
 
   } catch (err) {
     error.value = err.message || 'Error al guardar la configuración de la sala';
@@ -260,7 +260,7 @@ onMounted(async () => {
     // Establece valores por defecto
     form.value.date = minDate.value;
     const now = new Date();
-    now.setHours(now.getHours() + 1);
+    now.setHours(now.getHours());
     form.value.time = now.toTimeString().slice(0, 5);
 
     // Intenta obtener la configuración existente
