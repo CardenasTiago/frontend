@@ -236,8 +236,8 @@ const handleSubmit = async () => {
       throw new Error(data.error || data.message || `Error del servidor: ${response.status}`);
     }
 
-    // Redireccionar a la página de la sala
-    window.location.href = `/protected/room/${roomId.value}`;
+    // Redireccionar a la página de mis salas
+    window.location.href = `/protected/myRooms`;
 
   } catch (err) {
     error.value = err.message || 'Error al guardar la configuración de la sala';
