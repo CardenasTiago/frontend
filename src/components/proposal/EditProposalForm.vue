@@ -1,5 +1,5 @@
 <template>
-  <div class="bg-base-100 p-8 rounded-xl shadow-lg">
+  <div class="bg-white p-8 rounded-xl shadow-lg">
     <div class="flex justify-between items-center mb-6">
       <BackButton />
       <div class="dropdown dropdown-end">
@@ -44,10 +44,10 @@
           <input 
             v-model="form.title"
             type="text"
-            class="input input-bordered w-full bg-secondary/10"
+            class="input input-bordered w-full bg-secondary/10 border-secondary/20"
             required
             maxlength="255"
-            @input="validateTitle"
+            @input="validateForm"
           />
           <div class="label">
             <span class="label-text-alt text-accent/60">{{ form.title.length }}/255 caracteres</span>
@@ -63,10 +63,10 @@
           </div>
           <textarea 
             v-model="form.description"
-            class="textarea textarea-bordered w-full bg-secondary/10  h-32"
+            class="textarea textarea-bordered w-full bg-secondary/10 border-secondary/20 h-32"
             required
             maxlength="255"
-            @input="validateDescription"
+            @input="validateForm"
           ></textarea>
           <div class="label">
             <span class="label-text-alt text-accent/60">{{ form.description.length }}/255 caracteres</span>
@@ -75,7 +75,7 @@
         </label>
       </div>
 
-
+      <!-- Opciones -->
       <div class="space-y-4">
         <div 
           v-for="(option, index) in form.options" 
@@ -86,9 +86,17 @@
             v-model="option.value"
             type="text"
             :placeholder="`Opción ${index + 1}`"
-            class="input input-bordered w-full bg-primary text-white placeholder-white/70 pr-10"
+            class="input input-bordered w-full"
+            :class="[
+              'bg-primary text-white placeholder-white/70 pr-10',
+              optionErrors[index] ? 'border-error' : ''
+            ]"
             required
+            @input="validateOptions"
           />
+          <div v-if="optionErrors[index]" class="text-error text-sm mt-1">
+            {{ optionErrors[index] }}
+          </div>
           <button 
             v-if="form.options.length > 2"
             type="button"
@@ -114,7 +122,7 @@
       <button 
         type="submit" 
         class="btn w-full bg-primary hover:bg-primary/90 text-white"
-        :disabled="isSubmitting || !roomId || form.options.length < 2"
+        :disabled="isSubmitting || !isFormValid"
       >
         {{ isSubmitting ? 'Guardando...' : (isEditing ? 'Guardar cambios' : 'Crear propuesta') }}
       </button>
@@ -131,7 +139,7 @@
 
 <script setup>
 import { ref, onMounted, computed } from 'vue';
-import BackButton from '../../components/reusable/BackButton2.vue';
+import BackButton from '../reusable/BackButton2.vue';
 
 const form = ref({
   title: '',
@@ -150,38 +158,75 @@ const proposalId = ref(null);
 const roomId = ref(null);
 const descriptionError = ref('');
 const titleError = ref('');
+const optionErrors = ref([]);
 
 const isEditing = computed(() => !!proposalId.value);
 
-const isFormValid = computed(() => {
-  return form.value.title.length <= 255 && form.value.description <= 255 && !titleError.value && !descriptionError.value;
-});
+const validateOptions = () => {
+  optionErrors.value = Array(form.value.options.length).fill('');
+  
+  // Verificamos que no haya opciones duplicadas
+  const values = form.value.options.map(opt => opt.value.trim().toLowerCase());
+  const duplicates = new Set();
+  
+  values.forEach((value, index) => {
+    if (value === '') {
+      optionErrors.value[index] = 'La opción no puede estar vacía';
+      return;
+    }
+    
+    const firstIndex = values.indexOf(value);
+    if (firstIndex !== index) {
+      duplicates.add(value);
+      optionErrors.value[firstIndex] = 'Opción duplicada';
+      optionErrors.value[index] = 'Opción duplicada';
+    }
+  });
+};
 
-const validateTitle = () => {
+const validateForm = () => {
+  // Validar título
   if (form.value.title.length > 255) {
     titleError.value = 'El título no puede exceder los 255 caracteres';
   } else {
     titleError.value = '';
   }
-};
 
-const validateDescription = () => {
+  // Validar descripción
   if (form.value.description.length > 255) {
     descriptionError.value = 'La descripción no puede exceder los 255 caracteres';
   } else {
     descriptionError.value = '';
   }
+
+  // Validar opciones
+  validateOptions();
 };
+
+const isFormValid = computed(() => {
+  return form.value.title.length > 0 &&
+          form.value.title.length <= 255 &&
+          form.value.description.length <= 255 &&
+          form.value.options.length >= 2 &&
+          form.value.options.every(option => option.value.trim() !== '') &&
+          !titleError.value &&
+          !descriptionError.value &&
+          !optionErrors.value.some(error => error !== '') &&
+          roomId.value;
+});
 
 const addOption = () => {
   if (form.value.options.length < 5) {
     form.value.options.push({ value: '' });
+    optionErrors.value.push('');
   }
 };
 
 const removeOption = (index) => {
   if (form.value.options.length > 2) {
     form.value.options.splice(index, 1);
+    optionErrors.value.splice(index, 1);
+    validateOptions();
   }
 };
 
@@ -201,16 +246,19 @@ const fetchProposal = async () => {
     form.value.archive = data.archive || null;
 
     // Obtener las opciones de la propuesta
-    const optionsResponse = await fetch(`http://localhost:3000/v1/options/proposal/${proposalId.value}`, {
+    const optionsResponse = await fetch(`http://localhost:3000/v1/options/byProposal/${proposalId.value}`, {
       credentials: 'include'
     });
 
     if (optionsResponse.ok) {
       const optionsData = await optionsResponse.json();
-      if (Array.isArray(optionsData) && optionsData.length > 0) {
-        form.value.options = optionsData.map(option => ({ value: option.value }));
+      if (Array.isArray(optionsData.options)) {
+        form.value.options = optionsData.options.map(option => ({ value: option.value }));
+        optionErrors.value = Array(form.value.options.length).fill('');
       }
     }
+
+    validateForm();
   } catch (err) {
     error.value = err.message;
     console.error('Error:', err);
@@ -221,29 +269,26 @@ const fetchProposal = async () => {
 
 const handleSubmit = async () => {
   try {
-    if (!roomId.value) {
-      error.value = 'No se encontró el ID de la sala';
+    if (!isFormValid.value) {
+      error.value = 'Por favor, verifica todos los campos del formulario';
       return;
     }
 
-    if (form.value.options.length < 2) {
-      error.value = 'Se requieren al menos 2 opciones';
-      return;
-    }
-
-    if (!isFormValid.value){
-      error.value = 'Por favor, corrige los errores del formulario antes de guardar';
-      return
-    }
     isSubmitting.value = true;
     error.value = null;
 
+    // Verificar que el roomId sea un número
+    const roomIdNumber = parseInt(roomId.value, 10);
+    if (isNaN(roomIdNumber)) {
+      throw new Error('ID de sala inválido');
+    }
+
     // Crear la propuesta
     const proposalPayload = {
-      title: form.value.title,
-      description: form.value.description || '',
+      title: form.value.title.trim(),
+      description: form.value.description.trim(),
       archive: form.value.archive || '',
-      room_id: parseInt(roomId.value)
+      room_id: roomIdNumber 
     };
 
     let method = 'POST';
@@ -264,29 +309,68 @@ const handleSubmit = async () => {
     });
 
     if (!proposalResponse.ok) {
-      const errorData = await proposalResponse.json();
-      throw new Error(errorData.error || 'Error al guardar la propuesta');
+      const errorText = await proposalResponse.text();
+      let errorMessage;
+      try {
+        const errorData = JSON.parse(errorText);
+        errorMessage = errorData.error || 'Error al guardar la propuesta';
+      } catch {
+        errorMessage = errorText || `Error del servidor: ${proposalResponse.status}`;
+      }
+      throw new Error(errorMessage);
     }
 
-    const proposalResult = await proposalResponse.json();
-    const newProposalId = isEditing.value ? proposalId.value : proposalResult.proposal.id;
+    const proposalText = await proposalResponse.text();
+    let proposalResult;
+    try {
+      proposalResult = proposalText ? JSON.parse(proposalText) : null;
+    } catch {
+      throw new Error('Error al procesar la respuesta del servidor');
+    }
 
-    // Si estamos editando, primero eliminamos las opciones existentes
+
+    const newProposalId = isEditing.value ? 
+      parseInt(proposalId.value, 10) : 
+      (proposalResult?.proposal?.id ? parseInt(proposalResult.proposal.id, 10) : null);
+
+    if (!newProposalId || isNaN(newProposalId)) {
+      throw new Error('No se pudo obtener el ID de la propuesta');
+    }
+
+    // Si estamos editando, primero eliminamos las opciones existentes una por una
     if (isEditing.value) {
-      const deleteOptionsResponse = await fetch(`http://localhost:3000/v1/options/proposal/${proposalId.value}`, {
-        method: 'DELETE',
+      const existingOptionsResponse = await fetch(`http://localhost:3000/v1/options/byProposal/${newProposalId}`, {
         credentials: 'include'
       });
 
-      if (!deleteOptionsResponse.ok) {
-        throw new Error('Error al actualizar las opciones');
+      if (existingOptionsResponse.ok) {
+        const existingOptionsText = await existingOptionsResponse.text();
+        try {
+          if (existingOptionsText) {
+            const existingOptions = JSON.parse(existingOptionsText);
+            if (Array.isArray(existingOptions.options)) {
+              for (const option of existingOptions.options) {
+                const deleteResponse = await fetch(`http://localhost:3000/v1/options/${option.id}`, {
+                  method: 'DELETE',
+                  credentials: 'include'
+                });
+                
+                if (!deleteResponse.ok) {
+                  console.error(`Error al eliminar la opción ${option.id}`);
+                }
+              }
+            }
+          }
+        } catch (e) {
+          console.error('Error al procesar las opciones existentes:', e);
+        }
       }
     }
 
-    // Crear las opciones
+    // Crear las nuevas opciones
     for (const option of form.value.options) {
       const optionPayload = {
-        value: option.value,
+        value: option.value.trim(),
         proposal_id: newProposalId
       };
 
@@ -300,13 +384,20 @@ const handleSubmit = async () => {
       });
 
       if (!optionResponse.ok) {
-        const errorData = await optionResponse.json();
-        throw new Error(errorData.error || 'Error al guardar una opción');
+        const errorText = await optionResponse.text();
+        let errorMessage;
+        try {
+          const errorData = JSON.parse(errorText);
+          errorMessage = errorData.error || 'Error al guardar una opción';
+        } catch {
+          errorMessage = errorText || `Error del servidor: ${optionResponse.status}`;
+        }
+        throw new Error(errorMessage);
       }
     }
 
     // Redirigir a la página de propuestas
-    window.location.href = `/protected/proposal?id=${roomId.value}`;
+    window.location.href = `/protected/proposal?id=${roomIdNumber}`;
   } catch (err) {
     error.value = err.message;
     console.error('Error:', err);
