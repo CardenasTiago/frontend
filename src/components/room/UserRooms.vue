@@ -1,5 +1,19 @@
-<template> 
-  <BackButton/> 
+<template>  
+      <!-- Paginador -->
+      <div class="join flex justify-center mt-6">
+          <button class="join-item btn bg-primary" :disabled="currentPage === 1" @click="previousPage">
+            «
+          </button>
+
+          <button class="join-item btn bg-primary">
+            Página {{ currentPage }}
+          </button>
+
+          <button class="join-item btn bg-primary" :disabled="currentPage === totalPages" @click="nextPage">
+            »
+          </button>
+      </div>
+     
 
     <div v-for="(sala, index) in paginatedSalas" :key="index" class="container mx-auto px-4  mt-8 max-w-screen-md bg-neutral rounded-lg">
       
@@ -71,28 +85,7 @@
          </div>
         </a>    
         </div>
-        <!-- Paginador -->
-      <div class="join flex justify-center mt-2">
-        <button 
-          class="join-item btn bg-secondary"
-          :disabled="currentPage === 1"
-          @click="previousPage"
-        >
-          «
-        </button>
-
-        <button class="join-item btn bg-secondary">
-          Page {{ currentPage }}
-        </button>
-
-        <button 
-          class="join-item btn bg-secondary"
-          :disabled="currentPage === totalPages"
-          @click="nextPage"
-        >
-          »
-        </button>
-      </div>
+     
 
         <!-- Insertamos el componente DeleteRoom -->
         <DeleteRoom ref="deleteRoomRef" />

@@ -50,6 +50,14 @@
       }
   
       const data = await response.json();
+      // Limpiar la sala si ya existe
+      const storedRoom = localStorage.getItem("currentRoom");
+
+      if (storedRoom) {
+          // Si hay una sala guardada, la limpiamos para evitar inconsistencias
+          localStorage.removeItem("currentRoom");
+          console.log("Sala anterior eliminada de localStorage.");
+      }
       
       // Redirigir a editar sala con el ID creado
       window.location.href = `/protected/editRoom?id=${data.room.id}`;

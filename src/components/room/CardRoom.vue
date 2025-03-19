@@ -2,7 +2,7 @@
     
     <div v-if="sala" class="bg-neutral rounded-lg shadow-lg mt-3 relative z-10">
         <div class="relative flex items-center justify-center">
-            <div class="absolute top-0 left-0 hidden sm:block p-4">
+            <div class="absolute top-0 left-0 p-4">
                 <BackButton/>
             </div>
 
@@ -32,9 +32,9 @@
 
         </div>    
 
-        
-            <!-- titulo -->
-            <div class="flex justify-center items-center p-3 max-w-md mx-auto text-center gap-4">
+                        
+        <!-- titulo -->
+            <div class="relative flex justify-center items-center p-3 max-w-md mx-auto text-center gap-4 group">
             
                 <h1 v-if="!isEditing" class="font-semibold">{{ sala.room.room_title }}</h1>
                 
@@ -44,17 +44,27 @@
                     class="input input-primary lg:text-xl text-xs font-semibold text-center"               
                 />
                 <button @click="isEditing ? updateRoom() : toggleEdit()":class="{
-                                            ' bg-primary text-neutral btn btn-sm ': true,  
+                                            ' bg-primary text-neutral btn btn-sm lg:opacity-0 ': true,  
                                             'btn-circle': !isEditing,  
-                                            'px-4 py-2 rounded-lg': isEditing  
+                                            'px-4 py-2 rounded-lg': isEditing,                                                                            
+                                            'group-hover:opacity-100': true, /* Aparece al hacer hover sobre el grupo */
+                                            'lg:opacity-0': true,  /* El botón está oculto en pantallas grandes */
+                                            'lg:group-hover:opacity-100': true, /* El botón aparece en pantallas grandes solo con hover */
+                                            'sm:block': true /* Asegura que el botón sea visible en pantallas pequeñas */  
                                             }">           
-                    <svg v-if="!isEditing" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-4">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L6.832 19.82a4.5 4.5 0 0 1-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 0 1 1.13-1.897L16.863 4.487Zm0 0L19.5 7.125" />
-                    </svg>
-                    <span v-else>Guardar</span>
+                                   
+                    <div class="flex items-center justify-center">
+                        <svg v-if="!isEditing" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-4">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L6.832 19.82a4.5 4.5 0 0 1-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 0 1 1.13-1.897L16.863 4.487Zm0 0L19.5 7.125" />
+                        </svg>
+                        <span v-else>Guardar</span>
+                    </div>
+                    
                 </button>
                
             </div>
+
+
 
             <!-- descripción -->
             <div class="flex flex-col items-stretch gap-2 p-2 lg:p-6">         
@@ -166,6 +176,7 @@ const isEditing = ref(false); // Para controlar el modo de edición
 
 // Función para obtener los datos
 const fetchSala = async () => {
+    
 try {
 const response = await fetch(`http://localhost:3000/v1/rooms/${props.id}`, {
   method: "GET",
@@ -179,7 +190,16 @@ if (!response.ok) {
 }
 
 sala.value = await response.json();
-localStorage.setItem("currentRoom", JSON.stringify(sala.value));
+console.log(sala.value);
+const storedRoom =localStorage.getItem("currentRoom");
+if (!storedRoom){
+    localStorage.setItem("currentRoom", JSON.stringify(sala.value.room));
+    console.log("Sala guardada en localStorage:", sala.value);
+}
+else{
+    console.log("La sala ya está guardada en localStorage.");
+    console.log (localStorage.getItem("currentRoom"));
+}
 
 } catch (err) {
 error.value = err.message;

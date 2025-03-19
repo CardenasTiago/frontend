@@ -3,25 +3,16 @@
 import Layout from "../../layouts/Layout.astro";
 import ProtectedRoute from "../../components/authentication/ProtectedRoute.vue";
 import UserRoom from "../../components/room/UserRooms.vue"
-
+import BackButton from "../../components/reusable/BackButton2.vue"
 ---
 
 
 <Layout title="rooms">    
-        <ProtectedRoute client:load>          
-
-                <!-- <div class="hidden lg:flex justify-center items-center gab-x-10 sm:gap-x-4"> -->
-                    <!-- Pestaña izquierda -->
-                    <!-- <button class="text-primary font-bold text-lg p-8 ">Salas en las que participó</button> -->
-                    
-                    <!-- Separador -->
-                    <!-- <div class="w-[2px] h-6 bg-gray-400"></div> -->
-                
-                    <!-- Pestaña derecha -->
-                    <!-- <button class="text-primary font-bold text-lg p-8">Salas creadas</button> -->
-                <!-- </div> -->
-
-
+        <ProtectedRoute client:load> 
+            <div class="">
+             <BackButton/>
+            </div>      
+         
             <UserRoom client:load/> 
         </ProtectedRoute>
     
