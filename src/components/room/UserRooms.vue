@@ -54,7 +54,7 @@
               <div class="lg:w-44 lg:h-41 w-32 h-41  rounded-lg flex-shrink-0 overflow-hidden">
                 <img
                   class="w-full h-full flex items-center justify-center"
-                  :src="sala.imagen  || defaultImage"
+                  :src="sala.image  || defaultImage"
                   alt="Imagen de la sala" />
               </div>
   
@@ -114,6 +114,7 @@
       state: item.state || 'SIN ESTADO',
       id: item.id,
       description: item.description || 'sala sin descripción',
+      image: item.image,
       startTime: item.start_time ? new Date(item.start_time) : null,      
       
     }));   
