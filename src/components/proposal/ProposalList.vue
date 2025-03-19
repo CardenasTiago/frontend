@@ -17,18 +17,19 @@
       </svg>
       <span>{{ error }}</span>
     </div>
-    
+
+    <!-- Listado de propuestas -->
     <div v-else class="bg-secondary/20 rounded-lg p-4 space-y-2">
       <div 
         v-for="proposal in proposals" 
         :key="proposal.id"
-        class="flex items-center justify-between p-3 bg-base-100 rounded-lg shadow-sm"
+        class="flex items-center justify-between p-3 bg-white rounded-lg shadow-sm"
       >
         <span class="text-accent/80">{{ proposal.title }}</span>
         <div class="flex gap-2">
           <a 
             :href="`/protected/editProposal?id=${proposal.id}&roomId=${roomId}`"
-            class="btn btn-circle btn-sm btn-ghost text-accent"
+            class="btn btn-circle btn-sm btn-ghost"
           >
             <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
@@ -50,6 +51,7 @@
       </div>
     </div>
 
+    <!-- Modal de confirmación -->
     <dialog ref="deleteModal" class="modal">
       <div class="modal-box">
         <h3 class="font-bold text-lg text-error">¿Eliminar propuesta?</h3>
@@ -127,19 +129,61 @@ const closeModal = () => {
   proposalToDelete.value = null;
 };
 
-const handleDelete = async () => {
+const deleteOptions = async (proposalId) => {
   try {
-    isDeleting.value = true;
-    
-    const response = await fetch(`http://localhost:3000/v1/proposals/${proposalToDelete.value}`, {
-      method: 'DELETE',
+    const optionsResponse = await fetch(`http://localhost:3000/v1/options/byProposal/${proposalId}`, {
       credentials: 'include'
     });
 
-    if (!response.ok) {
-      throw new Error('Error al eliminar la propuesta');
+    if (!optionsResponse.ok) {
+      throw new Error('Error al obtener las opciones de la propuesta');
     }
 
+    const optionsData = await optionsResponse.json();
+    
+    if (optionsData.options && Array.isArray(optionsData.options)) {
+      // Eliminar cada opción 
+      for (const option of optionsData.options) {
+        const deleteResponse = await fetch(`http://localhost:3000/v1/options/${option.id}`, {
+          method: 'DELETE',
+          credentials: 'include'
+        });
+
+        if (!deleteResponse.ok) {
+          throw new Error(`Error al eliminar la opción ${option.id}`);
+        }
+      }
+    }
+  } catch (err) {
+    throw new Error(`Error al eliminar las opciones: ${err.message}`);
+  }
+};
+
+const handleDelete = async () => {
+  if (!proposalToDelete.value) return;
+
+  try {
+    isDeleting.value = true;
+    error.value = null;
+
+    // Primero eliminamos todas las opciones
+    await deleteOptions(proposalToDelete.value);
+
+    // Luego eliminamos la propuesta
+    const response = await fetch(`http://localhost:3000/v1/proposals/${proposalToDelete.value}`, {
+      method: 'DELETE',
+      credentials: 'include',
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.error || 'Error al eliminar la propuesta');
+    }
+
+    // Se actualiza la lista de propuestas
     await fetchProposals();
     closeModal();
   } catch (err) {
