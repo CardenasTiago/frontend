@@ -18,7 +18,7 @@
 
     <div v-else>
       <div class="aspect-video bg-gray-200 mb-6 rounded-lg flex items-center justify-center">
-        <input type="file" class="file-input file-input-ghost w-full max-w-xs" />
+        <input type="file" class="file-input file-input-ghost w-full max-w-xs" @change="handleFileChange" />
       </div>
 
       <form @submit.prevent="handleSubmit" class="space-y-6">
@@ -97,6 +97,7 @@ import BackButton from '../../reusable/BackButton2.vue';
 const form = ref({
   name: '',
   description: '',
+  imageBase64: '',
 });
 
 const isSubmitting = ref(false);
@@ -197,7 +198,8 @@ const handleSubmit = async () => {
       description: form.value.description.trim(),
       link_invite: 'default-link',
       is_formal: roomType.value === 'formal',
-      state: 'created'
+      state: 'created',
+      image: form.value.imageBase64
     };
 
     // Si estamos editando, usamos PUT, si es nueva sala usamos POST
@@ -237,5 +239,16 @@ const handleSubmit = async () => {
   } finally {
     isSubmitting.value = false;
   }
+};
+
+const handleFileChange = (event) => {
+  const file = event.target.files[0];
+  if (!file) return;
+
+  const reader = new FileReader();
+  reader.readAsDataURL(file);
+  reader.onload = () => {
+    form.value.imageBase64 = reader.result;
+  };
 };
 </script>
