@@ -28,14 +28,17 @@
 </template>
 
 <script setup>
-import { onMounted, onUnmounted, ref } from 'vue';
+import { onMounted, onUnmounted, ref, watch } from 'vue';
 import { useWebSocketStore } from '../stores/socketStore'
 import { storeToRefs } from 'pinia'
+import { useRouter } from 'vue-router'
 
+const router = useRouter();
 const socketStore = useWebSocketStore();
-const { currentProposal, socket } = storeToRefs(socketStore)
+const { currentProposal, socket, resultsAvailable } = storeToRefs(socketStore)
 
 const selectedIndex = ref(null);
+const room = ref(null);
 const error = ref("");
 const settingsRoom = ref(null);
 const countdown = ref(0);
@@ -50,6 +53,19 @@ function toggleSelection(index) {
 }
 
 onMounted(() => {
+  const storedRoom = localStorage.getItem('currentRoom');
+  if (storedRoom) {
+    try {
+
+      room.value = JSON.parse(storedRoom);
+
+    } catch (e) {
+      error.value = 'Error al leer los datos de la sala.';
+      console.error(e);
+    }
+  } else {
+    error.value = 'No se encontraron datos de la sala en el almacenamiento local.';
+  }
   const storedSettingsRoom = localStorage.getItem('settingsRoom')
   if (storedSettingsRoom) {
     try {
@@ -75,17 +91,29 @@ onMounted(() => {
         timerId = null;
 
         if (selectedIndex.value !== null) {
-          socketStore.socket.sendEvents("vote", { option_id:  currentProposal.value.options[selectedIndex.value].id})
+          socketStore.socket.sendEvents("vote", { option_id: currentProposal.value.options[selectedIndex.value].id })
           console.log(
             "¡Tiempo agotado! Tu voto fue por:",
             currentProposal.value.options[selectedIndex.value].value
           );
         } else {
           console.log("¡Tiempo agotado! No has seleccionado ninguna opción.");
-          socketStore.socket.sendEvents("vote", { option_id: 0})
+          socketStore.socket.sendEvents("vote", { option_id: 0 })
+        }
+
+        socket.voting = false;
+        if (room.value.privileges == true) {
+          //muestro resultados
+          router.push('/confirmResults')
         }
       }
     }, 1000);
+  }
+})
+
+watch(resultsAvailable, (val)=> {
+  if (val != null) {
+    router.push('/results')
   }
 })
 
