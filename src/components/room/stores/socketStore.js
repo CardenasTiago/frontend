@@ -15,7 +15,7 @@ export const useWebSocketStore = defineStore('webSocketStore', {
   state: () => ({
     // Instancia de WebSocket
     socket: null,
-
+    socketUrl: null,
     // Estado de conexión
     connected: false,
     reconnecting: false,
@@ -51,7 +51,7 @@ export const useWebSocketStore = defineStore('webSocketStore', {
         console.warn('Ya estás conectado al WebSocket.');
         return;
       }
-
+      this.socketUrl = url;
       this.socket = new WebSocket(url);
 
       this.socket.onopen = () => {
@@ -84,7 +84,7 @@ export const useWebSocketStore = defineStore('webSocketStore', {
       this.socket.onerror = (error) => {
         this.connected = false;
         console.error('WebSocket Error:', error);
-        pushMessage('Error en la conexión WebSocket.');
+        this.pushMessage('Error en la conexión WebSocket.');
       };
 
       this.socket.sendEvents = (eventName, payload) => {
@@ -157,7 +157,7 @@ export const useWebSocketStore = defineStore('webSocketStore', {
       this.pushMessage(`Intentando reconectar en ${delay / 1000} segundos...`);
       setTimeout(() => {
         this.pushMessage(`Intento de reconexión #${this.reconnectAttempts}`);
-        this.connect();
+        this.connect(this.socketUrl);
       }, delay);
     },
   },
