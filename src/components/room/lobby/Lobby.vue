@@ -1,8 +1,8 @@
 <template>
 
   <div class="main-container h-screen w-screen items-center">
-    <button v-if="connected" @click="closeConnection">Salir</button>
-    <button v-else @click="connect" :disabled="reconnecting">
+    <button v-if="socketStore.connected" @click="closeConnection">Salir</button>
+    <button v-else @click="connect" :disabled="socketStore.reconnecting">
       Conectar
     </button>
     <div>
@@ -68,8 +68,6 @@ import TabUsers from './TabUsers.vue';
 const socketStore = useWebSocketStore();
 const {
   voting,
-  connected,
-  reconnecting,
 } = storeToRefs(socketStore)
 
 
@@ -113,7 +111,7 @@ function startVoting() {
   socketStore.socket.sendEvents("start_voting", { from: username.value })
 }
 
-
+//atento para ver cuando arranca la votacion y redireccionar
 watch(voting, (val)=> {
   if (val) {
     router.push('/voting')
