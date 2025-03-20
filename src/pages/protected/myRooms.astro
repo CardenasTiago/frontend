@@ -8,14 +8,13 @@ import BackButton from "../../components/reusable/BackButton2.vue"
 
 
 <Layout title="rooms">    
-        <ProtectedRoute client:load> 
-            <div class="">
-             <BackButton/>
-            </div>      
-         
-            <UserRoom client:load/> 
-        </ProtectedRoute>
-    
+    <ProtectedRoute client:load> 
+        <div class="">
+            <BackButton/>
+        </div>      
+        
+        <UserRoom client:load/> 
+    </ProtectedRoute>    
 </Layout>
 
 <style>

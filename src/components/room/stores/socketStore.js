@@ -1,3 +1,4 @@
+import { useRouter } from 'vue-router'
 import { defineStore } from 'pinia'
 
 // Clase auxiliar para formatear mensajes salientes
@@ -8,11 +9,13 @@ class Event {
   }
 }
 
+const router = useRouter()
+
 export const useWebSocketStore = defineStore('webSocketStore', {
   state: () => ({
     // Instancia de WebSocket
     socket: null,
-
+    socketUrl: null,
     // Estado de conexión
     connected: false,
     reconnecting: false,
@@ -28,7 +31,18 @@ export const useWebSocketStore = defineStore('webSocketStore', {
 
     voting: false,
     currentProposal: null,
+    resultsAvailable: false,
+    results: [],
   }),
+  getters: {
+    voteCounts: (state) => {
+      return state.results.reduce((acc, vote) => {
+        // Cuenta cuántas veces se repite cada option_id
+        acc[vote.option_id] = (acc[vote.option_id] || 0) + 1;
+        return acc;
+      }, {});
+    },
+  },
 
   actions: {
     connect(url) {
@@ -37,7 +51,7 @@ export const useWebSocketStore = defineStore('webSocketStore', {
         console.warn('Ya estás conectado al WebSocket.');
         return;
       }
-
+      this.socketUrl = url;
       this.socket = new WebSocket(url);
 
       this.socket.onopen = () => {
@@ -70,7 +84,7 @@ export const useWebSocketStore = defineStore('webSocketStore', {
       this.socket.onerror = (error) => {
         this.connected = false;
         console.error('WebSocket Error:', error);
-        pushMessage('Error en la conexión WebSocket.');
+        this.pushMessage('Error en la conexión WebSocket.');
       };
 
       this.socket.sendEvents = (eventName, payload) => {
@@ -105,7 +119,7 @@ export const useWebSocketStore = defineStore('webSocketStore', {
         alert("Evento no definido");
         return;
       }
-    
+
       switch (eventData.action) {
         case "send_message":
           this.pushMessage(`${eventData.payload.from} : ${eventData.payload.message}`);
@@ -114,7 +128,20 @@ export const useWebSocketStore = defineStore('webSocketStore', {
           this.updateClientList(eventData.payload);
           break;
         case "first_proposal":
+          console.log(eventData);
           this.voting = true
+          this.currentProposal = eventData.payload;
+          break;
+        case "results":
+          this.resultsAvailable = true;
+          console.log(eventData);
+          this.results = eventData.payload;
+          break
+        case "next_proposal":
+          console.log(eventData);
+          this.results = []
+          this.voting = true
+          this.resultsAvailable = false
           this.currentProposal = eventData.payload;
           break;
         default:
@@ -123,14 +150,14 @@ export const useWebSocketStore = defineStore('webSocketStore', {
       }
     },
 
-    attemptReconnect()  {
+    attemptReconnect() {
       this.reconnecting = true;
       this.reconnectAttempts += 1;
       const delay = this.reconnectBaseDelay * Math.pow(2, this.reconnectAttempts - 1);
       this.pushMessage(`Intentando reconectar en ${delay / 1000} segundos...`);
       setTimeout(() => {
         this.pushMessage(`Intento de reconexión #${this.reconnectAttempts}`);
-        this.connect();
+        this.connect(this.socketUrl);
       }, delay);
     },
   },

@@ -1,11 +1,11 @@
 <template>
     <div class="chat-container">
 
-        <div v-if="connected" class="status connected">
+        <div v-if="socketStore.connected" class="status connected">
             Conectado
         </div>
-        <div v-else-if="reconnecting" class="status reconnecting">
-            Intentando reconectar... (Intento {{ reconnectAttempts }})
+        <div v-else-if="socketStore.reconnecting" class="status reconnecting">
+            Intentando reconectar... (Intento {{ socketStore.reconnectAttempts }})
         </div>
         <div v-else class="status disconnected">
             Desconectado del servidor WebSocket.
@@ -35,12 +35,8 @@ const socketStore = useWebSocketStore();
 const socket = socketStore.socket;
 const username = inject('username');
 
-const { 
-  connected, 
-  reconnecting, 
-  reconnectAttempts, 
-  messages, 
-  userList 
+const {   
+  messages,
 } = storeToRefs(socketStore)
 
 const inputMessageLocal = ref('');
@@ -50,7 +46,7 @@ const inputMessageLocal = ref('');
 const sendMessage = () => {
     const msg = inputMessageLocal.value.trim();
     if (msg === '') return;
-    if (socket && connected) {
+    if (socket && socketStore.connected) {
         socket.sendEvents("send_message", { from: username.value, message: msg });
         socketStore.pushMessage(`Tú: ${msg}`);
         inputMessageLocal.value = '';

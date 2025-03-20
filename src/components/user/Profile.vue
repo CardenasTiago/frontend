@@ -1,5 +1,5 @@
 <template>
-    <div class="avatar flex justify-center">
+    <div :key="componentKey" class="avatar flex justify-center">
         <div class="ring-primary ring-offset-base-100 w-24 rounded-full ring ring-offset-2">
             <img src="/images/images.png" />
         </div>
@@ -88,7 +88,7 @@
 
 <script setup>
 import { ref,onMounted } from 'vue';
-
+const componentKey = ref(0); // Clave reactiva para forzar el re-render
 const user = ref({
   name: "",
   lastname: "",
@@ -121,11 +121,13 @@ const storeUser = async () => {
       body: JSON.stringify(user.value),
     });
 
-    if (response.ok) {
-      const updatedUser = await response.json();
+    if (response.ok) {      
+      const updatedUser = await response.json();      
       localStorage.setItem("user", JSON.stringify(updatedUser)); // Actualizar localStorage
-      isEditing.value = false; // Salir del modo edición
+      user.value = updatedUser; // 🔹 Actualizar el estado reactivo
+      isEditing.value = false; // Salir del modo edición     
       
+            
     } 
   } catch (error) {
     console.error("Error en la actualización:", error);
