@@ -10,7 +10,7 @@ const { title } = Astro.props;
 ---
 
 <!doctype html>
-<html lang="es" data-theme="mytheme">
+<html lang="es" data-theme="mytheme" class="bg-neutral">
   <head>
     <meta charset="UTF-8" />
     <meta name="description" content="Astro description" />
@@ -34,7 +34,6 @@ const { title } = Astro.props;
 <style is:global>
   html {
     font-family: system-ui, sans-serif;
-    @apply bg-neutral
   }
 
   code {
