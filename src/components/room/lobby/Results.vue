@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="min-h-[80vh]">
         <h2>Resultados de la votación</h2>
         <ul>
             <li v-for="option in displayResults" :key="option.id">
