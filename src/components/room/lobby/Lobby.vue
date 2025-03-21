@@ -1,6 +1,10 @@
 <template>
 
   <div class="main-container h-screen w-screen items-center">
+    <div class="items-center rounded-lg flex-shrink-0 overflow-hidden">
+      <img class="w-full h-full  items-center justify-center" :src="room.image || defaultImage"
+        alt="Imagen de la sala" />
+    </div>
     <button v-if="socketStore.connected" @click="closeConnection">Salir</button>
     <button v-else @click="connect" :disabled="socketStore.reconnecting">
       Conectar
@@ -95,7 +99,7 @@ onMounted(() => {
 
   socketStore.connect(wsUrl);
 
-  
+
 });
 
 function connect() {
@@ -112,7 +116,7 @@ function startVoting() {
 }
 
 //atento para ver cuando arranca la votacion y redireccionar
-watch(voting, (val)=> {
+watch(voting, (val) => {
   if (val) {
     router.push('/voting')
   }

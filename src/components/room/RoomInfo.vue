@@ -1,9 +1,5 @@
 <template>
       <div v-if="room">
-        <div class="items-center lg:w-44 lg:h-41 w-32 h-41  rounded-lg flex-shrink-0 overflow-hidden">
-          <img class="w-full h-full flex items-center justify-center" :src="room.image || defaultImage"
-            alt="Imagen de la sala" />
-        </div>
         <h1 class="font-semibold m-3 text-center">{{ room.room_title }}</h1>
         <h2 class="mb-2">Descripción</h2>
         <p class="mb-4">
