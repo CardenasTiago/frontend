@@ -97,8 +97,6 @@ onMounted(() => {
   wsUrl = `ws://localhost:3000/v1/rooms/ws/${roomId.value}`;
 
   socketStore.connect(wsUrl);
-
-
 });
 
 function connect() {
@@ -151,27 +149,24 @@ button {
 
 button:active {
   @apply bg-primary;
-  @apply text-neutral;
 }
 
 button:hover {
   @apply bg-primary;
-  @apply text-neutral;
+  @apply text-white;
 }
 
 .custom-buttons button.active-button {
-  @apply bg-primary text-neutral;
+  @apply bg-primary text-white;
 }
 
 /* Opcional: estilos para hover */
 .custom-buttons button:hover {
-  @apply bg-primary text-neutral;
+  @apply bg-primary text-white;
   transition: all 0.3s;
 }
 
 .initiliaze {
-  font-weight: 700;
-  @apply bg-primary text-accent;
   border-radius: 30px;
 }
 </style>

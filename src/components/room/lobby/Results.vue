@@ -7,7 +7,7 @@
             </li>
         </ul>
 
-        <TabChat />
+        <!-- <TabChat /> -->
 
 
         <button class="btn btn-primary" v-if="room.privileges && !socketStore.currentProposal.last_prop"
@@ -24,15 +24,11 @@
 import { provide, onMounted, ref, computed, watch } from 'vue';
 import { useWebSocketStore } from '../stores/socketStore'
 import TabChat from './TabChat.vue';
-import { storeToRefs } from 'pinia'
 import { useRouter } from 'vue-router'
 
 const socketStore = useWebSocketStore();
 
 const router = useRouter();
-const {
-    voting,
-} = storeToRefs(socketStore)
 
 
 const room = ref('');

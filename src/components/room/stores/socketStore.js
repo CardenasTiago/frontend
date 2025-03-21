@@ -31,8 +31,12 @@ export const useWebSocketStore = defineStore('webSocketStore', {
 
     voting: false,
     currentProposal: null,
-    resultsAvailable: false,
+    resultsAvailable: false, //indica que el tiempo para votar ha terminado, solo lo recibe el admin
+    resultsReady: false, //indica que los resultados están listos para ser mostrados
     results: [],
+
+    countdown: 0,
+    timer: null,
   }),
   getters: {
     voteCounts: (state) => {
@@ -133,15 +137,15 @@ export const useWebSocketStore = defineStore('webSocketStore', {
           this.currentProposal = eventData.payload;
           break;
         case "results":
-          this.resultsAvailable = true;
+          this.resultsReady = true;
           console.log(eventData);
           this.results = eventData.payload;
           break
         case "next_proposal":
-          console.log(eventData);
           this.results = []
           this.voting = true
           this.resultsAvailable = false
+          this.resultsReady = false
           this.currentProposal = eventData.payload;
           break;
         default:
@@ -150,6 +154,30 @@ export const useWebSocketStore = defineStore('webSocketStore', {
       }
     },
 
+    startCountdown(initialTime) {
+      // Inicializa el contador con el valor proporcionado
+      this.countdown = initialTime;
+      // Si ya existe un timer activo, se detiene
+      if (this.timer) clearInterval(this.timer);
+      // Inicia el timer que decrementa el contador cada segundo
+      this.timer = setInterval(() => {
+        if (this.countdown > 0) {
+          this.countdown--;
+        } else {
+          clearInterval(this.timer);
+          this.timer = null;
+
+          this.resultsAvailable = true;
+          this.voting = false;
+        }
+      }, 1000);
+    },
+    stopCountdown() {
+      if (this.timer) {
+        clearInterval(this.timer);
+        this.timer = null;
+      }
+    },
     attemptReconnect() {
       this.reconnecting = true;
       this.reconnectAttempts += 1;

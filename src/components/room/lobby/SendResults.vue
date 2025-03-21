@@ -17,5 +17,4 @@ function showResults() {
     socketStore.socket.sendEvents('results', {})
     router.push('/results')
 }
-
 </script>

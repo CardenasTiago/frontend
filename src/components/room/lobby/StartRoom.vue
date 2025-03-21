@@ -4,7 +4,7 @@
       Iniciar Sala
     </button>
 
-    <button v-if="room.state === 'online' && !room.privileges" class="btn btn-primary start-room" @click="startRoom">
+    <button v-if="room.state != 'created' && !room.privileges" class="btn btn-primary start-room" @click="startRoom">
       Ingresar
     </button>
   </div>
