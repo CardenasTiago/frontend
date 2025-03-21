@@ -51,7 +51,7 @@
       <a
         @click="redirectToRegister"
         href="/auth/register"
-        class="register-text"
+        class="bg-base-100 text-primary"
       >
         Registrese aqui</a
       >
@@ -110,17 +110,9 @@ form {
   align-items: center;
 }
 
-.btn-primary {
-  color: white;
-}
-
 .btn-secondary {
   width: 15rem;
   font-weight: 500;
 }
 
-a {
-  @apply bg-neutral;
-  @apply text-primary;
-}
 </style>

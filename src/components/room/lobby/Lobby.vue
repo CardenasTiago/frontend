@@ -1,5 +1,4 @@
 <template>
-
   <div class="main-container h-screen w-screen items-center">
     <div class="items-center rounded-lg flex-shrink-0 overflow-hidden">
       <img class="w-full h-full  items-center justify-center" :src="room.image || defaultImage"
@@ -10,7 +9,7 @@
       Conectar
     </button>
     <div>
-      <v-card class="h-screen flex items-center justify-center">
+      <v-card class="min-h-[40vh] flex items-center justify-center">
         <v-tabs v-model="tab" align-tabs="center" class="">
           <div class="custom-buttons">
             <button :class="{ 'active-button': tab === 1 }" @click="tab = 1">Chat</button>
