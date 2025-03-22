@@ -1,19 +1,12 @@
 <template>
   <div class="main-container h-max w-screen items-center p-0 m-0">
     <div class="max-w-3xl mx-auto flex-shrink-0 overflow-hidden">
-    <img
-      class="w-full max-h-[40vh] object-contain object-center"
-      :src="room.image || defaultImage"
-      alt="Imagen de la sala"
-    />
-  </div>
-    <button v-if="socketStore.connected" @click="closeConnection">Salir</button>
-    <button v-else @click="connect" :disabled="socketStore.reconnecting">
-      Conectar
-    </button>
+      <img class="w-full max-h-[40vh] object-contain object-center" :src="room.image || defaultImage"
+        alt="Imagen de la sala" />
+    </div>
     <div>
       <v-card flat elevation="0" class="min-h-[40vh] flex items-center justify-center elevation-0">
-        <v-tabs v-model="tab" align-tabs="center" class="elevation-0" >
+        <v-tabs v-model="tab" align-tabs="center" class="elevation-0">
           <div class="custom-buttons">
             <button :class="{ 'active-button': tab === 1 }" @click="tab = 1">Chat</button>
             <button :class="{ 'active-button': tab === 2 }" @click="tab = 2">Info</button>
@@ -46,8 +39,22 @@
             </v-container>
           </v-tabs-window-item>
         </v-tabs-window>
-        <div v-if="room.privileges" class="flex justify-end m-4">
-          <button class="btn btn-primary initiliaze" @click="startVoting">Iniciar</button>
+
+        <div class="flex justify-between align-baseline p-4">
+          <a v-if="socketStore.connected" @click="closeConnection" class="btn btn-error text-white">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+              <path fill="currentColor"
+                d="M10.09 15.59L11.5 17l5-5l-5-5l-1.41 1.41L12.67 11H3v2h9.67zM19 3H5a2 2 0 0 0-2 2v4h2V5h14v14H5v-4H3v4a2 2 0 0 0 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2" />
+            </svg>
+          </a>
+          <a v-else @click="connect" :disabled="socketStore.reconnecting" class="btn btn-warning">
+            Conectar
+          </a>
+          <div v-if="room.privileges" class="flex justify-end">
+            <a class="btn btn-primary initiliaze" @click="startVoting">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10s10-4.48 10-10S17.52 2 12 2m-1 14H9V8h2zm1 0V8l5 4z"/></svg>
+            </a>
+          </div>
         </div>
       </v-card>
     </div>
@@ -172,8 +179,14 @@ button:hover {
   @apply text-white
 }
 
-.initiliaze:hover{
-  size : 1.1rem;
+.initiliaze:hover {
+  size: 1.1rem;
 }
 
+.btn-error {
+  font-weight: 700;
+  border-radius: 30px;
+  cursor: pointer;
+
+}
 </style>
