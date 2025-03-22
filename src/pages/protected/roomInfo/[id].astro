@@ -10,7 +10,7 @@ const { id } = Astro.params;
 <Layout title="Sala">
   <ProtectedRoute client:load />
 
-  <div class="mt-5 min-h-fit h-screen">
+  <div class="mt-5  min-h-[90vh]">
     <div class="h-fit p-10 main-container bg-neutral">
       <RoomInfo client:load roomId={id} />       
       <StartRoom client:load />

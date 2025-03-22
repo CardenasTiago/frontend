@@ -38,12 +38,12 @@
                 <a href="/protected/menu" class="text-primary/80">{{ title }}</a>
             </div>
         
-            <div class="flex-none ">
+            <div class="flex-none">
                 <div>
                     <h3 class="mr-2 text-secondary font-bold">{{ userName }}</h3>
                 </div>
                 <div class="dropdown dropdown-end">
-                    <div tabindex="0" role="button" class="btn btn-ghost btn-circle  ">
+                    <div tabindex="0" role="button" class="btn btn-ghost btn-circle bg-base-100">
                         <div class="w-10 h-10 flex-justify-center  ">
                             <!-- Mostrar el SVG si no hay imagen de perfil -->
                             <div v-if="!userProfileImage" v-html="defaultImage"></div>
@@ -53,15 +53,15 @@
                         </div>
                     </div>
                     <ul tabindex="0"
-                        class="menu menu-sm dropdown-content rounded-box z-[1] mt-3 w-40 p-1 shadow bg-neutral">
+                        class="menu menu-sm dropdown-content rounded-box z-[1] mt-3 w-40 p-1 shadow bg-base-100">
 
-                        <li><a href="/protected/user/myProfile" class="bg-neutral text-accent"><svg xmlns="http://www.w3.org/2000/svg"
+                        <li><a href="/protected/user/myProfile" class="bg-base-100 text-accent"><svg xmlns="http://www.w3.org/2000/svg"
                                     viewBox="0 0 20 20" fill="currentColor" class="size-5">
                                     <path
                                         d="M10 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6ZM3.465 14.493a1.23 1.23 0 0 0 .41 1.412A9.957 9.957 0 0 0 10 18c2.31 0 4.438-.784 6.131-2.1.43-.333.604-.903.408-1.41a7.002 7.002 0 0 0-13.074.003Z" />
                                 </svg>
                                 Mi perfil </a></li>
-                        <li><a @click="handleLogout" class="bg-neutral text-accent"><svg
+                        <li><a @click="handleLogout" class="bg-base-100 text-accent"><svg
                                     xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"
                                     class="size-6">
                                     <path fill-rule="evenodd"
