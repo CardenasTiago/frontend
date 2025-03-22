@@ -85,7 +85,8 @@ const handleSubmit = async () => {
     if (response.ok) {
       const data = await response.json();
       const userName = data.user.name;
-      localStorage.setItem("userName", userName);      
+      localStorage.setItem("userName", userName); 
+      localStorage.setItem('user',JSON.stringify(data.user));//guardo todo el usuario           
       window.location.href = "/protected/menu"; // Redirige al menú principal
     } else {
       const data = await response.json();

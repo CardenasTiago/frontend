@@ -19,9 +19,10 @@ const room = ref('');
 
 onMounted(() => {
   // Se asume que el ID de la sala se guarda en localStorage
-  const storedRoom = localStorage.getItem('currentRoom');
+  const storedRoom = localStorage.getItem('currentRoom'); 
+   
   if (storedRoom) {
-    room.value = JSON.parse(storedRoom);
+    room.value = JSON.parse(storedRoom);       
   } else {
     console.error('No se encontró el room ID en el almacenamiento local.');
   }
