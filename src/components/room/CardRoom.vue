@@ -1,6 +1,6 @@
 <template>
     
-  <div v-if="sala" class="bg-neutral rounded-lg shadow-lg mt-3 relative z-10">
+  <div v-if="sala" class="bg-neutral rounded-lg shadow-lg mt-3 relative ">
       <div class="relative flex items-center justify-center">
         <div class="absolute top-0 left-0 p-4">
             <BackButton/>
@@ -31,24 +31,43 @@
             type="text" 
             class="input input-primary lg:text-xl text-xs font-semibold text-center"               
         />
-        <button @click="isEditing ? updateRoom() : toggleEdit()":class="{
-                                    ' bg-primary text-neutral btn btn-sm lg:opacity-0 ': true,  
-                                    'btn-circle': !isEditing,  
-                                    'px-4 py-2 rounded-lg': isEditing,                                                                            
-                                    'group-hover:opacity-100': true, /* Aparece al hacer hover sobre el grupo */
-                                    'lg:opacity-0': true,  /* El botón está oculto en pantallas grandes */
-                                    'lg:group-hover:opacity-100': true, /* El botón aparece en pantallas grandes solo con hover */
-                                    'sm:block': true /* Asegura que el botón sea visible en pantallas pequeñas */  
-                                    }">           
-                            
-          <div class="flex items-center justify-center">
-              <svg v-if="!isEditing" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-4">
-                  <path stroke-linecap="round" stroke-linejoin="round" d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L6.832 19.82a4.5 4.5 0 0 1-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 0 1 1.13-1.897L16.863 4.487Zm0 0L19.5 7.125" />
+                <!-- Contenedor principal -->
+          <div class="relative flex  gap-2">
+
+            <!-- Botón de editar (solo visible cuando NO se está editando) -->
+            <button v-if="!isEditing" 
+                    @click="toggleEdit()"
+                    class="bg-primary text-neutral btn btn-sm btn-circle group-hover:opacity-100 lg:opacity-0 lg:group-hover:opacity-100 sm:block lg:flex lg:items-center lg:justify-center ">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487 18.549 2.8a1.875 1.875 0 1 1 2.652 2.652L6.832 19.82a4.5 4.5 0 0 1-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 0 1 1.13-1.897L16.863 4.487Zm0 0L19.5 7.125" />
               </svg>
-              <span v-else>Guardar</span>
+            </button>
+
+            <!-- Contenedor para los botones de edición -->
+            <div v-if="isEditing" class="flex items-center gap-4 ">
+              
+              <!-- Botón de guardar (solo visible en pantallas pequeñas) -->
+              <button @click="updateRoom()" class="sm:block lg:hidden p-0 bg-success rounded-full text-neutral">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+                </svg>
+              </button>
+
+              <!-- Botón de cancelar (solo visible en pantallas pequeñas) -->
+              <button @click="cancelEdit()" class="sm:block lg:hidden p-0 bg-error rounded-full text-neutral">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+              
+              <!-- Botones de texto para pantallas grandes -->
+              <div class="hidden lg:flex gap-4">
+                <button @click="updateRoom()" class="btn btn-sm btn-primary">Guardar</button>
+                <button @click="cancelEdit()" class="btn btn-sm btn-secondary">Cancelar</button>
+              </div>
+            </div>
+
           </div>
-            
-        </button>          
       </div>
 
 
@@ -90,36 +109,41 @@
           <div class="flex gap-1">
               <h2 class="text-primary text-md">{{sala.room.admin_name}}</h2>                                
           </div>
+          <div class="flex justify-center">
+          <a @click="openDeleteModal"  class="btn btn-primary btn-sm lg:hidden ">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                stroke="currentColor" class="size-6 ">
+                <path stroke-linecap="round" stroke-linejoin="round"
+                  d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0" />
+              </svg>
+            </a>
+          </div>  
         </div>
 
       </div>
+      
 
-      <div class="flex flex-col lg:items-center lg:w-1/2  lg:p-10 ">
+      <div class="flex flex-col lg:items-center lg:w-1/2  lg:p-10 mt-8 lg:mt-0">
+        
         <div class="flex space-x-6 sm:space-x-4 justify-center w-full">
             <a :href="`../proposal?id=${sala.room.id}`" class="btn btn-primary btn-sm lg:w-48">
                     Propuestas
-            </a>
+            </a>                  
+            
             <a :href="`../formalSettingRoom?id=${sala.room.id}`" class="btn btn-primary btn-sm lg:w-42">
                     otras configuraciones
             </a>
         </div>
-        <div class="w-full flex  p-2 mt-2 justify-center gap-8 ">
-            <!-- <a href="" class="btn btn-secondary btn-sm w-auto lg:w-56"> -->
-                <!-- <p class="text-neutral">Empezar Sala</p> -->
-            <!-- </a> -->
-            <a @click="openDeleteModal"  class="btn btn-primary btn-sm lg:hidden ">
-                ELiminar
-            </a>
-        </div>      
-      </div>
+             
+      </div>     
 
-    </div>
-        
+    </div> 
 
+    <div class="flex justify-center p-4">
+        <StartRoom client:load/>
+    </div>  
 
-
-
-        
+  
         
         
 
@@ -129,8 +153,6 @@
 
     <!-- Insertamos el componente DeleteRoom -->
   <DeleteRoom ref="deleteRoomRef" />
-
-
       
   </div>
 
@@ -142,6 +164,7 @@
 import { ref, onMounted,onUnmounted } from "vue";
 import DeleteRoom from "../room/deleteRoom/DeleteRoom.vue";
 import BackButton from "../reusable/BackButton2.vue";
+import StartRoom from "./lobby/StartRoom.vue";
 
 
 const props = defineProps({
@@ -156,8 +179,7 @@ const isEditing = ref(false); // Para controlar el modo de edición
 
 
 // Función para obtener los datos
-const fetchSala = async () => {
-    
+const fetchSala = async () => {    
 try {
 const response = await fetch(`http://localhost:3000/v1/rooms/${props.id}`, {
   method: "GET",
@@ -165,13 +187,10 @@ const response = await fetch(`http://localhost:3000/v1/rooms/${props.id}`, {
  
 });
 
-
 if (!response.ok) {
   throw new Error("Error al obtener la sala");
 }
-
 sala.value = await response.json();
-console.log(sala.value);
 const storedRoom =localStorage.getItem("currentRoom");
 if (!storedRoom){
     localStorage.setItem("currentRoom", JSON.stringify(sala.value.room));
@@ -215,23 +234,16 @@ const updateRoom = async () => {
 };
 
 
-
-
-
-
 // Llamamos a la función del componente hijo cuando se hace clic en el botón "Eliminar"
 const openDeleteModal = () => {
   // Usamos la referencia para llamar al método 'openModal' en el hijo
   deleteRoomRef.value.openModal(sala.value.room);
 };
 
-
-
 const toggleEdit = () => {    
         isEditing.value = !isEditing.value; 
              
 };
-
 
 // Función para cambiar la foto (esto se activará al hacer clic en el botón "Cambiar Foto")
 const handleChangePhoto = () => {
@@ -239,13 +251,25 @@ const handleChangePhoto = () => {
   fileInput.click(); // Abre el input de archivo al hacer clic en "Cambiar Foto"
 };
 
+// Función para cancelar la edición
+const cancelEdit = () => {
+  const storedRoom = localStorage.getItem("currentRoom");
 
+  if (storedRoom) {
+    sala.value.room = JSON.parse(storedRoom); // Restaurar valores originales
+  }
+
+  isEditing.value = false; // Salir del modo edición
+};
+// Función para limpiar currentRoom cuando el componente se desmonte
+onUnmounted(() => {
+  localStorage.removeItem("currentRoom");
+});
 
 
 onMounted(() => {
     fetchSala(); 
     
 });  
-
 
 </script>

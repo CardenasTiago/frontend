@@ -1,19 +1,21 @@
-<template>
-    <div :key="componentKey" class="avatar flex justify-center">
+<template> 
+  <form @submit.prevent="storeUser" >
+    <div  class="avatar flex justify-center">
         <div class="ring-primary ring-offset-base-100 w-24 rounded-full ring ring-offset-2">
-            <img src="/images/images.png" />
+            <img src="" />
         </div>
     </div> 
 
-    <div class="mt-6 p-4 lg:flex lg:items-center lg:flex-col">
+    <div class="mt-6 p-4 lg:flex-row">
         <fieldset class="fieldset flex mb-8">
             <legend class="fieldset-legend font-semi-bold text-secondary">Nombre</legend>
             <input
                 type="text"
                 class="input border-0 border-b border-primary w-full"
                 v-model="user.name"                 
-                :readonly="!isEditing"
-                :class="isEditing ? '!border !border-primary !p-2' : '!border-0 !border-b !border-primary pointer-events-none'"
+                :disabled="!isEditing"
+                :class="isEditing ? '!border !border-primary !p-2' : '!border-0 !border-b !border-primary pointer-events-none !bg-transparent'"
+                required
             />
         </fieldset>
 
@@ -23,8 +25,9 @@
                 type="text"
                 class="input  w-full"
                 v-model="user.lastname" 
-                :readonly="!isEditing"
-                :class="isEditing ? '!border !border-primary !p-2' : '!border-0 !border-b !border-primary pointer-events-none'"
+                :disabled="!isEditing"
+                :class="isEditing ? '!border !border-primary !p-2' : '!border-0 !border-b !border-primary pointer-events-none !bg-transparent'"
+                required
             />
         </fieldset>
 
@@ -34,8 +37,9 @@
                 type="text"
                 class="input  w-full"
                 v-model="user.username" 
-                :readonly="!isEditing"
-                :class="isEditing ? '!border !border-primary !p-2' : '!border-0 !border-b !border-primary pointer-events-none'"
+                :disabled="!isEditing"
+                :class="isEditing ? '!border !border-primary !p-2' : '!border-0 !border-b !border-primary pointer-events-none !bg-transparent'"
+                required
             />
         </fieldset>
 
@@ -45,50 +49,63 @@
                 type="text"
                 class="input  w-full"
                 v-model="user.dni" 
-                :readonly="!isEditing"
-                :class="isEditing ? '!border !border-primary !p-2' : '!border-0 !border-b !border-primary pointer-events-none'"
+                :disabled="!isEditing"
+                :class="isEditing ? '!border !border-primary !p-2' : '!border-0 !border-b !border-primary pointer-events-none !bg-transparent'"
+                required
+                maxlength="10"
+                minlength="8"
             />
         </fieldset>
 
         <fieldset class="fieldset flex mb-8">
             <legend class="fieldset-legend font-semi-bold text-secondary">Email</legend>
             <input
-                type="text"
+                type="email"
                 class="input  w-full"
                 v-model="user.email" 
-                :readonly="!isEditing"
-                :class="isEditing ? '!border !border-primary !p-2' : '!border-0 !border-b !border-primary pointer-events-none'"
+                :disabled="!isEditing"
+                :class="isEditing ? '!border !border-primary !p-2' : '!border-0 !border-b !border-primary pointer-events-none !bg-transparent'"
+                required
             />
         </fieldset>
 
-        <!-- Botones -->
         <div class="flex justify-center mt-8 gap-4">
-            <button 
-                class="btn" 
-                :class="isEditing ? 'bg-error' : 'bg-secondary'"
-                @click="isEditing ? storeUser() : isEditing = true">
-                {{ isEditing ? 'Guardar' : 'Editar' }}
-            </button>
+          <!-- Botón Editar -->
+          <button
+            v-if="!isEditing"
+            type="button"
+            class="btn bg-secondary"
+            @click="toggleEdit"
+          >
+            Editar
+          </button>
 
-            <button v-if="isEditing" @click="isEditing = false" class="btn bg-secondary">
-                Cancelar
-            </button>
+          <!-- Botón Guardar -->
+          <button
+            v-if="isEditing"
+            type="submit"
+            class="btn bg-error"
+          >
+            Guardar
+          </button>
+
+          <!-- Botón Cancelar -->
+          <button
+            v-if="isEditing"
+            type="button"
+            class="btn bg-secondary"
+            @click="cancelEdit"
+          >
+            Cancelar
+          </button>
         </div>
-      </div>
-
-
-
-
-
-
-
-
-
+      </div> 
+    </form> 
 </template>
 
 <script setup>
 import { ref,onMounted } from 'vue';
-const componentKey = ref(0); // Clave reactiva para forzar el re-render
+
 const user = ref({
   name: "",
   lastname: "",
@@ -100,11 +117,16 @@ const user = ref({
 const isEditing = ref(false);
 
 const toggleEdit = () => {
-  isEditing.value = !isEditing.value;
+  isEditing.value = true;
 };
 
 const cancelEdit = () => {
   isEditing.value = false;
+  // Restaurar los datos originales desde localStorage
+  const storedUser = JSON.parse(localStorage.getItem("user"));
+  if (storedUser) {
+    user.value = { ...storedUser };
+  }
 };
 
 
@@ -122,12 +144,10 @@ const storeUser = async () => {
     });
 
     if (response.ok) {      
-      const updatedUser = await response.json();      
-      localStorage.setItem("user", JSON.stringify(updatedUser)); // Actualizar localStorage
-      user.value = updatedUser; // 🔹 Actualizar el estado reactivo
-      isEditing.value = false; // Salir del modo edición     
-      
-            
+      const updatedUser = await response.json();           
+      localStorage.setItem("user", JSON.stringify(updatedUser.user)); // Actualizar localStorage      
+      user.value = { ...updatedUser.user };      
+      isEditing.value=false;                  
     } 
   } catch (error) {
     console.error("Error en la actualización:", error);
@@ -140,18 +160,16 @@ const storeUser = async () => {
 
 // Cargar datos guardados en localStorage al iniciar
 onMounted(() => {
-  const storedUser = JSON.parse(localStorage.getItem("user"));
+  const storedUser = JSON.parse(localStorage.getItem("user"));   
   if (storedUser) {
-    user.value = storedUser; // Cargamos los datos en los inputs
-    console.log(storedUser); // Verifica si el objeto 'user' contiene todos los campos
-
+    user.value.name = storedUser.name || "";
+    user.value.lastname = storedUser.lastname || "";
+    user.value.username = storedUser.username || "";
+    user.value.dni = storedUser.dni || "";
+    user.value.email = storedUser.email || "";  
+    
   }
 });
 
-
-
-
-
-
-
 </script>
+
