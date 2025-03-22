@@ -1,26 +1,31 @@
 <template>
-    <div class="flex flex-col items-center justify-center text-center h-screen w-screen">
-        <div>
-            <h2>Tiempo restante</h2>
-        </div>
-        <div>
-            <h1 class="font-bold">
-                {{ socketStore.countdown }}
-            </h1>
-        </div>
-        <div class="w-full">
-            <ul class="users flex justify-between font-semibold" v-for="client in userList" :key="client">
-                <li class="text-start">
-                    {{ client.username }}
-                    {{ client.voted }}
-                </li>
-                <li class="text-end">
-                    <span class="status">en línea</span>
-                    <span class="inline-block ml-2 w-3 h-3 bg-[#71F260] rounded-full mr-1"></span>
-                </li>
-            </ul>
-        </div>
+  <div class="flex flex-col items-center justify-center text-center h-screen w-screen">
+    <div v-if="socketStore.timer !== null">
+      <div>
+        <h2>Tiempo restante</h2>
+      </div>
+      <div>
+        <h1 v-if="settingsRoom && settingsRoom.proposal_timer" class="font-bold">
+          {{ socketStore.countdown }}
+        </h1>
+      </div>
     </div>
+    <div v-else class="flex flex-col items-center justify-center text-center">
+      <h2>Esperando resultados</h2>
+      <div class="loader mt-2" />
+    </div>
+
+    <div class="w-full">
+      <ul class="users flex flex-wrap justify-center gap-4">
+        <li v-for="client in userList" :key="client.username" class="flex flex-col items-center">
+          <div :class="['w-16 h-16 rounded-full border-4', client.voted ? 'border-green-500' : 'border-gray-500']">
+            <img :src="client.profileImage" alt="Foto de perfil" class="w-full h-full rounded-full object-cover" />
+          </div>
+          <p class="mt-2 font-semibold">{{ client.username }}</p>
+        </li>
+      </ul>
+    </div>
+  </div>
 </template>
 
 <script setup>
@@ -32,13 +37,13 @@ import { useRouter } from 'vue-router'
 const router = useRouter();
 const socketStore = useWebSocketStore();
 const {
-    userList
+  userList
 } = storeToRefs(socketStore)
 
 const room = ref('');
 const settingsRoom = ref(null);
 onMounted(() => {
-    const storedRoom = localStorage.getItem('currentRoom');
+  const storedRoom = localStorage.getItem('currentRoom');
   if (storedRoom) {
     try {
       room.value = JSON.parse(storedRoom);
@@ -49,7 +54,7 @@ onMounted(() => {
   } else {
     error.value = 'No se encontraron datos de la sala en el almacenamiento local.';
   }
-  
+
   const storedSettingsRoom = localStorage.getItem('settingsRoom');
   if (storedSettingsRoom) {
     try {
@@ -64,7 +69,7 @@ onMounted(() => {
 });
 
 onUnmounted(() => {
-    socketStore.stopCountdown();
+  socketStore.stopCountdown();
 });
 
 
@@ -73,7 +78,7 @@ watch(
   () => socketStore.resultsAvailable,
   (available) => {
     if (available && room.value?.privileges) {
-      router.push('/confirmResults'); 
+      router.push('/confirmResults');
     }
   },
   { immediate: true }
@@ -84,10 +89,38 @@ watch(
   () => socketStore.resultsReady,
   (available) => {
     if (available && !room.value?.privileges) {
-      router.push('/results'); 
+      router.push('/results');
     }
   },
   { immediate: true }
 );
 
 </script>
+
+<style>
+.loader {
+  width: 60px;
+  aspect-ratio: 4;
+  --_g: no-repeat radial-gradient(circle closest-side, #6B48FF 90%, #0000);
+  background:
+    var(--_g) 0% 50%,
+    var(--_g) 50% 50%,
+    var(--_g) 100% 50%;
+  background-size: calc(100%/3) 100%;
+  animation: l7 1s infinite linear;
+}
+
+@keyframes l7 {
+  33% {
+    background-size: calc(100%/3) 0%, calc(100%/3) 100%, calc(100%/3) 100%
+  }
+
+  50% {
+    background-size: calc(100%/3) 100%, calc(100%/3) 0%, calc(100%/3) 100%
+  }
+
+  66% {
+    background-size: calc(100%/3) 100%, calc(100%/3) 100%, calc(100%/3) 0%
+  }
+}
+</style>
