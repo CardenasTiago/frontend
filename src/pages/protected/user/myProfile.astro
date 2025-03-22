@@ -1,0 +1,14 @@
+---
+import Layout from "../../../layouts/Layout.astro";
+import ProtectedRoute from "../../../components/authentication/ProtectedRoute.vue";
+import Profile from "../../../components/user/Profile.vue"
+---
+
+<Layout title="myProfile">
+    <ProtectedRoute client:load>
+        <div class="h-fit p-10 main-container bg-neutral mt-10">
+            <Profile client:load/>
+        </div> 
+    <ProtectedRoute/>
+</Layout>
+
