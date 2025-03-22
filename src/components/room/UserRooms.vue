@@ -49,7 +49,6 @@
             </div>
           </div>
         </div>
-
         <div v-if="sala.startTime" class="hidden lg:flex flex-col justify-center items-center lg:w-1/3 p-3 relative ">
           <div class="absolute top-center left-0 h-36 w-px bg-accent opacity-30 "></div>
           <p class="  text-accent opacity-60 ">{{sala.startTime.toLocaleString('default', { month: 'long' }) }}</p>
@@ -68,12 +67,17 @@
           <img class="w-full h-full flex items-center justify-center" :src="sala.image  || defaultImage"
             alt="Imagen de la sala" />
         </div>
+
+
       </div>
     </a>
   </div>
+
+
   <!-- Insertamos el componente DeleteRoom -->
   <DeleteRoom ref="deleteRoomRef" />
 
+</template>
 
 <script setup>
   import { ref, onMounted,computed } from 'vue' 
@@ -112,28 +116,19 @@
     }
   };
 
-  <!-- Insertamos el componente DeleteRoom -->
-  <DeleteRoom ref="deleteRoomRef" />
 
-</template>
+      // Esta función se ejecuta solo cuando se hace clic en la tarjeta
+    const handleCardClick = (event) => {
+     
+    } 
 
-<script setup>
-import { ref, onMounted } from 'vue'
-import DeleteRoom from "../room/deleteRoom/DeleteRoom.vue";
+ 
 
 
-const salas = ref([]);
-const defaultImage = ""; // Imagen por defecto 
-const deleteRoomRef = ref(null);  // Referencia para el componente DeleteRoom
-
-// Esta función se ejecuta solo cuando se hace clic en la tarjeta
-const handleCardClick = (event) => {
-
-}
-//obtener salas
-const obtenerDatosSala = async () => {
+  //obtener salas
+   const obtenerDatosSala = async () => {    
   try {
-    const response = await fetch("http://localhost:3000/v1/rooms/myRooms", {
+    const response = await fetch("http://localhost:3000/v1/rooms/myRooms",{
       method: 'GET',
       credentials: 'include',
     });
@@ -158,26 +153,42 @@ const obtenerDatosSala = async () => {
       startTime: item.start_time ? new Date(item.start_time) : null,      
       
     })).reverse();   
+
   } 
 
   } catch (error) {
     console.error('Error al cargar los datos:', error)
   }
 }
+
+
+
+
   // Llamamos a la función del componente hijo cuando se hace clic en el botón "Eliminar"
   const openDeleteModal = (sala) => {
     // Usamos la referencia para llamar al método 'openModal' en el hijo
     deleteRoomRef.value.openModal(sala);
   };
+
+
+
+
+
   onMounted(() => {
     obtenerDatosSala();
   });
+
+
 </script>
+
+
+
+  
 <style>
-.card {
-  border-radius: 15px;
-  box-shadow:
+  .card{
+    border-radius: 15px;
+    box-shadow:
     rgba(60, 64, 67, 0.3) 0px 1px 2px 0px,
     rgba(60, 64, 67, 0.15) 0px 2px 6px 2px;
-}
-</style>
+    }
+ </style>

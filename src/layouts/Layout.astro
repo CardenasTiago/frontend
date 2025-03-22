@@ -20,7 +20,7 @@ const { title,hideHeader } = Astro.props;
     <meta name="generator" content={Astro.generator} />
     <title>{title}</title>
     <ViewTransitions />
-    { !hideHeader && <Header client:only="vue" /> }
+    { !hideHeader && <Header client:only="vue"/> }
   </head>
   <body
     class=" items-center justify-center">
@@ -58,11 +58,18 @@ const { title,hideHeader } = Astro.props;
     font-size: 24px;
   }
 
-
   h2 {
     @apply text-secondary;
     font-weight: 600;
     font-size: 20px;
+  }
+
+  .btn-primary {
+    @apply bg-primary text-white;
+  }
+  
+  .btn-secondary {
+    @apply bg-secondary text-white;
   }
 </style>
 

@@ -169,5 +169,11 @@ button:hover {
 
 .initiliaze {
   border-radius: 30px;
+  @apply text-white
 }
+
+.initiliaze:hover{
+  size : 1.1rem;
+}
+
 </style>

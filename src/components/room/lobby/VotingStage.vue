@@ -59,9 +59,9 @@ function confirmVote() {
   // Envía el voto a través del socket
   socketStore.socket.sendEvents("vote", { option_id: currentProposal.value.options[selectedIndex.value].id });
   console.log("Voto confirmado:", currentProposal.value.options[selectedIndex.value].value);
-  
+
   socket.voting = false;
-  
+
   router.push('/awaitResults');
 }
 
@@ -77,7 +77,7 @@ onMounted(() => {
   } else {
     error.value = 'No se encontraron datos de la sala en el almacenamiento local.';
   }
-  
+
   const storedSettingsRoom = localStorage.getItem('settingsRoom');
   if (storedSettingsRoom) {
     try {
@@ -100,7 +100,7 @@ watch(
   () => socketStore.resultsAvailable,
   (available) => {
     if (available && room.value?.privileges) {
-      router.push('/confirmResults'); 
+      router.push('/confirmResults');
     }
   },
   { immediate: true }
