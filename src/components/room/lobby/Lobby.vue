@@ -1,9 +1,16 @@
 <template>
   <div class="main-container h-max w-screen items-center p-0 m-0">
-    <div class="max-w-3xl mx-auto flex-shrink-0 overflow-hidden">
-      <img class="w-full max-h-[40vh] object-contain object-center" :src="room.image || defaultImage"
-        alt="Imagen de la sala" />
-    </div>
+    <div :style="containerStyle" class="max-w-3xl mx-auto flex-shrink-0 overflow-hidden p-0">
+    <!-- Asegúrate de agregar crossOrigin si la imagen es externa -->
+    <img
+      ref="imgElement"
+      class="w-full max-h-[40vh] object-contain object-center p-0 m-0"
+      :src="room.image || defaultImage"
+      alt="Imagen de la sala"
+      @load="extractDominantColor"
+      crossOrigin="anonymous"
+    />
+  </div>
     <div>
       <v-card flat elevation="0" class="min-h-[40vh] flex items-center justify-center elevation-0">
         <v-tabs v-model="tab" align-tabs="center" class="elevation-0">
@@ -14,8 +21,6 @@
           </div>
 
         </v-tabs>
-
-
         <v-tabs-window v-model="tab">
           <v-tabs-window-item :key="1" :value="1">
             <v-container>
@@ -70,7 +75,7 @@ export default {
 </script>
 <script setup>
 
-import { ref, onMounted, provide, watch } from 'vue';
+import { ref, onMounted, provide, watch, computed } from 'vue';
 import { useWebSocketStore } from '../stores/socketStore'
 import { storeToRefs } from 'pinia'
 import { useRouter } from 'vue-router'
@@ -131,6 +136,32 @@ watch(voting, (val) => {
 
 // Proveer valores para que otros componentes (por ejemplo, TabChat) puedan inyectarlos
 provide('username', username);
+
+import ColorThief from 'colorthief';
+const defaultImage = '/src/assets/default-image.jpg'; // Ajusta la ruta según corresponda
+const dominantColor = ref('');
+
+// Referencia al elemento img
+const imgElement = ref(null);
+
+const extractDominantColor = () => {
+  // Espera a que la imagen esté completamente cargada
+  if (imgElement.value && imgElement.value.complete) {
+    try {
+      const colorThief = new ColorThief();
+      // Extrae el color dominante (se devuelve un array [R, G, B])
+      const result = colorThief.getColor(imgElement.value);
+      dominantColor.value = `rgb(${result.join(',')})`;
+    } catch (error) {
+      console.error('Error al extraer el color dominante:', error);
+    }
+  }
+};
+
+const containerStyle = computed(() => ({
+  // Aplica la sombra solo si se extrajo el color
+  boxShadow: dominantColor.value ? `0 4px 8px ${dominantColor.value}` : 'none'
+}));
 </script>
 
 <style scoped>
@@ -190,3 +221,4 @@ button:hover {
 
 }
 </style>
+
