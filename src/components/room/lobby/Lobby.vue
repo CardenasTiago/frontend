@@ -1,13 +1,19 @@
 <template>
-
-  <div class="main-container h-screen w-screen items-center">
+  <div class="main-container h-max w-screen items-center p-0 m-0">
+    <div class="max-w-3xl mx-auto flex-shrink-0 overflow-hidden">
+    <img
+      class="w-full max-h-[40vh] object-contain object-center"
+      :src="room.image || defaultImage"
+      alt="Imagen de la sala"
+    />
+  </div>
     <button v-if="socketStore.connected" @click="closeConnection">Salir</button>
     <button v-else @click="connect" :disabled="socketStore.reconnecting">
       Conectar
     </button>
     <div>
-      <v-card class="h-screen flex items-center justify-center">
-        <v-tabs v-model="tab" align-tabs="center" class="">
+      <v-card flat elevation="0" class="min-h-[40vh] flex items-center justify-center elevation-0">
+        <v-tabs v-model="tab" align-tabs="center" class="elevation-0" >
           <div class="custom-buttons">
             <button :class="{ 'active-button': tab === 1 }" @click="tab = 1">Chat</button>
             <button :class="{ 'active-button': tab === 2 }" @click="tab = 2">Info</button>
@@ -40,7 +46,7 @@
             </v-container>
           </v-tabs-window-item>
         </v-tabs-window>
-        <div v-if="room.privileges" class="flex justify-end m-10">
+        <div v-if="room.privileges" class="flex justify-end m-4">
           <button class="btn btn-primary initiliaze" @click="startVoting">Iniciar</button>
         </div>
       </v-card>
@@ -94,8 +100,6 @@ onMounted(() => {
   wsUrl = `ws://localhost:3000/v1/rooms/ws/${roomId.value}`;
 
   socketStore.connect(wsUrl);
-
-  
 });
 
 function connect() {
@@ -112,7 +116,7 @@ function startVoting() {
 }
 
 //atento para ver cuando arranca la votacion y redireccionar
-watch(voting, (val)=> {
+watch(voting, (val) => {
   if (val) {
     router.push('/voting')
   }
@@ -124,8 +128,6 @@ provide('username', username);
 
 <style scoped>
 .main-container {
-  margin: 0 auto;
-  padding: 1rem;
   border-radius: 8px;
   @apply bg-neutral
 }
@@ -148,27 +150,24 @@ button {
 
 button:active {
   @apply bg-primary;
-  @apply text-neutral;
 }
 
 button:hover {
   @apply bg-primary;
-  @apply text-neutral;
+  @apply text-white;
 }
 
 .custom-buttons button.active-button {
-  @apply bg-primary text-neutral;
+  @apply bg-primary text-white;
 }
 
 /* Opcional: estilos para hover */
 .custom-buttons button:hover {
-  @apply bg-primary text-neutral;
+  @apply bg-primary text-white;
   transition: all 0.3s;
 }
 
 .initiliaze {
-  font-weight: 700;
-  @apply bg-primary text-accent;
   border-radius: 30px;
 }
 </style>

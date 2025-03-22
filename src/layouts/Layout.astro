@@ -2,8 +2,6 @@
 import "../global.css";
 import Header from "../components/reusable/Navbar.vue";
 import ViewTransitions from "astro/components/ViewTransitions.astro";
-import { fade } from "astro:transitions";
-
 interface Props {
   title: string;
   hideHeader?: boolean;
@@ -13,7 +11,7 @@ const { title,hideHeader } = Astro.props;
 ---
 
 <!doctype html>
-<html lang="es" data-theme="mytheme">
+<html lang="es" data-theme="mytheme" class="bg-neutral">
   <head>
     <meta charset="UTF-8" />
     <meta name="description" content="Astro description" />
@@ -22,13 +20,12 @@ const { title,hideHeader } = Astro.props;
     <meta name="generator" content={Astro.generator} />
     <title>{title}</title>
     <ViewTransitions />
+    { !hideHeader && <Header client:only="vue" /> }
   </head>
   <body
-    class=" items-center justify-center"
-    transition:animate={fade({ duration: "0.7s" })}>
+    class=" items-center justify-center">
     <div class="">
       <div class="m-4">
-        { !hideHeader && <Header client:only="vue" /> }
           <slot />
       </div>
     </div>
@@ -38,7 +35,6 @@ const { title,hideHeader } = Astro.props;
 <style is:global>
   html {
     font-family: system-ui, sans-serif;
-    @apply bg-neutral
   }
 
   code {
@@ -62,10 +58,6 @@ const { title,hideHeader } = Astro.props;
     font-size: 24px;
   }
 
-  a {
-    @apply bg-primary hover:text-primary/80;
-    @apply bg-neutral;
-  }
 
   h2 {
     @apply text-secondary;

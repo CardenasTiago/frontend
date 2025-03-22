@@ -1,50 +1,45 @@
 <template>
   <form @submit.prevent="handleSubmit">
-    <div>
-      <label class="input input-bordered input-primary flex items-center gap-2"
-        >Nombre
-        <input v-model="form.name" type="text" required />
-      </label>
+    <div class="flex flex-wrap gap-2">
+      <div class="max-w my-2">
+        <label class="flex input input-bordered input-primary items-center p-2">Nombre
+          <input v-model="form.name" type="text" class="text-center" required />
+        </label>
+      </div>
+      <div class="my-2">
+        <label class="flex input input-bordered input-primary items-center p-2">Apellido
+          <input v-model="form.lastname" type="text" class="text-center" required />
+        </label>
+      </div>
     </div>
     <div>
-      <label class="input input-bordered input-primary flex items-center gap-2"
-        >Apellido
-        <input v-model="form.lastname" type="text" required />
-      </label>
-    </div>
-    <div>
-      <label class="input input-bordered input-primary flex items-center gap-2"
-        >Nombre de Usuario
+      <label class="input input-bordered input-primary flex items-center gap-2 p-2">Nombre de Usuario
         <input v-model="form.username" type="text" required />
       </label>
     </div>
     <div>
       <label class="input input-bordered input-primary flex items-center gap-2">
         DNI
-        <input v-model="form.dni" type="text" required maxlength="10" minlength="8"/>
+        <input v-model="form.dni" type="text" required maxlength="10" minlength="8" />
       </label>
     </div>
     <div>
-      <label class="input input-bordered input-primary flex items-center gap-2"
-        >Email
+      <label class="input input-bordered input-primary flex items-center gap-2">Email
         <input v-model="form.email" type="email" required />
       </label>
     </div>
     <div>
-      <label class="input input-bordered input-primary flex items-center gap-2"
-        >Confirmar Email
+      <label class="input input-bordered input-primary flex items-center gap-2">Confirmar Email
         <input v-model="form.confirmEmail" type="email" required />
       </label>
     </div>
     <div>
-      <label class="input input-bordered input-primary flex items-center gap-2"
-        >Contraseña
+      <label class="input input-bordered input-primary flex items-center gap-2">Contraseña
         <input v-model="form.password" type="password" required />
       </label>
     </div>
     <div>
-      <label class="input input-bordered input-primary flex items-center gap-2"
-        >Confirmar Contraseña
+      <label class="input input-bordered input-primary flex items-center gap-2">Confirmar Contraseña
         <input v-model="form.confirmPassword" type="password" required />
       </label>
     </div>
@@ -55,9 +50,9 @@
       </div>
 
       <div>
-        <p class="mt-4 text-slate-600">
+        <p class="mt-4 text-accent">
           Ya tiene cuenta?
-          <a href="/auth/login">Inicie sesion</a>
+          <a href="/auth/login" class="bg-base-100 text-primary">Inicie sesion</a>
         </p>
       </div>
 
@@ -146,14 +141,6 @@ form {
   gap: 1rem;
 }
 
-.btn-primary {
-  @apply text-neutral;
-}
-
-a {
-  @apply bg-neutral;
-  @apply text-primary
-}
 
 label {
   font-weight: 600;
@@ -162,6 +149,6 @@ label {
 
 input {
   font-weight: 500;
-  color: black;
+  @apply text-accent;
 }
 </style>

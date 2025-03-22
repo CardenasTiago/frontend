@@ -2,7 +2,7 @@
     <div class="w-full">
         <ul class="users flex justify-between font-semibold" v-for="client in userList" :key="client">
             <li class="text-start">
-                {{ client }}
+                {{ client.username }}
             </li>
             <li class="text-end">
                 <span class="status">en línea</span>
@@ -10,7 +10,6 @@
             </li>
         </ul>
     </div>
-
 </template>
 
 <script setup>

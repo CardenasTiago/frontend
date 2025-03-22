@@ -1,6 +1,8 @@
 <template>
-    <h1>mostrar resultados</h1>
-    <button class="btn btn-primary" @click="showResults">Mostrar</button>
+    <div class="min-h-[80vh]">
+        <h1>mostrar resultados</h1>
+        <button class="btn btn-primary" @click="showResults">Mostrar</button>
+    </div>
 </template>
 
 <script setup>
@@ -13,7 +15,6 @@ const router = useRouter()
 
 function showResults() {
     socketStore.socket.sendEvents('results', {})
-    router.push('/results' )
+    router.push('/results')
 }
-
 </script>

@@ -7,9 +7,7 @@
           d="M7.28 7.72a.75.75 0 0 1 0 1.06l-2.47 2.47H21a.75.75 0 0 1 0 1.5H4.81l2.47 2.47a.75.75 0 1 1-1.06 1.06l-3.75-3.75a.75.75 0 0 1 0-1.06l3.75-3.75a.75.75 0 0 1 1.06 0Z"
           clip-rule="evenodd" />
       </svg>
-
     </button>
-
     <button class="join-item btn bg-primary" :disabled="currentPage === totalPages" @click="nextPage">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-4">
         <path fill-rule="evenodd"
@@ -19,8 +17,6 @@
 
     </button>
   </div>
-
-
   <div v-for="(sala, index) in paginatedSalas" :key="index"
     class="container mx-auto px-4  mt-8 max-w-screen-md bg-neutral rounded-lg">
     <a :href="`/protected/room/${sala.id}`" @click="handleCardClick">
@@ -72,17 +68,12 @@
           <img class="w-full h-full flex items-center justify-center" :src="sala.image  || defaultImage"
             alt="Imagen de la sala" />
         </div>
-
-
       </div>
     </a>
   </div>
-
-
   <!-- Insertamos el componente DeleteRoom -->
   <DeleteRoom ref="deleteRoomRef" />
 
-</template>
 
 <script setup>
   import { ref, onMounted,computed } from 'vue' 
@@ -121,19 +112,28 @@
     }
   };
 
+  <!-- Insertamos el componente DeleteRoom -->
+  <DeleteRoom ref="deleteRoomRef" />
 
-      // Esta función se ejecuta solo cuando se hace clic en la tarjeta
-    const handleCardClick = (event) => {
-     
-    } 
+</template>
 
- 
+<script setup>
+import { ref, onMounted } from 'vue'
+import DeleteRoom from "../room/deleteRoom/DeleteRoom.vue";
 
 
-  //obtener salas
-   const obtenerDatosSala = async () => {    
+const salas = ref([]);
+const defaultImage = ""; // Imagen por defecto 
+const deleteRoomRef = ref(null);  // Referencia para el componente DeleteRoom
+
+// Esta función se ejecuta solo cuando se hace clic en la tarjeta
+const handleCardClick = (event) => {
+
+}
+//obtener salas
+const obtenerDatosSala = async () => {
   try {
-    const response = await fetch("http://localhost:3000/v1/rooms/myRooms",{
+    const response = await fetch("http://localhost:3000/v1/rooms/myRooms", {
       method: 'GET',
       credentials: 'include',
     });
@@ -158,42 +158,26 @@
       startTime: item.start_time ? new Date(item.start_time) : null,      
       
     })).reverse();   
-
   } 
 
   } catch (error) {
     console.error('Error al cargar los datos:', error)
   }
 }
-
-
-
-
   // Llamamos a la función del componente hijo cuando se hace clic en el botón "Eliminar"
   const openDeleteModal = (sala) => {
     // Usamos la referencia para llamar al método 'openModal' en el hijo
     deleteRoomRef.value.openModal(sala);
   };
-
-
-
-
-
   onMounted(() => {
     obtenerDatosSala();
   });
-
-
 </script>
-
-
-
-  
 <style>
-  .card{
-    border-radius: 15px;
-    box-shadow:
+.card {
+  border-radius: 15px;
+  box-shadow:
     rgba(60, 64, 67, 0.3) 0px 1px 2px 0px,
     rgba(60, 64, 67, 0.15) 0px 2px 6px 2px;
-    }
- </style>
+}
+</style>
