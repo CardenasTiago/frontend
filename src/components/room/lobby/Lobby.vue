@@ -1,16 +1,19 @@
 <template>
-  <div class="main-container h-screen w-screen items-center">
-    <div class="items-center rounded-lg flex-shrink-0 overflow-hidden">
-      <img class="w-full h-full  items-center justify-center" :src="room.image || defaultImage"
-        alt="Imagen de la sala" />
-    </div>
+  <div class="main-container h-max w-screen items-center p-0 m-0">
+    <div class="max-w-3xl mx-auto flex-shrink-0 overflow-hidden">
+    <img
+      class="w-full max-h-[40vh] object-contain object-center"
+      :src="room.image || defaultImage"
+      alt="Imagen de la sala"
+    />
+  </div>
     <button v-if="socketStore.connected" @click="closeConnection">Salir</button>
     <button v-else @click="connect" :disabled="socketStore.reconnecting">
       Conectar
     </button>
     <div>
-      <v-card class="min-h-[40vh] flex items-center justify-center">
-        <v-tabs v-model="tab" align-tabs="center" class="">
+      <v-card flat elevation="0" class="min-h-[40vh] flex items-center justify-center elevation-0">
+        <v-tabs v-model="tab" align-tabs="center" class="elevation-0" >
           <div class="custom-buttons">
             <button :class="{ 'active-button': tab === 1 }" @click="tab = 1">Chat</button>
             <button :class="{ 'active-button': tab === 2 }" @click="tab = 2">Info</button>
@@ -43,7 +46,7 @@
             </v-container>
           </v-tabs-window-item>
         </v-tabs-window>
-        <div v-if="room.privileges" class="flex justify-end m-10">
+        <div v-if="room.privileges" class="flex justify-end m-4">
           <button class="btn btn-primary initiliaze" @click="startVoting">Iniciar</button>
         </div>
       </v-card>
@@ -125,8 +128,6 @@ provide('username', username);
 
 <style scoped>
 .main-container {
-  margin: 0 auto;
-  padding: 1rem;
   border-radius: 8px;
   @apply bg-neutral
 }
