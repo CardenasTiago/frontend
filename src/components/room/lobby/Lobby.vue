@@ -4,7 +4,7 @@
     <!-- Asegúrate de agregar crossOrigin si la imagen es externa -->
     <img
       ref="imgElement"
-      class="w-full max-h-[40vh] object-contain object-center p-0 m-0"
+      class="w-full max-h-[40vh] object-center p-0 m-0"
       :src="room.image || defaultImage"
       alt="Imagen de la sala"
       @load="extractDominantColor"
@@ -79,6 +79,7 @@ import { ref, onMounted, provide, watch, computed } from 'vue';
 import { useWebSocketStore } from '../stores/socketStore'
 import { storeToRefs } from 'pinia'
 import { useRouter } from 'vue-router'
+import ColorThief from 'colorthief';
 import TabChat from './TabChat.vue';
 import TabInfo from './TabInfo.vue';
 import TabUsers from './TabUsers.vue';
@@ -136,8 +137,6 @@ watch(voting, (val) => {
 
 // Proveer valores para que otros componentes (por ejemplo, TabChat) puedan inyectarlos
 provide('username', username);
-
-import ColorThief from 'colorthief';
 const defaultImage = '/src/assets/default-image.jpg'; // Ajusta la ruta según corresponda
 const dominantColor = ref('');
 
