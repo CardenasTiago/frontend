@@ -1,4 +1,3 @@
-import { useRouter } from 'vue-router'
 import { defineStore } from 'pinia'
 
 // Clase auxiliar para formatear mensajes salientes
@@ -9,7 +8,6 @@ class Event {
   }
 }
 
-const router = useRouter()
 
 export const useWebSocketStore = defineStore('webSocketStore', {
   state: () => ({
