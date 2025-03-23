@@ -12,7 +12,7 @@
     </div>
     <div v-else class="flex flex-col items-center justify-center text-center">
       <h2>Esperando resultados</h2>
-      <div class="loader mt-2" />
+      <div class="loader my-2" />
     </div>
 
     <div class="w-full">
