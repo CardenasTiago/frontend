@@ -1,9 +1,7 @@
 <template>
-  <!-- Se asume que hay una barra de navegación ocupando el resto, por lo que usamos h-[90vh] -->
   <div
     class="main-container h-[90vh] w-screen grid grid-rows-[35%,50%,10%] overflow-hidden p-0 m-0"
   >
-    <!-- 1) Imagen al 40% -->
     <div
       :style="containerStyle"
       class="relative w-full h-full max-w-3xl mx-auto overflow-hidden mt-0 p-0"
@@ -25,8 +23,6 @@
         crossOrigin="anonymous"
       />
     </div>
-
-    <!-- 2) Contenido central: pestañas con scroll interno -->
     <div class="overflow-y-auto">
       <v-card flat elevation="0" class="flex flex-col items-center justify-center">
         <v-tabs v-model="tab" align-tabs="center" class="w-full">
@@ -61,8 +57,6 @@
         </v-tabs-window>
       </v-card>
     </div>
-
-    <!-- 3) Footer fijo al final de la página (tercera fila) -->
     <footer class="flex justify-between items-center px-4 p-0 mb-0">
       <a v-if="socketStore.connected" @click="closeConnection" class="btn btn-error text-white">
         <!-- Ícono SVG de desconexión -->
@@ -79,13 +73,7 @@
       <div v-if="room.privileges" class="flex justify-end">
         <a class="btn btn-primary" @click="startVoting">
           Iniciar
-          <!-- Ícono SVG de iniciar votación -->
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
-            <path
-              fill="currentColor"
-              d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2m-1 14H9V8h2zm1 0V8l5 4z"
-            />
-          </svg>
+          <Icon icon="ic:baseline-not-started" width="24" height="24" />
         </a>
       </div>
     </footer>
@@ -108,6 +96,7 @@ import ColorThief from 'colorthief';
 import TabChat from './TabChat.vue';
 import TabInfo from './TabInfo.vue';
 import TabUsers from './TabUsers.vue';
+import { Icon } from "@iconify/vue";
 
 const socketStore = useWebSocketStore();
 const {
@@ -160,20 +149,16 @@ watch(voting, (val) => {
   }
 })
 
-// Proveer valores para que otros componentes (por ejemplo, TabChat) puedan inyectarlos
 provide('username', username);
-const defaultImage = '/src/assets/default-image.jpg'; // Ajusta la ruta según corresponda
-const dominantColor = ref('');
 
-// Referencia al elemento img
+const defaultImage = '/src/assets/default-image.jpg'; 
+const dominantColor = ref('');
 const imgElement = ref(null);
 
 const extractDominantColor = () => {
-  // Espera a que la imagen esté completamente cargada
   if (imgElement.value && imgElement.value.complete) {
     try {
       const colorThief = new ColorThief();
-      // Extrae el color dominante (se devuelve un array [R, G, B])
       const result = colorThief.getColor(imgElement.value);
       dominantColor.value = `rgb(${result.join(',')})`;
     } catch (error) {
@@ -183,7 +168,6 @@ const extractDominantColor = () => {
 };
 
 const containerStyle = computed(() => ({
-  // Aplica la sombra solo si se extrajo el color
   boxShadow: dominantColor.value ? `0 4px 10px ${dominantColor.value}` : 'none'
 }));
 </script>
