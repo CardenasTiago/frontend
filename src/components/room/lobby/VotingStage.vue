@@ -1,5 +1,5 @@
 <template>
-  <div class="flex flex-col items-center justify-center text-center h-screen w-screen">
+  <div class="flex flex-col items-center justify-center text-center min-h-[80vh] w-screen">
     <div>
       <h2>Tiempo restante</h2>
     </div>
@@ -22,7 +22,7 @@
         {{ option.value }}
       </button>
     </div>
-    
+
     <div v-if="selectedIndex !== null" class="mt-4 flex justify-end">
       <a class="flex justify-end btn btn-primary font-bold" @click="confirmVote">
         Enviar

@@ -1,6 +1,6 @@
 <template>
   <div v-if="room">
-    <h1 class="font-semibold m-3 text-center">{{ room.room_title }}</h1>
+    <h1 class="font-semibold text-center">{{ room.room_title }}</h1>
     <h2 class="mb-2">Descripción</h2>
     <p class="mb-4">
       {{ room.description || 'Sin descripción' }}

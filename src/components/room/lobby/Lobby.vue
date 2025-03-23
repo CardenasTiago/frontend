@@ -1,76 +1,75 @@
 <template>
-  <div  class="main-container h-max w-screen items-center p-0 m-0">
-    <div :style="containerStyle" class="relative max-w-3xl mx-auto flex-shrink-0 overflow-hidden p-0">
-  <!-- Imagen de fondo borrosa -->
-  <img 
-    class="absolute inset-0 w-full h-full object-cover filter blur-md" 
-    :src="room.image || defaultImage" 
-    alt="Imagen de fondo" 
-    crossOrigin="anonymous" />
-  <!-- Imagen principal -->
-  <img 
-    class="relative w-full max-h-[40vh] object-contain object-center p-0 m-0" 
-    ref="imgElement"
-    :src="room.image || defaultImage" 
-    alt="Imagen de la sala" 
-    @load="extractDominantColor" 
-    crossOrigin="anonymous" />
-</div>
-    <div>
-      <v-card flat elevation="0" class="min-h-[40vh] flex items-center justify-center elevation-0 mt-4">
-        <v-tabs v-model="tab" align-tabs="center" class="elevation-0">
-          <div class="custom-buttons">
-            <button :class="{ 'active-button': tab === 1 }" @click="tab = 1">Chat</button>
-            <button :class="{ 'active-button': tab === 2 }" @click="tab = 2">Info</button>
-            <button :class="{ 'active-button': tab === 3 }" @click="tab = 3">Usuarios</button>
-          </div>
+  <!-- Contenedor principal con altura máxima fija -->
+  <div class="main-container max-h-[80vh] w-screen flex flex-col p-0 m-0">
+    <!-- Sección de imagen (parte superior) -->
+    <div :style="containerStyle" class="relative max-w-3xl mx-auto flex-shrink-0 overflow-hidden m-0 p-0">
+      <!-- Imagen de fondo borrosa -->
+      <img class="absolute inset-0 w-full h-full object-cover filter blur-md" 
+           :src="room.image || defaultImage"
+           alt="Imagen de fondo" crossOrigin="anonymous" />
+      <!-- Imagen principal -->
+      <img class="relative w-full max-h-[40vh] object-contain object-center p-0 m-0" 
+           ref="imgElement"
+           :src="room.image || defaultImage" 
+           alt="Imagen de la sala" 
+           @load="extractDominantColor"
+           crossOrigin="anonymous" />
+    </div>
 
-        </v-tabs>
+    <!-- Contenedor de pestañas con scroll en caso de que el contenido no quepa -->
+    <v-card flat elevation="0" class="flex-grow overflow-hidden mt-2">
+      <!-- Contenedor de las pestañas (botones de selección) -->
+      <v-tabs v-model="tab" align-tabs="center" class="elevation-0">
+        <div class="custom-buttons mb-2">
+          <button :class="{ 'active-button': tab === 1 }" @click="tab = 1">Chat</button>
+          <button :class="{ 'active-button': tab === 2 }" @click="tab = 2">Info</button>
+          <button :class="{ 'active-button': tab === 3 }" @click="tab = 3">Usuarios</button>
+        </div>
+      </v-tabs>
+
+      <!-- Contenedor del contenido de la pestaña con altura fija y scroll vertical -->
+      <div class="overflow-y-auto" style="height: calc(80vh - 40vh - 60px);">
         <v-tabs-window v-model="tab">
           <v-tabs-window-item :key="1" :value="1">
             <v-container>
               <TabChat />
             </v-container>
           </v-tabs-window-item>
-        </v-tabs-window>
-
-        <v-tabs-window v-model="tab">
           <v-tabs-window-item :key="2" :value="2">
             <v-container>
               <TabInfo />
             </v-container>
           </v-tabs-window-item>
-        </v-tabs-window>
-
-        <v-tabs-window v-model="tab">
           <v-tabs-window-item :key="3" :value="3">
             <v-container>
               <TabUsers />
             </v-container>
           </v-tabs-window-item>
         </v-tabs-window>
+      </div>
+    </v-card>
 
-        <div class="flex justify-between align-baseline p-4">
-          <a v-if="socketStore.connected" @click="closeConnection" class="btn btn-error text-white">
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
-              <path fill="currentColor"
-                d="M10.09 15.59L11.5 17l5-5l-5-5l-1.41 1.41L12.67 11H3v2h9.67zM19 3H5a2 2 0 0 0-2 2v4h2V5h14v14H5v-4H3v4a2 2 0 0 0 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2" />
-            </svg>
-          </a>
-          <a v-else @click="connect" :disabled="socketStore.reconnecting" class="btn btn-warning">
-            Conectar
-          </a>
-          <div v-if="room.privileges" class="flex justify-end">
-            <a class="btn btn-primary initiliaze" @click="startVoting">
-              Iniciar
-              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
-                <path fill="currentColor"
-                  d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10s10-4.48 10-10S17.52 2 12 2m-1 14H9V8h2zm1 0V8l5 4z" />
-              </svg>
-            </a>
-          </div>
-        </div>
-      </v-card>
+    <!-- Sección de botones (pie de página) siempre visibles -->
+    <div class="flex justify-between items-center p-4">
+      <a v-if="socketStore.connected" @click="closeConnection" class="btn btn-error text-white">
+        <!-- SVG para el botón de salida -->
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+          <path fill="currentColor"
+            d="M10.09 15.59L11.5 17l5-5l-5-5l-1.41 1.41L12.67 11H3v2h9.67zM19 3H5a2 2 0 0 0-2 2v4h2V5h14v14H5v-4H3v4a2 2 0 0 0 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2" />
+        </svg>
+      </a>
+      <a v-else @click="connect" :disabled="socketStore.reconnecting" class="btn btn-warning">
+        Conectar
+      </a>
+      <div v-if="room.privileges" class="flex justify-end">
+        <a class="btn btn-primary initiliaze" @click="startVoting">
+          Iniciar
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+            <path fill="currentColor"
+              d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10s10-4.48 10-10S17.52 2 12 2m-1 14H9V8h2zm1 0V8l5 4z" />
+          </svg>
+        </a>
+      </div>
     </div>
   </div>
 </template>
