@@ -1,18 +1,23 @@
 <template>
-  <div class="main-container h-max w-screen items-center p-0 m-0">
-    <div :style="containerStyle" class="max-w-3xl mx-auto flex-shrink-0 overflow-hidden p-0">
-    <!-- Asegúrate de agregar crossOrigin si la imagen es externa -->
-    <img
-      ref="imgElement"
-      class="w-full max-h-[40vh] object-center p-0 m-0"
-      :src="room.image || defaultImage"
-      alt="Imagen de la sala"
-      @load="extractDominantColor"
-      crossOrigin="anonymous"
-    />
-  </div>
+  <div  class="main-container h-max w-screen items-center p-0 m-0">
+    <div :style="containerStyle" class="relative max-w-3xl mx-auto flex-shrink-0 overflow-hidden p-0">
+  <!-- Imagen de fondo borrosa -->
+  <img 
+    class="absolute inset-0 w-full h-full object-cover filter blur-md" 
+    :src="room.image || defaultImage" 
+    alt="Imagen de fondo" 
+    crossOrigin="anonymous" />
+  <!-- Imagen principal -->
+  <img 
+    class="relative w-full max-h-[40vh] object-contain object-center p-0 m-0" 
+    ref="imgElement"
+    :src="room.image || defaultImage" 
+    alt="Imagen de la sala" 
+    @load="extractDominantColor" 
+    crossOrigin="anonymous" />
+</div>
     <div>
-      <v-card flat elevation="0" class="min-h-[40vh] flex items-center justify-center elevation-0">
+      <v-card flat elevation="0" class="min-h-[40vh] flex items-center justify-center elevation-0 mt-4">
         <v-tabs v-model="tab" align-tabs="center" class="elevation-0">
           <div class="custom-buttons">
             <button :class="{ 'active-button': tab === 1 }" @click="tab = 1">Chat</button>
@@ -57,7 +62,11 @@
           </a>
           <div v-if="room.privileges" class="flex justify-end">
             <a class="btn btn-primary initiliaze" @click="startVoting">
-              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10s10-4.48 10-10S17.52 2 12 2m-1 14H9V8h2zm1 0V8l5 4z"/></svg>
+              Iniciar
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+                <path fill="currentColor"
+                  d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10s10-4.48 10-10S17.52 2 12 2m-1 14H9V8h2zm1 0V8l5 4z" />
+              </svg>
             </a>
           </div>
         </div>
@@ -121,7 +130,7 @@ function connect() {
 
 function closeConnection() {
   socketStore.close();
-  window.location.href = '/protected/joinRoom'
+  window.location.href = '/protected/menu'
 };
 
 function startVoting() {
@@ -159,7 +168,7 @@ const extractDominantColor = () => {
 
 const containerStyle = computed(() => ({
   // Aplica la sombra solo si se extrajo el color
-  boxShadow: dominantColor.value ? `0 4px 8px ${dominantColor.value}` : 'none'
+  boxShadow: dominantColor.value ? `0 4px 10px ${dominantColor.value}` : 'none'
 }));
 </script>
 
@@ -220,4 +229,3 @@ button:hover {
 
 }
 </style>
-
