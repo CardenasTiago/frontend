@@ -1,7 +1,7 @@
 <template>
   <!-- Se asume que hay una barra de navegación ocupando el resto, por lo que usamos h-[90vh] -->
   <div
-    class="main-container h-[90vh] w-screen grid grid-rows-[30%,50%,10%] overflow-hidden p-0 m-0"
+    class="main-container h-[90vh] w-screen grid grid-rows-[35%,50%,10%] overflow-hidden p-0 m-0"
   >
     <!-- 1) Imagen al 40% -->
     <div
@@ -73,9 +73,9 @@
           />
         </svg>
       </a>
-      <a v-else @click="connect" :disabled="socketStore.reconnecting" class="btn btn-warning">
+      <button v-else @click="connect" :disabled="socketStore.reconnecting" class="btn btn-warning">
         Conectar
-      </a>
+      </button>
       <div v-if="room.privileges" class="flex justify-end">
         <a class="btn btn-primary" @click="startVoting">
           Iniciar
@@ -244,4 +244,5 @@ button:hover {
   cursor: pointer;
 
 }
+
 </style>
