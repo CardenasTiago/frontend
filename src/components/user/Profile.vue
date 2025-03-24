@@ -167,14 +167,7 @@ const storeUser = async () => {
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({
-        name: user.value.name,
-        lastname: user.value.lastname,
-        username: user.value.username,
-        dni: user.value.dni,
-        email: user.value.email,
-        image: user.value.imageBase64,
-      }),
+      body: JSON.stringify(user.value),
     });
 
     if (response.ok) {      
