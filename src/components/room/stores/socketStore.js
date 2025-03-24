@@ -132,6 +132,9 @@ export const useWebSocketStore = defineStore('webSocketStore', {
         case "first_proposal":
           console.log(eventData);
           this.voting = true
+          //por las dudas reseteo los resultados
+          this.resultsAvailable = false; 
+          this.resultsReady = false;  
           this.currentProposal = eventData.payload;
           break;
         case "results":
