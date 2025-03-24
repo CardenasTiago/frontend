@@ -1,10 +1,13 @@
 <template> 
   <form @submit.prevent="storeUser" >
-    <div  class="avatar flex justify-center">
-        <div class="ring-primary ring-offset-base-100 w-24 rounded-full ring ring-offset-2">
-            <img src="" />
-        </div>
-    </div> 
+    <div class="avatar flex justify-center">
+      <!-- Contenedor principal con posición relativa -->
+      <div class="ring-primary ring-offset-base-100 w-24 rounded-full ring ring-offset-2">
+          <!-- Imagen dentro del contenedor -->
+          <img src="" />
+      </div>     
+    </div>
+
 
     <div class="mt-6 p-4 lg:flex-row">
         <fieldset class="fieldset flex mb-8">

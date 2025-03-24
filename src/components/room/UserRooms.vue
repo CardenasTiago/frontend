@@ -1,5 +1,5 @@
 <template>
-  <div class="flex justify-center">
+  <div class="ml-10">
     <BackButton/>    
   </div>
   <div v-for="(sala, index) in paginatedSalas" :key="index" class="max-w-screen-md mx-auto px-4  mt-8  bg-neutral rounded-lg">
@@ -7,11 +7,11 @@
         
         <div class="mt-1 p-3 w-2/3 ml-3 flex flex-col gap-3 ">
           <p class="text-secondary text-xs font-bold lg:text-sm  md:text-sm">{{ sala.state }}</p>
-          <h2 class="card-title text-accent opacity-80 text-sm lg:text-xl md:text-md">{{truncateText (sala.room_title, 28) }}</h2>
+          <h2 class="card-title text-accent opacity-80 text-xs lg:text-xl md:text-md">{{truncateText (sala.room_title, 28) }}</h2>
           <p class="text-xs text-accent opacity-60 lg:text-sm hidden lg:block md:block " >{{truncateText (sala.description,50) }}</p>
 
           <div class="relative flex justify-between ">
-            <button class="btn bg-transparent hover:bg-transparent border-none shadow-none p-0 "
+            <button class="absolute top-2 lg:top-0 btn bg-transparent hover:bg-transparent border-none shadow-none p-0 "
               @click.stop.prevent="openDeleteModal(sala)">
               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                 stroke="currentColor" class="size-5 lg:size-6 md:size-6 text-primary hover:text-accent">
@@ -20,7 +20,7 @@
               </svg>
             </button>
 
-            <div class="lg:hidden md:hidden text-accent opacity-70 flex items-center gap-x-1  ">
+            <div class="absolute top-6 right-8 lg:hidden md:hidden text-accent opacity-70 flex items-center gap-x-1  ">
               <p class="text-xs">Ver más</p>
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="size-5 mt-1">
                 <path fill-rule="evenodd"
@@ -56,16 +56,16 @@
   </div>
 
   <!-- Paginador -->
-  <div class="join flex justify-center mt-6">
-    <button class="join-item btn bg-primary" :disabled="currentPage === 1" @click="previousPage">
+  <div class="join flex justify-center mt-6 ">
+    <button class="join-item btn bg-primary hover:bg-primary" :disabled="currentPage === 1" @click="previousPage">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-4">
         <path fill-rule="evenodd"
           d="M7.28 7.72a.75.75 0 0 1 0 1.06l-2.47 2.47H21a.75.75 0 0 1 0 1.5H4.81l2.47 2.47a.75.75 0 1 1-1.06 1.06l-3.75-3.75a.75.75 0 0 1 0-1.06l3.75-3.75a.75.75 0 0 1 1.06 0Z"
           clip-rule="evenodd" />
       </svg>
     </button>
-    <button class="join-item btn bg-primary">Página {{currentPage}}</button>
-    <button class="join-item btn bg-primary" :disabled="currentPage === totalPages" @click="nextPage">
+    <button class="join-item btn bg-primary hover:bg-primary">Página {{currentPage}}</button>
+    <button class="join-item btn bg-primary hover:bg-primary" :disabled="currentPage === totalPages" @click="nextPage">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-4">
         <path fill-rule="evenodd"
           d="M16.72 7.72a.75.75 0 0 1 1.06 0l3.75 3.75a.75.75 0 0 1 0 1.06l-3.75 3.75a.75.75 0 1 1-1.06-1.06l2.47-2.47H3a.75.75 0 0 1 0-1.5h16.19l-2.47-2.47a.75.75 0 0 1 0-1.06Z"
