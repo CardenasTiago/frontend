@@ -9,7 +9,11 @@ Si todavia no creaste la red externa, ejecutar el siguiente comando
 Luego arrancar el contenedor que tiene instalado node 20 y pnpm
 
     docker compose run astro-app sh
-    
+
+Si ese comando no funciona intentar con este 
+
+    docker compose run -serice-ports astro-app sh
+
 Instalar dependencias
 
     pnpm install
@@ -23,9 +27,3 @@ El front deberia verse en
     localhost:4321
 
 > Si la API de go esta apagada, va a tirar error
-
-Si hay que actualizar la lista de dependencias
-
-    docker exec -it astro-app sh
-
-    pnpm update
