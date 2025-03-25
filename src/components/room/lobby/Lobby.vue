@@ -152,6 +152,16 @@ watch(socketStore.resultsReady, (val) => {
   }
 })  
 
+watch(
+  () => socketStore.redirectMenu,
+  (available) => {
+    if (available && room.value?.privileges) {
+      window.location.href = '/protected/menu'
+    }
+  },
+  { immediate: true }
+);
+
 provide('username', username);
 
 const defaultImage = '/src/assets/default-image.jpg'; 

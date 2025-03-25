@@ -21,6 +21,7 @@ export const useWebSocketStore = defineStore('webSocketStore', {
     maxReconnectAttempts: 5,
     reconnectBaseDelay: 1000,
     autoReconnect: true,
+    redirectMenu: false,
     username: '',
     room: null,
     roomId: null,
@@ -82,6 +83,7 @@ export const useWebSocketStore = defineStore('webSocketStore', {
         }
         if (event.code === 4002) {
           alert("Conexion rechazada, ya estas conectado a la sala.");
+          this.redirectMenu = true;
           return
         }
 
