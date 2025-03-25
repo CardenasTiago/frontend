@@ -10,10 +10,10 @@ const { id } = Astro.params;
 
 
 <Layout title="Sala">
-    <ProtectedRoute client:load>       
-            
+    <ProtectedRoute client:load> 
+          
            <CardRoom client:load id={id} />        
-           
+          
     </ProtectedRoute>
 </Layout>
 

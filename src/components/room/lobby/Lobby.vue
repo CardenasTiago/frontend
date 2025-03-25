@@ -121,10 +121,7 @@ onMounted(() => {
     console.error('No se encontró el room ID en el almacenamiento local.');
   }
 
-  const joinedRoomId = localStorage.getItem('joinedRoomId');
-  roomId.value = JSON.parse(joinedRoomId);
-
-  wsUrl = `ws://localhost:3000/v1/rooms/ws/${roomId.value}`;
+  wsUrl = `ws://localhost:3000/v1/rooms/ws/${room.value.id}`;
 
   socketStore.connect(wsUrl);
 });

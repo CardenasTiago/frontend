@@ -38,7 +38,6 @@ const handleSubmit = async () => {
 
       // Guardar los datos de la sala en localStorage
       localStorage.setItem("currentRoom", JSON.stringify(data.room));
-      localStorage.setItem("joinedRoomId", JSON.stringify(data.room.id));
 
       // Obtener la configuración
       const url = "http://localhost:3000/v1/settingsRoom/byRoom/" + data.room.id;
