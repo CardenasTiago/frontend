@@ -179,6 +179,19 @@ const fetchSala = async () => {
     localStorage.setItem("currentRoom", JSON.stringify(sala.value.room));
     console.log("Sala guardada en localStorage:", sala.value);
 
+    const url = "http://localhost:3000/v1/settingsRoom/byRoom/" + props.id;
+      const response2 = await fetch(url, {
+        method: "GET",
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (response2.ok) {
+        const config = await response2.json();
+        localStorage.setItem("settingsRoom", JSON.stringify(config));
+      } 
   } catch (err) {
     error.value = err.message;
   }

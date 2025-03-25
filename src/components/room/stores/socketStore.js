@@ -20,6 +20,8 @@ export const useWebSocketStore = defineStore('webSocketStore', {
     reconnectAttempts: 0,
     maxReconnectAttempts: 5,
     reconnectBaseDelay: 1000,
+    autoReconnect: true,
+    redirectMenu: false,
     username: '',
     room: null,
     roomId: null,
@@ -48,17 +50,18 @@ export const useWebSocketStore = defineStore('webSocketStore', {
 
   actions: {
     connect(url) {
-
-      if (this.socket !== null) {
-        console.warn('Ya estás conectado al WebSocket.');
+      if (this.socket && (this.socket.readyState === WebSocket.CONNECTING || this.socket.readyState === WebSocket.OPEN)) {
+        console.warn('Ya existe una conexión WebSocket activa o en proceso.');
         return;
       }
+      
       this.socketUrl = url;
       this.socket = new WebSocket(url);
 
       this.socket.onopen = () => {
         this.connected = true;
         this.reconnecting = false;
+        this.autoReconnect = true;
         this.reconnectAttempts = 0;
         this.pushMessage('Conexión abierta.');
       };
@@ -71,16 +74,25 @@ export const useWebSocketStore = defineStore('webSocketStore', {
       this.socket.onclose = (event) => {
         this.connected = false;
         this.socket = null;
+        if (!this.autoReconnect) {
+          return;  
+        }
         if (event.code === 4001) {
           this.pushMessage('La sala no existe. No se reintentará la conexión.');
           return;
         }
-        this.pushMessage('Conexión cerrada.');
-        if (this.reconnectAttempts < this.maxReconnectAttempts) {
-          this.attemptReconnect();
-        } else {
-          this.pushMessage('Se alcanzó el número máximo de intentos de reconexión.');
+        if (event.code === 4002) {
+          alert("Conexion rechazada, ya estas conectado a la sala.");
+          this.redirectMenu = true;
+          return
         }
+
+        // this.pushMessage('Conexión cerrada.');
+        // if (this.reconnectAttempts < this.maxReconnectAttempts) {
+        //   this.attemptReconnect();
+        // } else {
+        //   this.pushMessage('Se alcanzó el número máximo de intentos de reconexión.');
+        // }
       };
 
       this.socket.onerror = (error) => {
@@ -106,6 +118,7 @@ export const useWebSocketStore = defineStore('webSocketStore', {
 
     close() {
       this.connected = false;
+      this.autoReconnect = false; 
       if (this.socket === null) {
         console.warn('No estás conectado al WebSocket.');
         return;
@@ -130,7 +143,6 @@ export const useWebSocketStore = defineStore('webSocketStore', {
           this.updateClientList(eventData.payload);
           break;
         case "first_proposal":
-          console.log(eventData);
           this.voting = true
           //por las dudas reseteo los resultados
           this.resultsAvailable = false; 
@@ -139,7 +151,6 @@ export const useWebSocketStore = defineStore('webSocketStore', {
           break;
         case "results":
           this.resultsReady = true;
-          console.log(eventData);
           this.results = eventData.payload;
           break
         case "next_proposal":

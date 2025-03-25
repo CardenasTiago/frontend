@@ -1,6 +1,6 @@
 <template>
   <div
-    class="main-container h-[90vh] w-screen grid grid-rows-[35%,50%,10%] overflow-hidden p-0 m-0"
+    class="main-container h-[85vh] w-screen grid grid-rows-[35%,50%,10%] overflow-hidden p-0 m-0"
   >
     <div
       :style="containerStyle"
@@ -67,9 +67,9 @@
           />
         </svg>
       </a>
-      <button v-else @click="connect" :disabled="socketStore.reconnecting" class="btn btn-warning">
-        Conectar
-      </button>
+      <a v-else @click="connect"  class="btn btn-warning">
+        Reconectar
+      </a>
       <div v-if="room.privileges" class="flex justify-end">
         <a class="btn btn-primary" @click="startVoting">
           Iniciar
@@ -88,7 +88,7 @@ export default {
 </script>
 <script setup>
 
-import { ref, onMounted, provide, watch, computed } from 'vue';
+import { ref, onMounted, onUnmounted, provide, watch, computed } from 'vue';
 import { useWebSocketStore } from '../stores/socketStore'
 import { storeToRefs } from 'pinia'
 import { useRouter } from 'vue-router'
@@ -106,7 +106,6 @@ const {
 
 const router = useRouter()
 const room = ref('');
-const roomId = ref('');
 const username = ref('');
 let wsUrl = ''; // Variable normal, ya que no se requiere reactividad
 
@@ -146,6 +145,23 @@ watch(voting, (val) => {
   }
 })
 
+//en caso de que un usuario entre tarde a la sala y la votacion ya haya empezado
+watch(socketStore.resultsReady, (val) => {
+  if (val) {
+    router.push('/results')
+  }
+})  
+
+watch(
+  () => socketStore.redirectMenu,
+  (available) => {
+    if (available && room.value?.privileges) {
+      window.location.href = '/protected/menu'
+    }
+  },
+  { immediate: true }
+);
+
 provide('username', username);
 
 const defaultImage = '/src/assets/default-image.jpg'; 
@@ -167,6 +183,12 @@ const extractDominantColor = () => {
 const containerStyle = computed(() => ({
   boxShadow: dominantColor.value ? `0 4px 10px ${dominantColor.value}` : 'none'
 }));
+
+
+// onUnmounted (() => {
+//   socketStore.socket.close()
+// });
+
 </script>
 
 <style scoped>
