@@ -1,22 +1,17 @@
 ---
-import CardRoom from '../../../components/room/CardRoom.vue';
-import ProtectedRoute from '../../../components/authentication/ProtectedRoute.vue';
-import Layout from '../../../layouts/Layout.astro';
+import CardRoom from "../../../components/room/CardRoom.vue";
+import ProtectedRoute from "../../../components/authentication/ProtectedRoute.vue";
+import Layout from "../../../layouts/Layout.astro";
 import StartRoom from "../../../components/room/lobby/StartRoom.vue";
-
 
 const { id } = Astro.params;
 ---
 
-
 <Layout title="Sala">
-    <ProtectedRoute client:load>       
-            
-           <CardRoom client:load id={id} />        
-           
-    </ProtectedRoute>
+  <ProtectedRoute client:load>
+    <CardRoom client:load id={id} />
+  </ProtectedRoute>
 </Layout>
-
 
 <style>
   main {
