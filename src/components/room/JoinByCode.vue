@@ -52,10 +52,7 @@ const handleSubmit = async () => {
       if (response2.ok) {
         const config = await response2.json();
         localStorage.setItem("settingsRoom", JSON.stringify(config));
-		console.log("hola")
-      } else {
-		console.log("chau")
-	  }
+      } 
 
       // Redirigir a la sala
       window.location.href = `/protected/roomInfo/${data.room.id}`;

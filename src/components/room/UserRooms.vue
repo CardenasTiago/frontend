@@ -27,8 +27,8 @@
           <h2 class="card-title text-accent opacity-80 ">{{ sala.room_title || "cargando"}}</h2>
           <p class="sm:text-xs text-accent opacity-60 lg:text-sm hidden sm:block">{{ sala.description }}</p>
 
-          <div class="flex justify-end  ">
-            <button class="btn bg-transparent   hidden lg:block md:block hover:bg-transparent border-none shadow-none"
+          <div class="flex justify-end">
+            <button class="btn bg-transparent hidden lg:block md:block hover:bg-transparent border-none shadow-none"
               @click.stop.prevent="openDeleteModal(sala)">
               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                 stroke="currentColor" class="size-6 text-primary  hover:text-accent">
