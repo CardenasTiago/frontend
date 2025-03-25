@@ -49,11 +49,11 @@ export const useWebSocketStore = defineStore('webSocketStore', {
 
   actions: {
     connect(url) {
-
-      if (this.socket !== null) {
-        console.warn('Ya estás conectado al WebSocket.');
+      if (this.socket && (this.socket.readyState === WebSocket.CONNECTING || this.socket.readyState === WebSocket.OPEN)) {
+        console.warn('Ya existe una conexión WebSocket activa o en proceso.');
         return;
       }
+      
       this.socketUrl = url;
       this.socket = new WebSocket(url);
 

@@ -67,9 +67,9 @@
           />
         </svg>
       </a>
-      <button v-else @click="connect" :disabled="socketStore.reconnecting" class="btn btn-warning">
-        Conectar
-      </button>
+      <a v-else @click="connect"  class="btn btn-warning">
+        Reconectar
+      </a>
       <div v-if="room.privileges" class="flex justify-end">
         <a class="btn btn-primary" @click="startVoting">
           Iniciar
@@ -174,6 +174,10 @@ const containerStyle = computed(() => ({
   boxShadow: dominantColor.value ? `0 4px 10px ${dominantColor.value}` : 'none'
 }));
 
+
+// onUnmounted (() => {
+//   socketStore.socket.close()
+// });
 
 </script>
 
