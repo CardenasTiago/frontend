@@ -1,6 +1,6 @@
 <template>
 
-  <div v-if="sala" class="bg-neutral  mt-3 relative lg:p-12">
+  <div v-if="sala" class="bg-neutral  mt-6 lg:mt-3 relative lg:p-12 ">
     <div class="relative flex items-center justify-center">
       <div class="absolute top-0 left-0 p-4">
         <BackButton />
@@ -11,12 +11,12 @@
         <!-- Imagen -->
         <img :src="sala.room.image || defaultImage" alt="Imagen de la sala"
           class="object-cover w-full h-full rounded-lg " />
-          <label for="fileInput"
-            class="absolute bottom-4 right-4 flex items-center font-bold py-1 px-4 rounded-full lg:opacity-0 group-hover:opacity-100 transition-opacity btn-primary btn-xs cursor-pointer">
-            Cambiar Foto
-          </label>
-          <!-- Input de archivo (oculto, se activa con el click del label) -->
-          <input id="fileInput" type="file" class="hidden" @change="handleFileChange" />
+        <label for="fileInput"
+          class="absolute bottom-4 right-4 flex items-center font-bold py-1 px-4 rounded-full lg:opacity-0 group-hover:opacity-100 transition-opacity btn-primary btn-xs cursor-pointer">
+          Cambiar Foto
+        </label>
+        <!-- Input de archivo (oculto, se activa con el click del label) -->
+        <input id="fileInput" type="file" class="hidden" @change="handleFileChange" />
       </div>
     </div>
 
@@ -32,7 +32,7 @@
         <!-- Botón de editar (solo visible cuando NO se está editando) -->
         <button v-if="!isEditing" @click="toggleEdit()"
           class="bg-primary text-neutral btn btn-xs btn-circle group-hover:opacity-100 lg:opacity-0 lg:group-hover:opacity-100 sm:block  ">
-          <Icon icon="proicons:pencil" class="w-6 h-5"/>
+          <Icon icon="proicons:pencil" class="w-6 h-5" />
         </button>
 
         <!-- Contenedor para los botones de edición -->
@@ -40,12 +40,12 @@
 
           <!-- Botón de guardar (solo visible en pantallas pequeñas) -->
           <button @click="updateRoom()" class="sm:block lg:hidden p-0 bg-success rounded-full text-neutral">
-            <Icon icon="material-symbols:check-rounded" class="w-6 h-6"/>
+            <Icon icon="material-symbols:check-rounded" class="w-6 h-6" />
           </button>
 
           <!-- Botón de cancelar (solo visible en pantallas pequeñas) -->
           <button @click="cancelEdit()" class="sm:block lg:hidden p-0 bg-error rounded-full text-neutral">
-            <Icon icon="proicons:cancel" class="w-6 h-6"/>
+            <Icon icon="proicons:cancel" class="w-6 h-6" />
           </button>
 
           <!-- Botones de texto para pantallas grandes -->
@@ -81,57 +81,47 @@
             {{ new Date(sala.room.start_time).toLocaleDateString('default', { month: 'long' }) }}
             {{ new Date(sala.room.start_time).toLocaleDateString('default', { day: 'numeric' }) }},
             {{ new Date(sala.room.start_time).toLocaleDateString('default', { year: 'numeric' }) }} -
-            {{ new Date(sala.room.start_time).toLocaleTimeString('es-ES', {hour: '2-digit', minute: '2-digit', hour12:false }) }} hs
-          </h2>        
+            {{ new Date(sala.room.start_time).toLocaleTimeString('es-ES', {hour: '2-digit', minute: '2-digit',
+            hour12:false }) }} hs
+          </h2>
         </div>
-       
+
         <div class="mt-6">
           <h2 class="text-sm">Link de Invitación</h2>
           <div class="flex gap-2 group">
             <h2 class="text-primary text-md ">{{ sala.room.link_invite }}</h2>
-            <button
-              @click="copyToClipboard" 
+            <button @click="copyToClipboard"
               class="btn btn-sm lg:opacity-0 lg:group-hover:opacity-100 border-none shadow-none hover:bg-transparent bg-transparent p-0">
-              <Icon icon="fa6-regular:copy" class="w-5 h-5 text-primary font-bold"/>
-            </button>                               
+              <Icon icon="fa6-regular:copy" class="w-5 h-5 text-primary font-bold" />
+            </button>
           </div>
           <!-- Tooltip que aparece cuando se copia -->
-          <div v-if="copied" class="fixed top-4 left-1/2 transform -translate-x-1/2 bg-success text-accent text-sm px-2 py-1 rounded-lg text-xs md:text-sm lg:text-sm">
+          <div v-if="copied"
+            class="fixed top-4 left-1/2 transform -translate-x-1/2 bg-success text-accent  px-2 py-1 rounded-lg text-xs md:text-sm lg:text-sm">
             Link copiado en el portapapeles
-          </div>                          
+          </div>
         </div>
-        
-        
-
 
         <div class="mt-4">
           <h2 class="text-sm">Administrador</h2>
           <div class="flex gap-16">
-            <h2 class="text-primary text-md">{{ sala.room.admin_name }}</h2> 
+            <h2 class="text-primary text-md">{{ sala.room.admin_name }}</h2>
+            <!--Botón desplegable  -->
             <div class="lg:hidden md:hidden dropdown dropdown-top">
-              <div tabindex="0" role="button" class="btn btn-sm rounded-full bg-primary">
-                <Icon icon="mdi:more-circle" class="w-6 h-6"/> 
+              <div tabindex="0" role="button"
+                class="btn btn-sm rounded-full bg-transparent border-none hover:bg-transparent shadow-none">
+                <Icon icon="nrk:more-active" class="w-6 h-6 text-primary" />
               </div>
-                <ul tabindex="0" class="dropdown-content menu bg-base-100  z-1 w-52 ">
-                  <li><a :href="`../proposal?id=${sala.room.id}`" class="btn btn-primary btn-sm">Propuestas</a></li>
-                  <li><a :href="`../formalSettingRoom?id=${sala.room.id}`" class="btn btn-primary btn-sm mt-2">Otras configuraciones</a></li>
-                </ul>
-            </div>            
-        
-                
-            
-            
+              <ul tabindex="0" class="dropdown-content menu bg-base-100  z-1 w-52 ">
+                <li><a :href="`../proposal?id=${sala.room.id}`" class="btn btn-primary btn-sm">Propuestas</a></li>
+                <li><a :href="`../formalSettingRoom?id=${sala.room.id}`" class="btn btn-primary btn-sm mt-3">Otras
+                    configuraciones</a></li>
+              </ul>
+            </div>
           </div>
+        </div>
 
-
-
-
-
-
-
-
-        </div>  
-      </div>      
+      </div>
 
 
 
@@ -148,11 +138,11 @@
 
     </div>
 
-    <div class="flex justify-center p-4">
+    <div class="flex justify-center p-2">
       <StartRoom client:load />
     </div>
 
- 
+
 
   </div>
 </template>
