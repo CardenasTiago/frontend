@@ -408,9 +408,21 @@ const handleSubmit = async () => {
 
 const handleFileUpload = (event) => {
   const file = event.target.files[0];
-  if (file) {
-    form.value.archive = file.name;
-  }
+
+  if (!file) return;
+
+  const reader = new FileReader();
+  reader.readAsDataURL(file);
+
+  reader.onload = () => {
+    form.value.archive = reader.result; // Guarda el archivo en base64
+    console.log('Archivo en base64:', form.value.archive); // Debug
+  };
+
+  reader.onerror = (error) => {
+    console.error('Error al convertir el archivo:', error);
+    error.value = 'Error al subir el archivo';
+  };
 };
 
 onMounted(() => {
