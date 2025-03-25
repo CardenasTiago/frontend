@@ -1,27 +1,26 @@
 <template>
   <div v-if="room">
+
+
     <h1 class="font-semibold text-center">{{ room.room_title }}</h1>
-    <h2 class="mb-2">Descripción</h2>
-    <p class="mb-4">
-      {{ room.description || 'Sin descripción' }}
-    </p>
 
     <div class="flex justify-between">
       <div>
-        <h2 class="mb-2">Fecha y hora</h2>
-        <!-- Utilizamos la propiedad computada para formatear la fecha -->
-        <h1 class="font-semibold mb-4">{{ formattedDate }}</h1>
+        <h2 class="mb-2">Descripción</h2>
+        <p class="mb-4">
+          {{ room.description || 'Sin descripción' }}
+        </p>
       </div>
-
       <div class="align-baseline">
         <div class="flex flex-end align-baseline justify-end">
           <h2 class="mb-2 mr-2 flex flex-end justify-end">Código</h2>
           <button @click="toggleBlur" class="text-secondary">
-            <div v-if="isBlurred" class="text-primary mb-1">
-              <Icon icon="ic:outline-remove-red-eye" width="24" height="24" />
-            </div>
-            <div v-else class="text-primary mb-1">
+            <div v-if="isBlurred" class="text-primary mb-1 mr-0 p-0">
               <Icon icon="mdi:eye-closed" width="24" height="24" />
+
+            </div>
+            <div v-else class="text-primary mb-1 mr-0 p-0">
+              <Icon icon="ic:outline-remove-red-eye" width="24" height="24" />
             </div>
           </button>
         </div>
@@ -46,8 +45,15 @@
           </div>
         </transition>
       </div>
-
     </div>
+
+    <div>
+      <h2 class="mb-2">Fecha y hora</h2>
+      <!-- Utilizamos la propiedad computada para formatear la fecha -->
+      <h1 class="font-semibold mb-4">{{ formattedDate }}</h1>
+    </div>
+
+
 
 
     <h2 class="mb-2">Administrador</h2>
