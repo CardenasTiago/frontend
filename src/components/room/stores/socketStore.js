@@ -82,6 +82,7 @@ export const useWebSocketStore = defineStore('webSocketStore', {
         }
         if (event.code === 4002) {
           alert("Conexion rechazada, ya estas conectado a la sala.");
+          return
         }
 
         // this.pushMessage('Conexión cerrada.');
