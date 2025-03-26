@@ -1,6 +1,6 @@
 <template>
   <div
-    class="main-container h-[85vh] w-screen grid grid-rows-[35%,50%,10%] overflow-hidden p-0 m-0"
+    class="main-container h-[85vh] w-screen grid grid-rows-[35%,50%,auto] overflow-hidden p-0 m-0"
   >
     <div
       :style="containerStyle"
@@ -23,8 +23,8 @@
         crossOrigin="anonymous"
       />
     </div>
-    <div class="overflow-y-auto">
-      <v-card flat elevation="0" class="flex flex-col items-center justify-center">
+    <div class="overflow-y-auto w-full">
+      <v-card flat elevation="0" class="flex items-center justify-center">
         <v-tabs v-model="tab" align-tabs="center" class="w-full">
           <div class="custom-buttons mb-4">
             <button :class="{ 'active-button': tab === 1 }" @click="tab = 1">
@@ -71,7 +71,7 @@
         Reconectar
       </a>
       <div v-if="room.privileges" class="flex justify-end">
-        <a class="btn btn-primary" @click="startVoting">
+        <a class="btn btn-primary initiliaze" @click="startVoting">
           Iniciar
           <Icon icon="ic:baseline-not-started" width="24" height="24" />
         </a>
@@ -238,7 +238,7 @@ button:hover {
 }
 
 .initiliaze:hover {
-  size: 1.1rem;
+  size: 1.4rem;
 }
 
 .btn-error {

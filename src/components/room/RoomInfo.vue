@@ -36,7 +36,6 @@
             </button>
           </div>
         </div>
-        <!-- Tooltip que aparece cuando se copia -->
 
         <transition name="fade">
           <div v-if="copied"

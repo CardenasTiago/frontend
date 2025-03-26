@@ -160,6 +160,8 @@ export const useWebSocketStore = defineStore('webSocketStore', {
           this.resultsReady = false
           this.currentProposal = eventData.payload;
           break;
+        case "kick_user":
+          break;
         default:
           alert("Unsupported action");
           break;

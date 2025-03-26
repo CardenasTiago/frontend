@@ -10,9 +10,14 @@
                     <Icon v-else icon="ic:baseline-person" class="rounded-full object-cover text-secondary" width="24"
                         height="24" />
 
+
                     <span alt="Nombre de usuario">
                         {{ client.username }}
                     </span>
+                    <button v-if="client.username !== user.username && room.privileges" class="text-error"
+                        @click="kickUser(client.id)">
+                        <Icon icon="mdi:cross-circle-outline" width="24" height="24" />
+                    </button>
                 </div>
 
 
@@ -27,6 +32,7 @@
 
 <script setup>
 import { useWebSocketStore } from '../stores/socketStore';
+import { ref, onMounted } from 'vue'
 import { storeToRefs } from 'pinia'
 import { Icon } from "@iconify/vue";
 
@@ -35,6 +41,31 @@ const {
     userList
 } = storeToRefs(socketStore)
 
+const user = ref('');
+const room = ref('');
+
+
+onMounted(() => {
+    const loggedUser = localStorage.getItem('user');
+
+    if (loggedUser) {
+        user.value = JSON.parse(loggedUser);
+    } else {
+        console.error('No se encontro el usuario en el almacenamiento local.');
+    }
+
+    const storedRoom = localStorage.getItem('currentRoom');
+
+    if (storedRoom) {
+        room.value = JSON.parse(storedRoom);
+    } else {
+        console.error('No se encontró el room ID en el almacenamiento local.');
+    }
+});
+
+function kickUser(id) {
+    socketStore.socket.sendEvents("kick_user", { user_id: id });
+}
 </script>
 
 <style>
