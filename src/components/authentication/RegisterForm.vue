@@ -1,12 +1,12 @@
 <template>
   <form @submit.prevent="handleSubmit">
-    <div class="flex flex-wrap gap-2">
-      <div class="max-w my-2">
+    <div class="lg:flex lg:flex-wrap gap-2">
+      <div class="lg:max-w lg:my-2 my-4">
         <label class="flex input input-bordered input-primary items-center p-2">Nombre
           <input v-model="form.name" type="text" class="text-center" required />
         </label>
       </div>
-      <div class="my-2">
+      <div class="lg:my-2">
         <label class="flex input input-bordered input-primary items-center p-2">Apellido
           <input v-model="form.lastname" type="text" class="text-center" required />
         </label>

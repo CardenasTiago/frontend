@@ -4,10 +4,10 @@ import Header from "../components/reusable/Navbar.vue";
 import ViewTransitions from "astro/components/ViewTransitions.astro";
 interface Props {
   title: string;
-  hideHeader?: boolean;
+  hideMenuItems?: boolean;
 }
 
-const { title,hideHeader } = Astro.props;
+const { title,hideMenuItems=false } = Astro.props;
 ---
 
 <!doctype html>
@@ -20,7 +20,7 @@ const { title,hideHeader } = Astro.props;
     <meta name="generator" content={Astro.generator} />
     <title>{title}</title>
     <ViewTransitions />
-    { !hideHeader && <Header client:only="vue"/> }
+     <Header client:only="vue": hideMenuItems={hideMenuItems}/> 
   </head>
   <body
     class="items-center justify-center">
