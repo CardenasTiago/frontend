@@ -163,6 +163,7 @@ export const useWebSocketStore = defineStore('webSocketStore', {
           this.currentProposal = eventData.payload;
           break;
         case "kick_user": //lo ve el que es kickeado
+          this.close()
           window.location.href = '/protected/menu'
           break;
         case "kick_info":// lo ve el resto de la sala

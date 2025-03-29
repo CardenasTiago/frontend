@@ -26,7 +26,7 @@
     <div class="overflow-y-auto w-full">
       <v-card flat elevation="0" class="flex items-center justify-center">
         <v-tabs v-model="tab" align-tabs="center" class="w-full">
-          <div class="custom-buttons mb-4">
+          <div class="custom-buttons mb-4 pl-6">
             <button :class="{ 'active-button': tab === 1 }" @click="tab = 1">
               Chat
             </button>
@@ -88,7 +88,7 @@ export default {
 </script>
 <script setup>
 
-import { ref, onMounted, onUnmounted, provide, watch, computed } from 'vue';
+import { ref, onMounted,  provide, watch, computed } from 'vue';
 import { useWebSocketStore } from '../stores/socketStore'
 import { storeToRefs } from 'pinia'
 import { useRouter } from 'vue-router'

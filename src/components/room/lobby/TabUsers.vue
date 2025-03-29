@@ -14,7 +14,7 @@
                     <span alt="Nombre de usuario">
                         {{ client.username }}
                     </span>
-                    <button v-if="client.username !== user.username && room.privileges" class="text-error"
+                    <button alt="expulsar usuario" v-if="client.username !== user.username && room.privileges" class="text-error"
                         @click="kickUser(client.id)">
                         <Icon icon="mdi:cross-circle-outline" width="24" height="24" />
                     </button>
