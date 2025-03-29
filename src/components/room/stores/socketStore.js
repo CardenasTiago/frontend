@@ -54,7 +54,7 @@ export const useWebSocketStore = defineStore('webSocketStore', {
         console.warn('Ya existe una conexión WebSocket activa o en proceso.');
         return;
       }
-      
+
       this.socketUrl = url;
       this.socket = new WebSocket(url);
 
@@ -75,7 +75,7 @@ export const useWebSocketStore = defineStore('webSocketStore', {
         this.connected = false;
         this.socket = null;
         if (!this.autoReconnect) {
-          return;  
+          return;
         }
         if (event.code === 4001) {
           this.pushMessage('La sala no existe. No se reintentará la conexión.');
@@ -84,6 +84,7 @@ export const useWebSocketStore = defineStore('webSocketStore', {
         if (event.code === 4002) {
           alert("Conexion rechazada, ya estas conectado a la sala.");
           this.redirectMenu = true;
+          this.close()
           return
         }
 
@@ -118,7 +119,7 @@ export const useWebSocketStore = defineStore('webSocketStore', {
 
     close() {
       this.connected = false;
-      this.autoReconnect = false; 
+      this.autoReconnect = false;
       if (this.socket === null) {
         console.warn('No estás conectado al WebSocket.');
         return;
@@ -140,13 +141,14 @@ export const useWebSocketStore = defineStore('webSocketStore', {
           this.pushMessage(`${eventData.payload.from} : ${eventData.payload.message}`);
           break;
         case "update_client_list":
+          console.log(eventData.payload)
           this.updateClientList(eventData.payload);
           break;
         case "first_proposal":
           this.voting = true
           //por las dudas reseteo los resultados
-          this.resultsAvailable = false; 
-          this.resultsReady = false;  
+          this.resultsAvailable = false;
+          this.resultsReady = false;
           this.currentProposal = eventData.payload;
           break;
         case "results":
@@ -160,8 +162,12 @@ export const useWebSocketStore = defineStore('webSocketStore', {
           this.resultsReady = false
           this.currentProposal = eventData.payload;
           break;
-        case "kick_user":
+        case "kick_user": //lo ve el que es kickeado
+          window.location.href = '/protected/menu'
           break;
+        case "kick_info":// lo ve el resto de la sala
+          alert("un usuario fue expulsado");
+          break
         default:
           alert("Unsupported action");
           break;
