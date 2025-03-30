@@ -38,10 +38,7 @@
     <div v-if="selectedIndex !== null" class="mt-4 flex justify-end">
       <a class="flex justify-end btn btn-primary font-bold" @click="confirmVote">
         Enviar
-        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
-          <path fill="currentColor"
-            d="m3.4 20.4l17.45-7.48a1 1 0 0 0 0-1.84L3.4 3.6a.993.993 0 0 0-1.39.91L2 9.12c0 .5.37.93.87.99L17 12L2.87 13.88c-.5.07-.87.5-.87 1l.01 4.61c0 .71.73 1.2 1.39.91" />
-        </svg>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="m3.4 20.4l17.45-7.48a1 1 0 0 0 0-1.84L3.4 3.6a.993.993 0 0 0-1.39.91L2 9.12c0 .5.37.93.87.99L17 12L2.87 13.88c-.5.07-.87.5-.87 1l.01 4.61c0 .71.73 1.2 1.39.91"/></svg>
       </a>
     </div>
   </div>
@@ -111,7 +108,7 @@ onMounted(() => {
   }
 });
 
-// Si el admin no votó, lo lleva a confirmar resultados
+//si sos el admin y no votaste te lleva a confirmar resultados
 watch(
   () => socketStore.resultsAvailable,
   (available) => {
@@ -122,7 +119,7 @@ watch(
   { immediate: true }
 );
 
-// Si el usuario normal no votó, lo mantiene en esta página hasta que se muestren los resultados
+//No llegaste a votar siendo usuario normal, se te muestra esta pagina hasta que se muestren los resultados
 watch(resultsAvailable, (val) => {
   if (val && !room.value?.privileges) {
     router.push('/awaitResults');
@@ -147,10 +144,6 @@ button {
 /* Anulamos el ancho para el botón de vista */
 .view-btn {
   width: auto !important;
-}
-
-.view-btn:hover {
-  background-color: #7c3aed; /* Solo cambiamos el color al hover */
 }
 
 .selected {
