@@ -7,14 +7,26 @@
       <h1 v-if="settingsRoom && settingsRoom.proposal_timer" class="font-bold">
         {{ socketStore.countdown }}
       </h1>
-    </div>
-    <div v-if="currentProposal" class="proposal-container pb-4 m-4 w-[80%]">
+    </div>   
+    <div v-if="currentProposal" class="proposal-container pb-4 m-4 w-[80%] relative">
+      <button 
+        v-if="currentProposal.archive" 
+        @click="openFile(currentProposal.archive)" 
+        class="view-btn absolute top-2 right-2 w-10 h-10 flex items-center justify-center rounded-md btn btn-primary"
+        title="Ver archivo"
+      >
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+          <polyline points="15 3 21 3 21 9"></polyline>
+          <line x1="10" y1="14" x2="21" y2="3"></line>
+        </svg>
+      </button>
+
       <div class="description bg-secondary p-4">
-        <p>{{ currentProposal.description }} </p>
+        <p>{{ currentProposal.description }}</p>
       </div>
       <h1 class="font-semibold">{{ currentProposal.title }}</h1>
     </div>
-
 
     <div v-for="(option, index) in currentProposal.options" :key="index">
       <button class="btn btn-primary font-semibold mt-4" :class="{ 'selected bg-success': selectedIndex === index }"
@@ -26,7 +38,10 @@
     <div v-if="selectedIndex !== null" class="mt-4 flex justify-end">
       <a class="flex justify-end btn btn-primary font-bold" @click="confirmVote">
         Enviar
-        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="m3.4 20.4l17.45-7.48a1 1 0 0 0 0-1.84L3.4 3.6a.993.993 0 0 0-1.39.91L2 9.12c0 .5.37.93.87.99L17 12L2.87 13.88c-.5.07-.87.5-.87 1l.01 4.61c0 .71.73 1.2 1.39.91"/></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+          <path fill="currentColor"
+            d="m3.4 20.4l17.45-7.48a1 1 0 0 0 0-1.84L3.4 3.6a.993.993 0 0 0-1.39.91L2 9.12c0 .5.37.93.87.99L17 12L2.87 13.88c-.5.07-.87.5-.87 1l.01 4.61c0 .71.73 1.2 1.39.91" />
+        </svg>
       </a>
     </div>
   </div>
@@ -47,22 +62,22 @@ const room = ref(null);
 const error = ref("");
 const settingsRoom = ref(null);
 
+// Función para verificar si el archivo existe y abrirlo en una nueva pestaña
+const openFile = (fileName) => {
+  const fileURL = `http://localhost:3000/uploads/proposalFiles/${fileName}`;
+  window.open(fileURL, '_blank');
+};
+
 function toggleSelection(index) {
-  if (selectedIndex.value === index) {
-    selectedIndex.value = null;
-  } else {
-    selectedIndex.value = index;
-  }
+  selectedIndex.value = selectedIndex.value === index ? null : index;
 }
 
 function confirmVote() {
   if (selectedIndex.value === null) return;
-  // Envía el voto a través del socket
   socketStore.socket.sendEvents("vote", { option_id: currentProposal.value.options[selectedIndex.value].id });
   console.log("Voto confirmado:", currentProposal.value.options[selectedIndex.value].value);
 
   socket.voting = false;
-
   router.push('/awaitResults');
 }
 
@@ -84,11 +99,11 @@ onMounted(() => {
     try {
       settingsRoom.value = JSON.parse(storedSettingsRoom);
     } catch (e) {
-      error.value = 'Error al leer los datos de la configuracion de la sala.';
+      error.value = 'Error al leer los datos de la configuración de la sala.';
       console.error(e);
     }
   } else {
-    error.value = 'No se encontraron datos de la configuracion de la sala en el almacenamiento local.';
+    error.value = 'No se encontraron datos de la configuración de la sala en el almacenamiento local.';
   }
 
   if (settingsRoom.value?.proposal_timer) {
@@ -96,7 +111,7 @@ onMounted(() => {
   }
 });
 
-//si sos el admin y no votaste te lleva a confirmar resultados
+// Si el admin no votó, lo lleva a confirmar resultados
 watch(
   () => socketStore.resultsAvailable,
   (available) => {
@@ -107,7 +122,7 @@ watch(
   { immediate: true }
 );
 
-//No llegaste a votar siendo usuario normal, se te muestra esta pagina hasta que se muestren los resultados
+// Si el usuario normal no votó, lo mantiene en esta página hasta que se muestren los resultados
 watch(resultsAvailable, (val) => {
   if (val && !room.value?.privileges) {
     router.push('/awaitResults');
@@ -129,12 +144,19 @@ button {
   width: 300px;
 }
 
+/* Anulamos el ancho para el botón de vista */
+.view-btn {
+  width: auto !important;
+}
+
+.view-btn:hover {
+  background-color: #7c3aed; /* Solo cambiamos el color al hover */
+}
+
 .selected {
   @apply text-accent bg-success;
   transform: scale(1.1);
 }
-
-
 
 p {
   color: black;
