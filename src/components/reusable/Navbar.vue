@@ -32,7 +32,7 @@
     <!-- Navbar de móvil (visible en pantallas pequeñas) -->
 
     <div class="block md:hidden">
-        <div class="navbar bg-neutral flex justify-between gap-4">
+        <div class="navbar bg-neutral flex justify-between">
 
             <div class="text-xl font-bold text-primary mr-4">
                 <a href="/protected/menu" class="text-primary/80">{{ title }}</a>

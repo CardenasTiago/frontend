@@ -18,8 +18,8 @@
         </div>
     </div> 
 
-    <div class="mt-6 p-4 lg:flex-row">
-        <fieldset class="fieldset flex mb-8">
+    <div class="p-4 flex flex-col gap-8 ">
+        <fieldset class="fieldset flex">
             <legend class="fieldset-legend font-semi-bold text-secondary">Nombre</legend>
             <input
                 type="text"
@@ -31,7 +31,7 @@
             />
         </fieldset>
 
-        <fieldset class="fieldset flex mb-8">
+        <fieldset class="fieldset flex">
             <legend class="fieldset-legend font-semi-bold text-secondary">Apellido</legend>
             <input
                 type="text"
@@ -43,7 +43,7 @@
             />
         </fieldset>
 
-        <fieldset class="fieldset flex mb-8">
+        <fieldset class="fieldset flex ">
             <legend class="fieldset-legend font-semi-bold text-secondary">Nombre de usuario</legend>
             <input
                 type="text"
@@ -55,30 +55,36 @@
             />
         </fieldset>
 
-        <fieldset class="fieldset flex mb-8">
+        <fieldset class="fieldset flex ">
             <legend class="fieldset-legend font-semi-bold text-secondary">Documento</legend>
-            <input
-                type="text"
-                class="input  w-full"
-                v-model="user.dni" 
-                :disabled="!isEditing"
-                :class="isEditing ? '!border !border-primary !p-2' : '!border-0 !border-b !border-primary pointer-events-none !bg-transparent'"
-                required
-                maxlength="10"
-                minlength="8"
-            />
+            <div class="relative w-full">
+              <input
+                  type="text"
+                  class="input w-full"
+                  v-model="user.dni" 
+                  :disabled="true"                
+                  :class="isEditing ? '!border !border-primary !pl-10' : '!border-0 !border-b !border-primary pointer-events-none !bg-transparent'"
+                  required
+                  maxlength="10"
+                  minlength="8"
+              />
+              <Icon v-if="isEditing" icon="uil:padlock" class="absolute left-3 top-1/2 transform -translate-y-1/2 w-6 h-6 text-primary"/> 
+          </div>
         </fieldset>
 
-        <fieldset class="fieldset flex mb-8">
+        <fieldset class="fieldset flex">
             <legend class="fieldset-legend font-semi-bold text-secondary">Email</legend>
-            <input
-                type="email"
-                class="input  w-full"
-                v-model="user.email" 
-                :disabled="!isEditing"
-                :class="isEditing ? '!border !border-primary !p-2' : '!border-0 !border-b !border-primary pointer-events-none !bg-transparent'"
-                required
-            />
+            <div class="relative w-full">             
+              <input
+                  type="email"
+                  class="input w-full"
+                  v-model="user.email" 
+                  :disabled="true"
+                  :class="isEditing ? '!border !border-primary !pl-10' : '!border-0 !border-b !border-primary pointer-events-none !bg-transparent'"
+                  required                
+              />
+              <Icon v-if="isEditing" icon="uil:padlock" class="absolute left-3 top-1/2 transform -translate-y-1/2 w-6 h-6 text-primary"/>  
+            </div>             
         </fieldset>
 
         <div class="flex justify-center mt-8 gap-4">
@@ -111,12 +117,13 @@
             Cancelar
           </button>
         </div>
-      </div> 
-    </form> 
+      </div>      
+  </form> 
 </template>
 
 <script setup>
 import { ref,onMounted } from 'vue';
+import {Icon} from "@iconify/vue";
 
 const user = ref({
   name: "",
