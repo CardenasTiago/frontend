@@ -15,7 +15,7 @@
                 type="file" 
                 class="hidden" 
                 @change="handleFileUpload"
-                accept=".pdf,.doc,.docx,.txt"
+                accept=".pdf,.doc,.docx,.txt,.xls,.xlsx"
               />
               <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
@@ -73,6 +73,25 @@
             <span v-if="descriptionError" class="label-text-alt text-error">{{ descriptionError }}</span>
           </div>
         </label>
+      </div>
+
+      <!-- Archivo -->
+      <div v-if="form.archiveData" class="flex items-center justify-between bg-secondary/10 p-3 rounded-lg">
+        <div class="flex items-center gap-2">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+          </svg>
+          <span class="truncate">{{ form.archive }}</span>
+        </div>
+        <button 
+          type="button"
+          @click="removeFile"
+          class="text-accent/80 hover:text-accent"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
       </div>
 
       <!-- Opciones -->
@@ -145,6 +164,7 @@ const form = ref({
   title: '',
   description: '',
   archive: null,
+  archiveData: null,
   options: [
     { value: '' },
     { value: '' }
@@ -230,6 +250,34 @@ const removeOption = (index) => {
   }
 };
 
+const removeFile = () => {
+  form.value.archive = null;
+  form.value.archiveData = null;
+};
+
+const handleFileUpload = (event) => {
+  const file = event.target.files[0];
+  if (!file) return;
+  
+  const maxSize = 5 * 1024 * 1024;
+  if (file.size > maxSize) {
+    error.value = `El archivo es demasiado grande. El tamaño máximo permitido es ${maxSize / (1024 * 1024)}MB`;
+    return;
+  }
+  form.value.archive = file.name;
+  
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    form.value.archiveData = e.target.result;
+  };
+  reader.onerror = () => {
+    error.value = 'Error al leer el archivo';
+    form.value.archive = null;
+    form.value.archiveData = null;
+  };
+  reader.readAsDataURL(file);
+};
+
 const fetchProposal = async () => {
   try {
     const response = await fetch(`http://localhost:3000/v1/proposals/${proposalId.value}`, {
@@ -244,6 +292,7 @@ const fetchProposal = async () => {
     form.value.title = data.title || '';
     form.value.description = data.description || '';
     form.value.archive = data.archive || null;
+    // No podemos recuperar el contenido en base64 del archivo ya guardado
 
     // Obtener las opciones de la propuesta
     const optionsResponse = await fetch(`http://localhost:3000/v1/options/byProposal/${proposalId.value}`, {
@@ -287,7 +336,7 @@ const handleSubmit = async () => {
     const proposalPayload = {
       title: form.value.title.trim(),
       description: form.value.description.trim(),
-      archive: form.value.archive || '',
+      archive: form.value.archiveData || '', // Enviamos los datos en base64 si existen
       room_id: roomIdNumber 
     };
 
@@ -403,13 +452,6 @@ const handleSubmit = async () => {
     console.error('Error:', err);
   } finally {
     isSubmitting.value = false;
-  }
-};
-
-const handleFileUpload = (event) => {
-  const file = event.target.files[0];
-  if (file) {
-    form.value.archive = file.name;
   }
 };
 
