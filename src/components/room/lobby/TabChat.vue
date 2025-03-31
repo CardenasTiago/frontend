@@ -1,27 +1,31 @@
 <template>
-    <div class="chat-container">
+    <div class="chat-container flex  bg-base-100 border-secondary p-2 shadow-md shadow-secondary">
 
-        <div v-if="socketStore.connected" class="status connected">
+        <div v-if="socketStore.connected" class="text-success font-semibold flex items-end text-end">
             Conectado
-        </div>
-        <div v-else-if="socketStore.reconnecting" class="status reconnecting">
+        </div> 
+        <div v-else-if="socketStore.reconnecting" class="text-warning">
             Intentando reconectar... (Intento {{ socketStore.reconnectAttempts }})
         </div>
-        <div v-else class="status disconnected">
-            Desconectado del servidor WebSocket.
+        <div v-else class="text-error">
+            Desconectado.
         </div>
-
-        <div class="messages">
-            <h3>Mensajes:</h3>
+        <div class="messages flex-1 overflow-y-auto">
             <ul>
                 <li v-for="(msg, index) in messages" :key="index" class="text-accent">{{ msg }}</li>
             </ul>
         </div>
 
-        <div class="send-message">
-            <input v-model="inputMessageLocal" type="text" placeholder="Escribe un mensaje..."
-                @keyup.enter="sendMessage" ref="msgInput" />
-            <button @click="sendMessage">Enviar</button>
+        <div class="send-message flex justify-between items-center w-full">
+            <div class="flex-1">
+                <input v-model="inputMessageLocal" class="flex bg-neutral m-0 p-2 w-full" type="text"
+                    placeholder="Escribe un mensaje..." @keyup.enter="sendMessage" ref="msgInput" />
+            </div>
+            <div>
+                <button @click="sendMessage" class="text-primary m-2">
+                    <Icon icon="ic:baseline-send" width="24" height="24" />
+                </button>
+            </div>
         </div>
     </div>
 </template>
@@ -30,13 +34,14 @@
 import { inject, ref } from 'vue';
 import { useWebSocketStore } from '../stores/socketStore';
 import { storeToRefs } from 'pinia'
+import { Icon } from "@iconify/vue";
 
 const socketStore = useWebSocketStore();
 const socket = socketStore.socket;
 const username = inject('username');
 
-const {   
-  messages,
+const {
+    messages,
 } = storeToRefs(socketStore)
 
 const inputMessageLocal = ref('');
@@ -59,86 +64,26 @@ const sendMessage = () => {
 </script>
 
 <style scoped>
-
-.status {
-    padding: 0.5rem;
-    margin-bottom: 1rem;
-    border-radius: 4px;
-    text-align: center;
+.chat-container {
+    flex-direction: column;
+    align-items: start;
+    border-radius: 10px;
+    min-height: 30vh;
 }
 
-.connected {
-    @apply text-success;
-}
-
-.reconnecting {
-    background-color: #fde68a;
-    color: #92400e;
-}
-
-.disconnected {
-    background-color: #fee2e2;
-    color: #dc2626;
-}
-
-.messages {
-    @apply text-accent;
-    margin-bottom: 1rem;
-}
-
-.messages ul {
-    list-style-type: none;
-    padding: 0;
-    max-height: 200px;
-    overflow-y: auto;
-}
-
-.messages li {
-    padding: 0.25rem 0;
-    color: black;
-}
 
 .send-message {
-    display: flex;
-    gap: 0.5rem;
-    margin-bottom: 1rem;
+    border-radius: 15px;
+    @apply bg-neutral border border-secondary;
 }
 
-.send-message input {
-    flex: 1;
-    padding: 0.5rem;
-    border: 1px solid #d1d5db;
-    border-radius: 4px;
+input {
+    border-radius: 15px;
 }
 
-.send-message button {
-    padding: 0.5rem 1rem;
-    background-color: #6b48ff;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-}
-
-.send-message button:hover {
-    background-color: #5941d1;
-}
-
-button {
-    padding: 0.5rem 1rem;
-    background-color: #6b48ff;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-}
-
-button:hover {
-    background-color: #5941d1;
-}
-
-button:disabled {
-    background-color: #a78bfa;
-    cursor: not-allowed;
+li {
+    border-radius: 15px;
+    width: fit-content;
+    @apply bg-secondary p-2 m-2 ;
 }
 </style>
