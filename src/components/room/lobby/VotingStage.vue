@@ -12,7 +12,7 @@
       <button 
         v-if="currentProposal.archive" 
         @click="openFile(currentProposal.archive)" 
-        class="view-btn absolute top-2 right-2 w-10 h-10 flex items-center justify-center rounded-md btn btn-primary"
+        class="view-btn absolute top-1 right-1 w-10 h-10 flex items-center justify-center rounded-full btn btn-primary"
         title="Ver archivo"
       >
         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
