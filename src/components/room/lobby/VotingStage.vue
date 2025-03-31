@@ -7,14 +7,26 @@
       <h1 v-if="settingsRoom && settingsRoom.proposal_timer" class="font-bold">
         {{ socketStore.countdown }}
       </h1>
-    </div>
-    <div v-if="currentProposal" class="proposal-container pb-4 m-4 w-[80%]">
+    </div>   
+    <div v-if="currentProposal" class="proposal-container pb-4 m-4 w-[80%] relative">
+      <button 
+        v-if="currentProposal.archive" 
+        @click="openFile(currentProposal.archive)" 
+        class="view-btn absolute top-1 right-1 w-10 h-10 flex items-center justify-center rounded-full btn btn-primary"
+        title="Ver archivo"
+      >
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+          <polyline points="15 3 21 3 21 9"></polyline>
+          <line x1="10" y1="14" x2="21" y2="3"></line>
+        </svg>
+      </button>
+
       <div class="description bg-secondary p-4">
-        <p>{{ currentProposal.description }} </p>
+        <p>{{ currentProposal.description }}</p>
       </div>
       <h1 class="font-semibold">{{ currentProposal.title }}</h1>
     </div>
-
 
     <div v-for="(option, index) in currentProposal.options" :key="index">
       <button class="btn btn-primary font-semibold mt-4" :class="{ 'selected bg-success': selectedIndex === index }"
@@ -47,6 +59,12 @@ const room = ref(null);
 const error = ref("");
 const settingsRoom = ref(null);
 
+// Función para verificar si el archivo existe y abrirlo en una nueva pestaña
+const openFile = (fileName) => {
+  const fileURL = `http://localhost:3000/uploads/proposalFiles/${fileName}`;
+  window.open(fileURL, '_blank');
+};
+
 function toggleSelection(index) {
   if (selectedIndex.value === index) {
     selectedIndex.value = null;
@@ -62,7 +80,6 @@ function confirmVote() {
   console.log("Voto confirmado:", currentProposal.value.options[selectedIndex.value].value);
 
   socket.voting = false;
-
   router.push('/awaitResults');
 }
 
@@ -84,11 +101,11 @@ onMounted(() => {
     try {
       settingsRoom.value = JSON.parse(storedSettingsRoom);
     } catch (e) {
-      error.value = 'Error al leer los datos de la configuracion de la sala.';
+      error.value = 'Error al leer los datos de la configuración de la sala.';
       console.error(e);
     }
   } else {
-    error.value = 'No se encontraron datos de la configuracion de la sala en el almacenamiento local.';
+    error.value = 'No se encontraron datos de la configuración de la sala en el almacenamiento local.';
   }
 
   if (settingsRoom.value?.proposal_timer) {
@@ -129,12 +146,15 @@ button {
   width: 300px;
 }
 
+/* Anulamos el ancho para el botón de vista */
+.view-btn {
+  width: auto !important;
+}
+
 .selected {
   @apply text-accent bg-success;
   transform: scale(1.1);
 }
-
-
 
 p {
   color: black;
