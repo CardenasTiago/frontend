@@ -63,7 +63,6 @@ export const useWebSocketStore = defineStore('webSocketStore', {
         this.reconnecting = false;
         this.autoReconnect = true;
         this.reconnectAttempts = 0;
-        this.pushMessage('Te uniste a la sala.');
       };
 
       this.socket.onmessage = (event) => {
