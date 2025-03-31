@@ -1,5 +1,5 @@
 <template>
-    <div class="chat-container flex  bg-base-100 border-secondary p-2 shadow-md shadow-secondary">
+    <div class="chat-container flex justify-between bg-base-100 border-secondary p-2 shadow-md shadow-secondary">
 
         <div v-if="socketStore.connected" class="text-success font-semibold flex items-end text-end">
             Conectado
@@ -10,7 +10,7 @@
         <div v-else class="text-error">
             Desconectado.
         </div>
-        <div class="messages flex-1 overflow-y-auto">
+        <div class="messages w-full justify-start gap-2 overflow-y-auto" ref="messagesContainer">
             <ul>
                 <li v-for="(msg, index) in messages" :key="index" class="text-accent">{{ msg }}</li>
             </ul>
@@ -31,7 +31,7 @@
 </template>
 
 <script setup>
-import { inject, ref } from 'vue';
+import { inject, ref, watch } from 'vue';
 import { useWebSocketStore } from '../stores/socketStore';
 import { storeToRefs } from 'pinia'
 import { Icon } from "@iconify/vue";
@@ -45,7 +45,7 @@ const {
 } = storeToRefs(socketStore)
 
 const inputMessageLocal = ref('');
-
+const messagesContainer = ref(null);
 
 
 const sendMessage = () => {
@@ -61,9 +61,16 @@ const sendMessage = () => {
     }
 };
 
+watch(messages, async () => {
+    await nextTick();
+    if (messagesContainer.value) {
+        messagesContainer.value.scrollTop = messagesContainer.value.scrollHeight;
+    }
+});
 </script>
 
 <style scoped>
+
 .chat-container {
     flex-direction: column;
     align-items: start;
@@ -71,6 +78,10 @@ const sendMessage = () => {
     min-height: 30vh;
 }
 
+.messages {
+    
+    height: 25vh;
+}
 
 .send-message {
     border-radius: 15px;
