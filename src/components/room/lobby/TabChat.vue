@@ -30,7 +30,7 @@
 </template>
 
 <script setup>
-import { inject, ref, watch } from 'vue';
+import { inject, ref, onUpdated, nextTick } from 'vue';
 import { useWebSocketStore } from '../stores/socketStore';
 import { storeToRefs } from 'pinia'
 import { Icon } from "@iconify/vue";
@@ -60,8 +60,7 @@ const sendMessage = () => {
     }
 };
 
-watch(messages, async () => {
-    await nextTick();
+onUpdated(() => {
     if (messagesContainer.value) {
         messagesContainer.value.scrollTop = messagesContainer.value.scrollHeight;
     }
@@ -78,8 +77,7 @@ watch(messages, async () => {
 }
 
 .messages {
-    
-    height: 25vh;
+    height: 26vh;
 }
 
 .send-message {
