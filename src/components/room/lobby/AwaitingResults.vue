@@ -34,12 +34,14 @@
         </li>
       </ul>
     </div>
+    <TabChat />
   </div>
 </template>
 
 <script setup>
 import { useWebSocketStore } from '../stores/socketStore';
-import { onMounted, onUnmounted, watch, ref } from 'vue';
+import { onMounted, provide, onUnmounted, watch, ref } from 'vue';
+import TabChat from './TabChat.vue';
 import { storeToRefs } from 'pinia'
 import { useRouter } from 'vue-router'
 import { Icon } from "@iconify/vue";
@@ -52,7 +54,13 @@ const {
 
 const room = ref('');
 const settingsRoom = ref(null);
+const user = ref('');
+
 onMounted(() => {
+  const loggedUser = localStorage.getItem('user');
+    if (loggedUser) {
+        user.value = JSON.parse(loggedUser);
+    }
   const storedRoom = localStorage.getItem('currentRoom');
   if (storedRoom) {
     try {
@@ -105,6 +113,7 @@ watch(
   { immediate: true }
 );
 
+provide('user', user)
 </script>
 
 <style>

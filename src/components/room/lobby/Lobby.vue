@@ -1,6 +1,6 @@
 <template>
   <div
-    class="main-container h-[85vh] w-screen grid grid-rows-[35%,50%,auto] overflow-hidden p-0 m-0"
+    class="main-container h-[85vh] w-screen grid grid-rows-[35%,auto,10%] overflow-hidden p-0 m-0"
   >
     <div
       :style="containerStyle"
@@ -57,7 +57,7 @@
         </v-tabs-window>
       </v-card>
     </div>
-    <footer class="flex justify-between items-center px-4 p-0 mb-0">
+    <footer class="flex justify-between items-end px-4 p-0 mb-0">
       <a v-if="socketStore.connected" @click="closeConnection" class="btn btn-error text-white">
         <!-- Ícono SVG de desconexión -->
         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
@@ -106,12 +106,15 @@ const {
 
 const router = useRouter()
 const room = ref('');
-const username = ref('');
+const user  = ref('');
 let wsUrl = ''; // Variable normal, ya que no se requiere reactividad
 
 onMounted(() => {
-  const loggedUser = localStorage.getItem('userName');
-  username.value = loggedUser;
+  const loggedUser = localStorage.getItem('user');
+  if (loggedUser) {
+    user.value = JSON.parse(loggedUser);
+  }
+
   const storedRoom = localStorage.getItem('currentRoom');
 
   if (storedRoom) {
@@ -135,7 +138,7 @@ function closeConnection() {
 };
 
 function startVoting() {
-  socketStore.socket.sendEvents("start_voting", { from: username.value })
+  socketStore.socket.sendEvents("start_voting", { from: user.value.username })
 }
 
 //atento para ver cuando arranca la votacion y redireccionar
@@ -162,7 +165,7 @@ watch(
   { immediate: true }
 );
 
-provide('username', username);
+provide('user', user);
 
 const defaultImage = '/src/assets/default-image.jpg'; 
 const dominantColor = ref('');
@@ -184,10 +187,6 @@ const containerStyle = computed(() => ({
   boxShadow: dominantColor.value ? `0 4px 10px ${dominantColor.value}` : 'none'
 }));
 
-
-// onUnmounted (() => {
-//   socketStore.socket.close()
-// });
 
 </script>
 

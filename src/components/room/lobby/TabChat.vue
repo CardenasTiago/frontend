@@ -1,6 +1,5 @@
 <template>
-    <div class="chat-container flex justify-between bg-base-100 border-secondary p-2 shadow-md shadow-secondary">
-
+    <div class="chat-container flex justify-between bg-base-100 border-secondary p-2 shadow-md shadow-secondary gap-2">
         <div v-if="socketStore.connected" class="text-success font-semibold flex items-end text-end">
             Conectado
         </div> 
@@ -12,7 +11,7 @@
         </div>
         <div class="messages w-full justify-start gap-2 overflow-y-auto" ref="messagesContainer">
             <ul>
-                <li v-for="(msg, index) in messages" :key="index" class="text-accent">{{ msg }}</li>
+                <li v-for="(msg, index) in messages" :key="index" class="text-accent text-start">{{ msg }}</li>
             </ul>
         </div>
 
@@ -38,7 +37,7 @@ import { Icon } from "@iconify/vue";
 
 const socketStore = useWebSocketStore();
 const socket = socketStore.socket;
-const username = inject('username');
+const user = inject('user');
 
 const {
     messages,
@@ -52,8 +51,8 @@ const sendMessage = () => {
     const msg = inputMessageLocal.value.trim();
     if (msg === '') return;
     if (socket && socketStore.connected) {
-        socket.sendEvents("send_message", { from: username.value, message: msg });
-        socketStore.pushMessage(`Tú: ${msg}`);
+        socket.sendEvents("send_message", { from: user.value.username, message: msg });
+        socketStore.pushMessage(`Tu: ${msg}`);
         inputMessageLocal.value = '';
     } else {
         console.warn('No estás conectado al WebSocket.');
@@ -95,6 +94,7 @@ input {
 li {
     border-radius: 15px;
     width: fit-content;
+    max-width: 80vw;
     @apply bg-secondary p-2 m-2 ;
 }
 </style>
