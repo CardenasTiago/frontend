@@ -107,8 +107,8 @@ export const useWebSocketStore = defineStore('webSocketStore', {
       };
     },
 
-    pushMessage(msg) {
-      this.messages.push(msg);
+    pushMessage(msg, isCurrentUser = false) {
+      this.messages.push({ text: msg, isCurrentUser });
     },
 
     updateClientList(payload) {
@@ -137,7 +137,7 @@ export const useWebSocketStore = defineStore('webSocketStore', {
 
       switch (eventData.action) {
         case "send_message":
-          this.pushMessage(`${eventData.payload.from} : ${eventData.payload.message}`);
+          this.pushMessage(`${eventData.payload.from} : ${eventData.payload.message}`, false );
           break;
         case "update_client_list":
           console.log(eventData.payload)

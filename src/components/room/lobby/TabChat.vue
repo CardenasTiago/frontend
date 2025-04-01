@@ -2,7 +2,7 @@
     <div class="chat-container flex justify-between bg-base-100 border-secondary p-2 shadow-md shadow-secondary gap-2">
         <div v-if="socketStore.connected" class="text-success font-semibold flex items-end text-end">
             Conectado
-        </div> 
+        </div>
         <div v-else-if="socketStore.reconnecting" class="text-warning">
             Intentando reconectar... (Intento {{ socketStore.reconnectAttempts }})
         </div>
@@ -11,7 +11,10 @@
         </div>
         <div class="messages w-full justify-start gap-2 overflow-y-auto" ref="messagesContainer">
             <ul>
-                <li v-for="(msg, index) in messages" :key="index" class="text-accent text-start">{{ msg }}</li>
+                <li v-for="(msg, index) in messages" :key="index"
+                    :class="['text-start', msg.isCurrentUser ? 'bg-primary' : 'bg-secondary']" class="p-2 m-2 rounded">
+                    {{ msg.text }}
+                </li>
             </ul>
         </div>
 
@@ -30,7 +33,7 @@
 </template>
 
 <script setup>
-import { inject, ref, onUpdated, nextTick } from 'vue';
+import { inject, ref, onUpdated } from 'vue';
 import { useWebSocketStore } from '../stores/socketStore';
 import { storeToRefs } from 'pinia'
 import { Icon } from "@iconify/vue";
@@ -52,7 +55,7 @@ const sendMessage = () => {
     if (msg === '') return;
     if (socket && socketStore.connected) {
         socket.sendEvents("send_message", { from: user.value.username, message: msg });
-        socketStore.pushMessage(`Tu: ${msg}`);
+        socketStore.pushMessage("tu: " + msg, true );
         inputMessageLocal.value = '';
     } else {
         console.warn('No estás conectado al WebSocket.');
@@ -68,7 +71,6 @@ onUpdated(() => {
 </script>
 
 <style scoped>
-
 .chat-container {
     flex-direction: column;
     align-items: start;
@@ -94,6 +96,6 @@ li {
     width: fit-content;
     max-width: 80vw;
     overflow-wrap: break-word;
-    @apply bg-secondary p-2 m-2 ;
+    @apply text-white font-semibold p-2 m-2;
 }
 </style>
