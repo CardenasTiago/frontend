@@ -95,6 +95,7 @@ li {
     border-radius: 15px;
     width: fit-content;
     max-width: 80vw;
+    overflow-wrap: break-word;
     @apply bg-secondary p-2 m-2 ;
 }
 </style>
