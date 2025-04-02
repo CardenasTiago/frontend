@@ -3,11 +3,9 @@
 import WelcomeMessage from "../../components/WelcomeMessage.vue";
 import Layout from "../../layouts/Layout.astro";
 import ProtectedRoute from "../../components/authentication/ProtectedRoute.vue";
-import { Icon } from "@iconify/vue";
-import LogoutButton from "../../components/authentication/LogoutButton.vue";
 ---
 
-<Layout title="Menu">
+<Layout title="Suffgo | Menu">
   <ProtectedRoute client:load>
     <div class="min-h-[90vh] flex items-center justify-center">
       <div class="h-fit p-10 main-container bg-base-100">

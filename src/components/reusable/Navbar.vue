@@ -142,7 +142,10 @@ const goBack = () => {
 
 // Obtener el nombre de usuario desde localStorage al montar el componente
 onMounted(() => {
-    userName.value = localStorage.getItem('userName').toLowerCase() || 'Usuario';
+    const storedName = localStorage.getItem('userName')
+    if (storedName) {
+        userName.value = localStorage.getItem('userName').toLowerCase() || 'Usuario';
+    }
     document.documentElement.setAttribute('data-theme', theme.value);
 
 });
