@@ -130,8 +130,13 @@
           <a :href="`../proposal?id=${sala.room.id}`" class="btn btn-primary btn-sm lg:w-48">
             Propuestas
           </a>
-          <a :href="`../formalSettingRoom?id=${sala.room.id}`" class="btn btn-primary btn-sm lg:w-42">
+          <a :href="`../formalSettingRoom?${sala.room.id}`" class="btn btn-primary btn-sm lg:w-42">
             Otras configuraciones
+          </a>
+        </div>
+        <div class="flex justify-center py-3">
+          <a :href="`../user/addUser/${sala.room.id}`" class="btn btn-primary btn-sm lg:w-48">
+            Votantes
           </a>
         </div>
       </div>

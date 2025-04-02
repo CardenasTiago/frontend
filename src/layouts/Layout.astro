@@ -20,7 +20,7 @@ const { title,hideMenuItems=false } = Astro.props;
     <meta name="generator" content={Astro.generator} />
     <title>{title}</title>
     <ViewTransitions />
-     <Header client:only="vue": hideMenuItems={hideMenuItems}/> 
+     <Header client:only="vue": hideMenuItems={hideMenuItems}/>  
   </head>
   <body
     class="items-center justify-center">
