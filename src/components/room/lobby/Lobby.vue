@@ -1,8 +1,8 @@
 <template>
-  <div class="main-container h-[85vh] w-screen grid grid-rows-[35%,auto,10%] overflow-hidden p-0 m-0">
-    <div :style="containerStyle" class="relative w-full h-full max-w-3xl mx-auto overflow-hidden mt-0 p-0">
+  <div class="main-container h-[100vh] w-screen grid grid-rows-[35%,auto,10%] overflow-hidden p-0 m-0">
+    <div :style="containerStyle" class="relative w-full h-full mx-auto overflow-hidden mt-0 p-0">
       <!-- Imagen de fondo borrosa -->
-      <img class="absolute inset-0 w-full h-full object-cover filter blur-sm mt-0 p-0" :src="room.image || defaultImage"
+      <img class="absolute inset-0 w-full h-full object-cover filter blur-md mt-0 p-0" :src="room.image || defaultImage"
         alt="Imagen de fondo" crossOrigin="anonymous" />
       <!-- Imagen principal -->
       <img class="relative w-full h-full object-contain object-center mt-0 p-0" ref="imgElement"
@@ -43,7 +43,7 @@
         </v-tabs-window>
       </v-card>
     </div>
-    <footer class="flex justify-between items-end px-4 p-0 mb-0">
+    <footer class="flex justify-between items-center px-4 p-0 mb-0">
       <a v-if="socketStore.connected" @click="closeConnection" class="btn btn-error text-white">
         <!-- Ícono SVG de desconexión -->
         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
@@ -103,7 +103,10 @@ const quorum = ref('');
 let wsUrl = ''; // Variable normal, ya que no se requiere reactividad
 const connectedUsersCount = computed(() => userList.value ? userList.value.length : 0);
 
+const theme = ref(localStorage.getItem('theme') || 'mytheme');
+
 onMounted(() => {
+  document.documentElement.setAttribute('data-theme', theme.value);
   const loggedUser = localStorage.getItem('user');
   if (loggedUser) {
     user.value = JSON.parse(loggedUser);
