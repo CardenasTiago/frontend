@@ -61,11 +61,12 @@
   }
   
   const addVoter = () => {
-    if (!userInput.value.trim()){
-      
-    } return // Validación básica
+    if (!userInput.value.trim()) {
+        return // Si el input está vacío, sale de la función
+    }
     emit("add-voter", userInput.value.trim())
     handleClose()
-  }
+}
+
   </script>
   

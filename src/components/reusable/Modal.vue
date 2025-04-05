@@ -2,7 +2,7 @@
     <TransitionRoot as="template" :show="modelValue">
       <Dialog class="relative z-10" @close="handleClose">
         <TransitionChild as="template" enter="ease-out duration-300" enter-from="opacity-0" enter-to="opacity-100" leave="ease-in duration-200" leave-from="opacity-100" leave-to="opacity-0">
-          <div class="fixed inset-0 bg-accent/30 transition-opacity" />
+          <div class="fixed inset-0 bg-accent/10 transition-opacity" />
         </TransitionChild>
   
         <div class="fixed inset-0 z-10 w-screen overflow-y-auto">
@@ -25,11 +25,12 @@
                     </div>
                   </div>
                 </div>
-                  <div class="bg-neutral px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
-                    <!-- Botón Confirmar con estilo y condicional -->
-                    <button v-if="confirmText" type="button" class="inline-flex w-full justify-center rounded-md bg-primary px-3 py-2 text-sm font-semibold text-neutral shadow-xs hover:bg-error sm:ml-3 sm:w-auto" @click="confirmAction">{{ confirmText }}</button>
+                  <div class="bg-neutral flex flex-col lg:flex-row  gap-3 justify-end p-4 mr-2">
                     <!-- Botón Cancelar con estilo y condicional -->
-                    <button v-if="cancelText" type="button" class="mt-3 inline-flex w-full justify-center rounded-md bg-neutral px-3 py-2 text-sm font-semibold text-accent ring-1 shadow-xs ring-accent ring-inset  sm:mt-0 sm:w-auto" @click="handleClose" ref="cancelButtonRef">{{ cancelText }}</button>
+                    <button v-if="cancelText" type="button" class="btn btn-secondary btn-md lg:btn-sm " @click="handleClose" ref="cancelButtonRef">{{ cancelText }}</button>
+                    <!-- Botón Confirmar con estilo y condicional -->
+                    <button v-if="confirmText" type="button" class="btn btn-primary btn-md lg:btn-sm hover:bg-error border-none" @click="confirmAction">{{ confirmText }}</button>
+                   
                 </div>
               </DialogPanel>
             </TransitionChild>
