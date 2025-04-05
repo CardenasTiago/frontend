@@ -19,7 +19,7 @@ export default {
           "info": "#0ea5e9",
           "success": "#6ee7b7",
           "warning": "#fde047",
-          "error": "#f87171",  
+          "error": "#f44336",
         },
         mydarktheme: {
           "primary": "#6B48FF",
@@ -30,7 +30,7 @@ export default {
           "info": "#2196f3",
           "success": "#4caf50",
           "warning": "#fb8c00",
-          "error": "#f44336",
+          "error": "#f54242",
         },
       },
     ],

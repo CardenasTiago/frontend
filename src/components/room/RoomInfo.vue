@@ -1,7 +1,5 @@
 <template>
-  <div v-if="room">
-
-
+  <div v-if="room" class="bg-base-100 rounded-lg p-5">
     <h1 class="font-semibold text-center">{{ room.room_title }}</h1>
 
     <div class="flex justify-between">
@@ -53,13 +51,8 @@
     </div>
 
 
-
-
     <h2 class="mb-2">Administrador</h2>
-    <h1 class="font-semibold">{{ room.admin_name }}</h1>
-
-
-
+    <h1 class="font-semibold mb-4">{{ room.admin_name }}</h1>
   </div>
   <div v-else>
     <p>No se encontraron datos de la sala. Por favor, únete a una sala primero.</p>
@@ -109,10 +102,7 @@ const formattedDate = computed(() => {
   // Formatear los minutos para que siempre sean 2 dígitos
   const formattedMinutes = minutes < 10 ? '0' + minutes : minutes;
 
-  // Capitalizamos la primera letra del mes
-  const capitalizedMonth = month.charAt(0).toUpperCase() + month.slice(1);
-
-  return `${day} de ${capitalizedMonth} ${year} ${hours}:${formattedMinutes} ${period}`;
+  return `${day} de ${month} ${hours}:${formattedMinutes} ${period}`;
 });
 
 

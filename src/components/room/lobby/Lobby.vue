@@ -1,5 +1,5 @@
 <template>
-  <div class="main-container h-[100vh] w-screen grid grid-rows-[35%,auto,10%] overflow-hidden p-0 m-0">
+  <div class="main-container h-[100vh] w-screen grid grid-rows-[35%,auto] overflow-hidden p-0 m-0">
     <div :style="containerStyle" class="relative w-full h-full mx-auto overflow-hidden mt-0 p-0">
       <!-- Imagen de fondo borrosa -->
       <img class="absolute inset-0 w-full h-full object-cover filter blur-md mt-0 p-0" :src="room.image || defaultImage"
@@ -42,32 +42,32 @@
           </v-tabs-window-item>
         </v-tabs-window>
       </v-card>
+      <footer class="absolute bottom-0 z-10 flex flex-row justify-between py-2 px-4 w-full">
+        <div>
+          <a v-if="socketStore.connected" @click="closeConnection" class="btn btn-error text-white">
+            <!-- boton salir sala -->
+            <Icon icon="ic:baseline-exit-to-app" width="24" height="24" />
+          </a>
+          <a v-else @click="connect" class="btn btn-warning text-white">
+            <Icon icon="ic:baseline-replay" width="24" height="24" />
+          </a>
+        </div>
+        <div v-if="room.privileges" class="">
+          <a class="btn btn-primary initiliaze" @click="startVoting"
+            :class="{ 'cursor-not-allowed opacity-50 pointer-events-none': isVotingDisabled }">
+            Iniciar
+            <span :class="{
+              'text-error': connectedUsersCount < quorum,
+              'text-success': connectedUsersCount >= quorum
+            }">
+              {{ connectedUsersCount }}/{{ quorum }}
+            </span>
+            <Icon icon="ic:baseline-not-started" width="24" height="24" />
+          </a>
+        </div>
+      </footer>
     </div>
-    <footer class="flex justify-between items-center px-4 p-0 mb-0">
-      <a v-if="socketStore.connected" @click="closeConnection" class="btn btn-error text-white">
-        <!-- Ícono SVG de desconexión -->
-        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
-          <path fill="currentColor"
-            d="M10.09 15.59L11.5 17l5-5l-5-5l-1.41 1.41L12.67 11H3v2h9.67zM19 3H5a2 2 0 0 0-2 2v4h2V5h14v14H5v-4H3v4a2 2 0 0 0 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2" />
-        </svg>
-      </a>
-      <a v-else @click="connect" class="btn btn-warning">
-        Reconectar
-      </a>
-      <div v-if="room.privileges" class="flex justify-end">
-        <a class="btn btn-primary initiliaze" @click="startVoting"
-          :class="{ 'cursor-not-allowed opacity-50 pointer-events-none': isVotingDisabled }">
-          Iniciar
-          <span :class="{
-            'text-error': connectedUsersCount < quorum,
-            'text-success': connectedUsersCount >= quorum
-          }">
-            {{ connectedUsersCount }}/{{ quorum }}
-          </span>
-          <Icon icon="ic:baseline-not-started" width="24" height="24" />
-        </a>
-      </div>
-    </footer>
+
   </div>
 </template>
 <script>
