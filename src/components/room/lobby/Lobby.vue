@@ -1,32 +1,18 @@
 <template>
-  <div
-    class="main-container h-[85vh] w-screen grid grid-rows-[35%,50%,10%] overflow-hidden p-0 m-0"
-  >
-    <div
-      :style="containerStyle"
-      class="relative w-full h-full max-w-3xl mx-auto overflow-hidden mt-0 p-0"
-    >
+  <div class="main-container h-[100vh] w-screen grid grid-rows-[35%,auto] overflow-hidden p-0 m-0">
+    <div :style="containerStyle" class="relative w-full h-full mx-auto overflow-hidden mt-0 p-0">
       <!-- Imagen de fondo borrosa -->
-      <img
-        class="absolute inset-0 w-full h-full object-cover filter blur-sm mt-0 p-0"
-        :src="room.image || defaultImage"
-        alt="Imagen de fondo"
-        crossOrigin="anonymous"
-      />
+      <img class="absolute inset-0 w-full h-full object-cover filter blur-md mt-0 p-0" :src="room.image || defaultImage"
+        alt="Imagen de fondo" crossOrigin="anonymous" />
       <!-- Imagen principal -->
-      <img
-        class="relative w-full h-full object-contain object-center mt-0 p-0"
-        ref="imgElement"
-        :src="room.image || defaultImage"
-        alt="Imagen de la sala"
-        @load="extractDominantColor"
-        crossOrigin="anonymous"
-      />
+      <img class="relative w-full h-full object-contain object-center mt-0 p-0" ref="imgElement"
+        :src="room.image || defaultImage" alt="Imagen de la sala" @load="extractDominantColor"
+        crossOrigin="anonymous" />
     </div>
-    <div class="overflow-y-auto">
-      <v-card flat elevation="0" class="flex flex-col items-center justify-center">
+    <div class="overflow-y-auto w-full">
+      <v-card flat elevation="0" class="flex items-center justify-center">
         <v-tabs v-model="tab" align-tabs="center" class="w-full">
-          <div class="custom-buttons mb-4">
+          <div class="custom-buttons mb-4 pl-6">
             <button :class="{ 'active-button': tab === 1 }" @click="tab = 1">
               Chat
             </button>
@@ -56,27 +42,32 @@
           </v-tabs-window-item>
         </v-tabs-window>
       </v-card>
+      <footer class="absolute bottom-0 z-10 flex flex-row justify-between py-2 px-4 w-full">
+        <div>
+          <a v-if="socketStore.connected" @click="closeConnection" class="btn btn-error text-white">
+            <!-- boton salir sala -->
+            <Icon icon="ic:baseline-exit-to-app" width="24" height="24" />
+          </a>
+          <a v-else @click="connect" class="btn btn-warning text-white">
+            <Icon icon="ic:baseline-replay" width="24" height="24" />
+          </a>
+        </div>
+        <div v-if="room.privileges" class="">
+          <a class="btn btn-primary initiliaze" @click="startVoting"
+            :class="{ 'cursor-not-allowed opacity-50 pointer-events-none': isVotingDisabled }">
+            Iniciar
+            <span :class="{
+              'text-error': connectedUsersCount < quorum,
+              'text-success': connectedUsersCount >= quorum
+            }">
+              {{ connectedUsersCount }}/{{ quorum }}
+            </span>
+            <Icon icon="ic:baseline-not-started" width="24" height="24" />
+          </a>
+        </div>
+      </footer>
     </div>
-    <footer class="flex justify-between items-center px-4 p-0 mb-0">
-      <a v-if="socketStore.connected" @click="closeConnection" class="btn btn-error text-white">
-        <!-- Ícono SVG de desconexión -->
-        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
-          <path
-            fill="currentColor"
-            d="M10.09 15.59L11.5 17l5-5l-5-5l-1.41 1.41L12.67 11H3v2h9.67zM19 3H5a2 2 0 0 0-2 2v4h2V5h14v14H5v-4H3v4a2 2 0 0 0 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2"
-          />
-        </svg>
-      </a>
-      <a v-else @click="connect"  class="btn btn-warning">
-        Reconectar
-      </a>
-      <div v-if="room.privileges" class="flex justify-end">
-        <a class="btn btn-primary" @click="startVoting">
-          Iniciar
-          <Icon icon="ic:baseline-not-started" width="24" height="24" />
-        </a>
-      </div>
-    </footer>
+
   </div>
 </template>
 <script>
@@ -88,7 +79,7 @@ export default {
 </script>
 <script setup>
 
-import { ref, onMounted, onUnmounted, provide, watch, computed } from 'vue';
+import { ref, onMounted, provide, watch, computed } from 'vue';
 import { useWebSocketStore } from '../stores/socketStore'
 import { storeToRefs } from 'pinia'
 import { useRouter } from 'vue-router'
@@ -101,17 +92,26 @@ import { Icon } from "@iconify/vue";
 const socketStore = useWebSocketStore();
 const {
   voting,
+  userList,
 } = storeToRefs(socketStore)
 
 
 const router = useRouter()
 const room = ref('');
-const username = ref('');
+const user = ref('');
+const quorum = ref('');
 let wsUrl = ''; // Variable normal, ya que no se requiere reactividad
+const connectedUsersCount = computed(() => userList.value ? userList.value.length : 0);
+
+const theme = ref(localStorage.getItem('theme') || 'mytheme');
 
 onMounted(() => {
-  const loggedUser = localStorage.getItem('userName');
-  username.value = loggedUser;
+  document.documentElement.setAttribute('data-theme', theme.value);
+  const loggedUser = localStorage.getItem('user');
+  if (loggedUser) {
+    user.value = JSON.parse(loggedUser);
+  }
+
   const storedRoom = localStorage.getItem('currentRoom');
 
   if (storedRoom) {
@@ -120,10 +120,22 @@ onMounted(() => {
     console.error('No se encontró el room ID en el almacenamiento local.');
   }
 
+  const settingsRoom = localStorage.getItem('settingsRoom');
+  if (settingsRoom) {
+    const settings = JSON.parse(settingsRoom);
+    quorum.value = settings.quorum;
+  }
+
   wsUrl = `ws://localhost:3000/v1/rooms/ws/${room.value.id}`;
 
   socketStore.connect(wsUrl);
 });
+
+const isVotingDisabled = computed(() => {
+  // Bloquear si el quorum es mayor que la cantidad de usuarios conectados
+  return quorum.value > (userList.value ? userList.value.length : 0);
+});
+
 
 function connect() {
   socketStore.connect(wsUrl);
@@ -135,7 +147,7 @@ function closeConnection() {
 };
 
 function startVoting() {
-  socketStore.socket.sendEvents("start_voting", { from: username.value })
+  socketStore.socket.sendEvents("start_voting", { from: user.value.username })
 }
 
 //atento para ver cuando arranca la votacion y redireccionar
@@ -150,7 +162,7 @@ watch(socketStore.resultsReady, (val) => {
   if (val) {
     router.push('/results')
   }
-})  
+})
 
 watch(
   () => socketStore.redirectMenu,
@@ -162,9 +174,9 @@ watch(
   { immediate: true }
 );
 
-provide('username', username);
+provide('user', user);
 
-const defaultImage = '/src/assets/default-image.jpg'; 
+const defaultImage = '/src/assets/default-image.jpg';
 const dominantColor = ref('');
 const imgElement = ref(null);
 
@@ -184,10 +196,6 @@ const containerStyle = computed(() => ({
   boxShadow: dominantColor.value ? `0 4px 10px ${dominantColor.value}` : 'none'
 }));
 
-
-// onUnmounted (() => {
-//   socketStore.socket.close()
-// });
 
 </script>
 
@@ -238,7 +246,7 @@ button:hover {
 }
 
 .initiliaze:hover {
-  size: 1.1rem;
+  size: 1.4rem;
 }
 
 .btn-error {
@@ -247,5 +255,4 @@ button:hover {
   cursor: pointer;
 
 }
-
 </style>
