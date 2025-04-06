@@ -30,13 +30,13 @@
     <div>
       <label class="form-control w-full">
         <div class="label">
-          <span class="label-text text-accent/80 text-lg">Tiempo por propuesta (minutos)</span>
+          <span class="label-text text-accent/80 text-lg">Tiempo por propuesta (segundos)</span>
         </div>
         <input
           v-model.number="form.proposalTimer"
           type="number"
           min="1"
-          max="60"
+          max="10000"
           class="input input-bordered w-full bg-secondary/10 border-secondary/20 h-12 text-lg"
           required
         />
@@ -46,7 +46,7 @@
     <div>
       <label class="form-control w-full">
         <div class="label">
-          <span class="label-text text-accent/80 text-lg">Quórum (%)</span>
+          <span class="label-text text-accent/80 text-lg">Quórum</span>
         </div>
         <input
           v-model.number="form.quorum"
@@ -179,12 +179,12 @@ const validateForm = () => {
     throw new Error('No se encontró el ID de la sala');
   }
 
-  if (form.value.proposalTimer < 1 || form.value.proposalTimer > 60) {
-    throw new Error('El tiempo por propuesta debe estar entre 1 y 60 minutos');
+  if (form.value.proposalTimer < 1 || form.value.proposalTimer > 10000) {
+    throw new Error('El tiempo por propuesta debe estar entre 1 y 10000 minutos');
   }
 
   if (form.value.quorum < 1 || form.value.quorum > 100) {
-    throw new Error('El quórum debe estar entre 1 y 100%');
+    throw new Error('El quórum debe estar entre 1 y 100');
   }
 
   if (form.value.voterLimit < 2 || form.value.voterLimit > 255) {
