@@ -1,14 +1,12 @@
 <template>
-    <div class="min-h-[80vh]">
+    <div class="min-h-[80vh] flex flex-col gap-6 justify-center items-center">
         <h2>Resultados de la votación</h2>
-        <ul>
-            <li v-for="option in displayResults" :key="option.id">
-                {{ option.value }}: {{ option.count }} voto(s)
-            </li>
-        </ul>
-
-        <!-- <TabChat /> -->
-
+        <CardResult 
+            :result="displayResults" 
+            :proposal="socketStore.currentProposal"            
+        />      
+  
+        <TabChat /> 
 
         <button class="btn btn-primary" v-if="room.privileges && !socketStore.currentProposal.last_prop"
             @click="nextProposal">
@@ -17,7 +15,7 @@
 
         <h1 v-if="socketStore.currentProposal.last_prop">fin de votacion</h1>
 
-        <TabChat />
+       
     </div>
 </template>
 
@@ -25,7 +23,8 @@
 import { provide, onMounted, ref, computed, watch } from 'vue';
 import { useWebSocketStore } from '../stores/socketStore'
 import TabChat from './TabChat.vue';
-import { useRouter } from 'vue-router'
+import { useRouter } from 'vue-router';
+import CardResult from './CardResult.vue'
 
 const socketStore = useWebSocketStore();
 

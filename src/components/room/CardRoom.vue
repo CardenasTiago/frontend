@@ -1,29 +1,29 @@
 <template>
-
-  <div v-if="sala" class="bg-neutral  mt-6 lg:mt-3 relative lg:p-12 ">
-    <div class="relative flex items-center justify-center">
-      <div class="absolute top-0 left-0 p-4">
+  <div class="block lg:hidden  p-2">
+    <BackButton />
+  </div>
+  <div v-if="sala" class="bg-neutral w-[80%] flex flex-col justify-center mx-auto">
+    <div class="flex justify-between">      
+      <div class="hidden lg:block ">
         <BackButton />
       </div>
 
+      <!-- Contenedor de imagen -->
       <div
-        class="lg:max-w-lg  lg:h-[300px] md:max-w-lg  md:h-[300px] h-[240px] bg-gray-200  rounded-lg flex-grow flex items-center justify-center text-lg relative group">
-        <!-- Imagen -->
-        <img :src="sala.room.image || defaultImage" alt="Imagen de la sala"
-          class="object-cover w-full h-full rounded-lg " />
+        class="w-full lg:max-w-md h-[240px] lg:h-[300px] bg-gray-200 rounded-lg overflow-hidden relative group mr-auto ml-auto">
+        <img :src="sala.room.image || defaultImage" alt="Imagen de la sala" class="object-cover w-full h-full" />
+
+        <!-- Botón para cambiar imagen (solo visible en pantallas grandes al hacer hover) -->
         <label for="fileInput"
           class="absolute bottom-4 right-4 flex items-center font-bold py-1 px-4 rounded-full lg:opacity-0 group-hover:opacity-100 transition-opacity btn-primary btn-xs cursor-pointer">
           Cambiar Foto
         </label>
-        <!-- Input de archivo (oculto, se activa con el click del label) -->
         <input id="fileInput" type="file" class="hidden" @change="handleFileChange" />
       </div>
     </div>
-
-
-    <!-- titulo -->
-    <div class="relative flex justify-center items-center p-3 max-w-md mx-auto text-center gap-1 group">
-      <h1 v-if="!isEditing" class="font-semibold">{{ sala.room.room_title }}</h1>
+    
+    <div class="relative flex justify-center items-center p-3 max-w-md mx-auto text-center gap-1 group ">
+      <h1 v-if="!isEditing" class="font-semibold lg:ml-6">{{ sala.room.room_title }}</h1>
       <input v-else v-model="sala.room.room_title" type="text"
         class="input input-primary lg:text-xl text-xs font-semibold text-center" />
       <!-- Contenedor principal -->
@@ -58,17 +58,36 @@
       </div>
     </div>
 
-
-
     <!-- descripción -->
     <div class="flex flex-col items-stretch gap-2 p-2 lg:p-6">
       <div class="relative">
-        <h2>Descripción</h2>
+        <div class="flex justify-between ">
+          <h2 class="">Descripción</h2>
+          <!-- Boton de DropDown -->
+          <div class="dropdown dropdown-left ">
+            <div tabindex="0" role="button"
+              class="btn rounded-full bg-transparent border-none hover:bg-transparent shadow-none">
+              <Icon icon="iconamoon:menu-kebab-horizontal-circle-bold" class="w-6 h-6 lg:w-8 lg:h-8 text-primary" />
+            </div>
+            <ul tabindex="0" class="dropdown-content menu bg-base-100 z-10 ">
+              <li><a :href="`../proposal?id=${sala.room.id}`" class="btn btn-primary btn-xs lg:btn-sm">Propuestas</a>
+              </li>
+              <li><a :href="`../formalSettingRoom?id=${sala.room.id}`"
+                  class="btn btn-primary btn-xs mt-3 lg:btn-sm">Otras
+                  Configuraciones</a></li>
+              <li><a :href="`../user/addUser/${sala.room.id}`"
+                  class="btn btn-primary btn-xs mt-3 lg:btn-sm">Votantes</a></li>
+            </ul>
+          </div>
+        </div>
+
+
         <div v-if="!isEditing">
           <p class="text-accent opacity-50">{{ sala.room.description }}</p>
         </div>
         <textarea v-else v-model="sala.room.description" class="textarea textarea-primary w-full"></textarea>
       </div>
+
     </div>
 
 
@@ -81,8 +100,10 @@
             {{ new Date(sala.room.start_time).toLocaleDateString('default', { month: 'long' }) }}
             {{ new Date(sala.room.start_time).toLocaleDateString('default', { day: 'numeric' }) }},
             {{ new Date(sala.room.start_time).toLocaleDateString('default', { year: 'numeric' }) }} -
-            {{ new Date(sala.room.start_time).toLocaleTimeString('es-ES', {hour: '2-digit', minute: '2-digit',
-            hour12:false }) }} hs
+            {{ new Date(sala.room.start_time).toLocaleTimeString('es-ES', {
+              hour: '2-digit', minute: '2-digit',
+              hour12: false
+            }) }} hs
           </h2>
         </div>
 
@@ -102,56 +123,30 @@
           </div>
         </div>
 
-        <div class="mt-4">
+        <div class=" mt-4">
           <h2 class="text-sm">Administrador</h2>
           <div class="flex gap-16">
             <h2 class="text-primary text-md">{{ sala.room.admin_name }}</h2>
-            <!--Botón desplegable  -->
-            <div class="lg:hidden md:hidden dropdown dropdown-top">
-              <div tabindex="0" role="button"
-                class="btn btn-sm rounded-full bg-transparent border-none hover:bg-transparent shadow-none">
-                <Icon icon="nrk:more-active" class="w-6 h-6 text-primary" />
-              </div>
-              <ul tabindex="0" class="dropdown-content menu bg-base-100  z-1 w-52 ">
-                <li><a :href="`../proposal?id=${sala.room.id}`" class="btn btn-primary btn-sm">Propuestas</a></li>
-                <li><a :href="`../formalSettingRoom?id=${sala.room.id}`" class="btn btn-primary btn-sm mt-3">Otras
-                    configuraciones</a></li>
-              </ul>
-            </div>
           </div>
         </div>
 
       </div>
 
-
-
-      <div class="hidden lg:flex md:flex flex-col lg:items-center lg:w-1/2  lg:p-10 mt-8 lg:mt-0">
-        <div class="flex space-x-6 sm:space-x-4 justify-center w-full">
-          <a :href="`../proposal?id=${sala.room.id}`" class="btn btn-primary btn-sm lg:w-48">
-            Propuestas
-          </a>
-          <a :href="`../formalSettingRoom?id=${sala.room.id}`" class="btn btn-primary btn-sm lg:w-42">
-            Otras configuraciones
-          </a>
-        </div>
-      </div>
-
     </div>
 
-    <div class="flex justify-center p-2">
+    <div class="flex justify-center p-2 ">
       <StartRoom client:load />
     </div>
-
-
-
   </div>
+
+
 </template>
 
 <script setup>
 import { ref, onMounted, onUnmounted } from "vue";
 import BackButton from "../reusable/BackButton2.vue";
 import StartRoom from "./lobby/StartRoom.vue";
-import {Icon} from "@iconify/vue";
+import { Icon } from "@iconify/vue";
 
 
 const props = defineProps({
@@ -180,18 +175,18 @@ const fetchSala = async () => {
     console.log("Sala guardada en localStorage:", sala.value);
 
     const url = "http://localhost:3000/v1/settingsRoom/byRoom/" + props.id;
-      const response2 = await fetch(url, {
-        method: "GET",
-        credentials: "include",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
+    const response2 = await fetch(url, {
+      method: "GET",
+      credentials: "include",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
 
-      if (response2.ok) {
-        const config = await response2.json();
-        localStorage.setItem("settingsRoom", JSON.stringify(config));
-      } 
+    if (response2.ok) {
+      const config = await response2.json();
+      localStorage.setItem("settingsRoom", JSON.stringify(config));
+    }
   } catch (err) {
     error.value = err.message;
   }
@@ -207,7 +202,7 @@ const updateRoom = async () => {
         description: sala.value.room.description,
         name: sala.value.room.room_title,
         link_invite: sala.value.room.link_invite,
-        image: sala.value.room.image 
+        image: sala.value.room.image
 
       }),
       credentials: "include"
@@ -234,8 +229,8 @@ const handleFileChange = (event) => {
   const reader = new FileReader();
   reader.readAsDataURL(file);
   reader.onload = () => {
-    sala.value.room.image = reader.result; 
-    updateRoom(); 
+    sala.value.room.image = reader.result;
+    updateRoom();
   };
   reader.onerror = (error) => {
     console.error("Error al convertir la imagen:", error);

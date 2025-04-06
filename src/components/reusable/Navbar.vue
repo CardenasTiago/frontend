@@ -23,22 +23,22 @@
                         <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
                     </svg>
                 </label>
-                <li><a href="/protected/myRooms" class="text-m font-bold text-primary">Mis salas</a></li>
-                <li><a href="/protected/user/myProfile" class="text-m font-bold text-primary">Mi perfil</a></li>
+                <li v-show="!hideMenuItems"><a href="/protected/myRooms" class="text-m font-bold text-primary">Mis salas</a></li>
+                <li v-show="!hideMenuItems"><a href="/protected/user/myProfile" class="text-m font-bold text-primary">Mi perfil</a></li>
             </ul>
         </nav>
     </div>
 
     <!-- Navbar de móvil (visible en pantallas pequeñas) -->
 
-    <div class="block md:hidden p-2">
-        <div class="navbar bg-neutral flex justify-between gap-4">
+    <div class="block md:hidden">
+        <div class="navbar bg-neutral flex justify-between">
 
             <div class="text-xl font-bold text-primary mr-4">
                 <a href="/protected/menu" class="text-primary/80">{{ title }}</a>
             </div>
 
-            <div class="flex-none">
+            <div v-show="!hideMenuItems" class="flex-none">
                 <div>
                     <h3 class="mr-2 text-secondary font-bold">{{ user.username }}</h3>
                 </div>
@@ -130,10 +130,6 @@ const handleLogout = async () => {
     }
 };
 
-//funcionalidad para el boton atras
-const goBack = () => {
-    window.history.back();
-};
 
 // Obtener el nombre de usuario desde localStorage al montar el componente
 onMounted(() => {
