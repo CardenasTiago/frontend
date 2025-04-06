@@ -5,9 +5,10 @@ import ViewTransitions from "astro/components/ViewTransitions.astro";
 interface Props {
   title: string;
   hideMenuItems?: boolean;
+  hideHeader?: boolean;
 }
 
-const { title,hideMenuItems=false } = Astro.props;
+const { title, hideMenuItems=false, hideHeader = false } = Astro.props;
 ---
 
 <!doctype html>
@@ -20,7 +21,7 @@ const { title,hideMenuItems=false } = Astro.props;
     <meta name="generator" content={Astro.generator} />
     <title>{title}</title>
     <ViewTransitions />
-     <Header client:only="vue": hideMenuItems={hideMenuItems}/>  
+    <Header client:only="vue" hideMenuItems={hideMenuItems} hideHeader={hideHeader} />
   </head>
   <body
     class="items-center justify-center">
