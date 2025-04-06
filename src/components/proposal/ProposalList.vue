@@ -2,7 +2,7 @@
   <div class="space-y-6">
     <a 
       :href="`/protected/editProposal?roomId=${roomId}`"
-      class="btn w-full bg-primary hover:bg-primary/90 text-neutral"
+      class="btn w-full bg-primary hover:bg-primary/90"
     >
       Agregar propuesta
     </a>
