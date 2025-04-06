@@ -1,5 +1,5 @@
 <template>
-  <div class="bg-white p-8 rounded-xl shadow-lg">
+  <div class="bg-neutral p-8 rounded-xl shadow-lg">
     <div class="flex justify-between items-center mb-6">
       <BackButton />
       <div class="dropdown dropdown-end">
