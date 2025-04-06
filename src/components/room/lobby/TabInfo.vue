@@ -5,5 +5,6 @@
 <script setup>
 
 import RoomInfo from '../RoomInfo.vue';
+
 </script>
 

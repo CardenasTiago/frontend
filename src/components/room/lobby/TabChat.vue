@@ -1,54 +1,61 @@
 <template>
-    <div class="chat-container">
-
-        <div v-if="socketStore.connected" class="status connected">
+    <div class="chat-container flex justify-between bg-base-100 border-secondary p-2 shadow-md shadow-secondary gap-2">
+        <div v-if="socketStore.connected" class="text-success font-semibold flex items-end text-end">
             Conectado
         </div>
-        <div v-else-if="socketStore.reconnecting" class="status reconnecting">
+        <div v-else-if="socketStore.reconnecting" class="text-warning">
             Intentando reconectar... (Intento {{ socketStore.reconnectAttempts }})
         </div>
-        <div v-else class="status disconnected">
-            Desconectado del servidor WebSocket.
+        <div v-else class="text-error">
+            Desconectado.
         </div>
-
-        <div class="messages">
-            <h3>Mensajes:</h3>
+        <div class="messages w-full justify-start gap-2 overflow-y-auto" ref="messagesContainer">
             <ul>
-                <li v-for="(msg, index) in messages" :key="index" class="text-accent">{{ msg }}</li>
+                <li v-for="(msg, index) in messages" :key="index"
+                    :class="['text-start', msg.isCurrentUser ? 'bg-primary' : 'bg-secondary']" class="p-2 m-2 rounded">
+                    {{ msg.text }}
+                </li>
             </ul>
         </div>
 
-        <div class="send-message">
-            <input v-model="inputMessageLocal" type="text" placeholder="Escribe un mensaje..."
-                @keyup.enter="sendMessage" ref="msgInput" />
-            <button @click="sendMessage">Enviar</button>
+        <div class="send-message flex justify-between items-center w-full">
+            <div class="flex-1">
+                <input v-model="inputMessageLocal" class="flex bg-neutral m-0 p-2 w-full" type="text"
+                    placeholder="Escribe un mensaje..." @keyup.enter="sendMessage" ref="msgInput" />
+            </div>
+            <div>
+                <button @click="sendMessage" class="text-primary m-2">
+                    <Icon icon="ic:baseline-send" width="24" height="24" />
+                </button>
+            </div>
         </div>
     </div>
 </template>
 
 <script setup>
-import { inject, ref } from 'vue';
+import { inject, ref, onUpdated } from 'vue';
 import { useWebSocketStore } from '../stores/socketStore';
 import { storeToRefs } from 'pinia'
+import { Icon } from "@iconify/vue";
 
 const socketStore = useWebSocketStore();
 const socket = socketStore.socket;
-const username = inject('username');
+const user = inject('user');
 
-const {   
-  messages,
+const {
+    messages,
 } = storeToRefs(socketStore)
 
 const inputMessageLocal = ref('');
-
+const messagesContainer = ref(null);
 
 
 const sendMessage = () => {
     const msg = inputMessageLocal.value.trim();
     if (msg === '') return;
     if (socket && socketStore.connected) {
-        socket.sendEvents("send_message", { from: username.value, message: msg });
-        socketStore.pushMessage(`Tú: ${msg}`);
+        socket.sendEvents("send_message", { from: user.value.username, message: msg });
+        socketStore.pushMessage("tu: " + msg, true );
         inputMessageLocal.value = '';
     } else {
         console.warn('No estás conectado al WebSocket.');
@@ -56,89 +63,39 @@ const sendMessage = () => {
     }
 };
 
+onUpdated(() => {
+    if (messagesContainer.value) {
+        messagesContainer.value.scrollTop = messagesContainer.value.scrollHeight;
+    }
+});
 </script>
 
 <style scoped>
-
-.status {
-    padding: 0.5rem;
-    margin-bottom: 1rem;
-    border-radius: 4px;
-    text-align: center;
-}
-
-.connected {
-    @apply text-success;
-}
-
-.reconnecting {
-    background-color: #fde68a;
-    color: #92400e;
-}
-
-.disconnected {
-    background-color: #fee2e2;
-    color: #dc2626;
+.chat-container {
+    flex-direction: column;
+    align-items: start;
+    border-radius: 10px;
+    min-height: 30vh;
 }
 
 .messages {
-    @apply text-accent;
-    margin-bottom: 1rem;
-}
-
-.messages ul {
-    list-style-type: none;
-    padding: 0;
-    max-height: 200px;
-    overflow-y: auto;
-}
-
-.messages li {
-    padding: 0.25rem 0;
-    color: black;
+    height: 26vh;
 }
 
 .send-message {
-    display: flex;
-    gap: 0.5rem;
-    margin-bottom: 1rem;
+    border-radius: 15px;
+    @apply bg-neutral border border-secondary;
 }
 
-.send-message input {
-    flex: 1;
-    padding: 0.5rem;
-    border: 1px solid #d1d5db;
-    border-radius: 4px;
+input {
+    border-radius: 15px;
 }
 
-.send-message button {
-    padding: 0.5rem 1rem;
-    background-color: #6b48ff;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-}
-
-.send-message button:hover {
-    background-color: #5941d1;
-}
-
-button {
-    padding: 0.5rem 1rem;
-    background-color: #6b48ff;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-}
-
-button:hover {
-    background-color: #5941d1;
-}
-
-button:disabled {
-    background-color: #a78bfa;
-    cursor: not-allowed;
+li {
+    border-radius: 15px;
+    width: fit-content;
+    max-width: 80vw;
+    overflow-wrap: break-word;
+    @apply text-white font-semibold p-2 m-2;
 }
 </style>

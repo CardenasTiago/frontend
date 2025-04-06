@@ -8,7 +8,7 @@
         {{ socketStore.countdown }}
       </h1>
     </div>   
-    <div v-if="currentProposal" class="proposal-container pb-4 m-4 w-[80%] relative">
+    <div v-if="currentProposal" class="proposal-container max-w-[50%] pb-4 m-4">
       <button 
         v-if="currentProposal.archive" 
         @click="openFile(currentProposal.archive)" 

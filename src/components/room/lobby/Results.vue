@@ -15,6 +15,7 @@
 
         <h1 v-if="socketStore.currentProposal.last_prop">fin de votacion</h1>
 
+        <TabChat />
     </div>
 </template>
 
@@ -31,12 +32,14 @@ const router = useRouter();
 
 
 const room = ref('');
-const username = ref('');
+const user = ref('');
 onMounted(() => {
     socketStore.resultsAvailable = false
-    const loggedUser = localStorage.getItem('userName');
-    username.value = loggedUser;
 
+    const loggedUser = localStorage.getItem('user');
+    if (loggedUser) {
+        user.value = JSON.parse(loggedUser);
+    }
     const storedRoom = localStorage.getItem('currentRoom');
 
     if (storedRoom) {
@@ -72,6 +75,5 @@ watch(currentProposal, (newVal, oldVal) => {
     }
 });
 
-
-provide('username', username);
+provide('user', user);
 </script>
