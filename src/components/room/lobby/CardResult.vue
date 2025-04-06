@@ -1,5 +1,5 @@
 <template>
-  <div class="max-w-3xl mx-auto p-4 rounded-xl shadow-md shadow-base-100 bg-neutral flex flex-col border border-accent/10">
+  <div class="max-w-xs lg:max-w-3xl mx-auto p-4 rounded-xl shadow-md shadow-base-100 bg-neutral flex flex-col border border-accent/10">
     <h2 class="text-accent font-semibold text-sm mb-2 lg:border-b lg:border-accent/20 pb-1 text-center lg:text-start">
       {{ proposal?.title || 'Propuesta sin título' }}
     </h2>

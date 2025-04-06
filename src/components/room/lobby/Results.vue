@@ -15,7 +15,7 @@
 
         <h1 v-if="socketStore.currentProposal.last_prop">fin de votacion</h1>
 
-        <TabChat />
+       
     </div>
 </template>
 

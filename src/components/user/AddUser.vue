@@ -1,5 +1,7 @@
 <template>
-
+  <div class="ml-4">
+    <BackButton />
+  </div>
   <div class="flex flex-col gap-10 p-8 max-w-screen-md mx-auto ">
 
     <h1 class="flex justify-center font-bold text-2xl">Votantes</h1>
@@ -81,6 +83,7 @@ import { ref, defineProps, onMounted, computed } from 'vue';
 import { Icon } from "@iconify/vue";
 import AddVoterModal from "./AddVoterModal.vue";
 import ModalConfirm from "../reusable/Modal.vue";
+import BackButton from '../reusable/BackButton2.vue';
 
 const users = ref([]); // Donde se guardarán los datos de la API
 const props = defineProps(["id"]); // Recibir el ID de la sala
