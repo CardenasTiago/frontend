@@ -11,11 +11,6 @@
       </button>
       <!-- Modal -->
       <AddVoterModal v-model="isModalOpen" @add-voter="handleAddVoter" />
-
-      <button class="btn btn-primary">
-        <Icon icon="material-symbols:upload" class="w-6 h-6 " />
-        Subir Archivo
-      </button>
     </div>
 
     <div class="flex flex-col lg:flex-row gap-2 ">
