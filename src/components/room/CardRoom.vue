@@ -58,18 +58,30 @@
       </div>
     </div>
 
+    <div class="main-info bg-base-100 p-2">    
     <!-- descripción -->
-    <div class="flex flex-col items-stretch gap-2 p-2 lg:p-6">
+    
+
+
+    <div class="flex flex-col justify-between p-4">
+      <div class="flex flex-col">
       <div class="relative">
-        <div class="flex justify-between ">
-          <h2 class="">Descripción</h2>
+        <div class="flex flex-row justify-between">
+          <div class="flex flex-col">
+            <h2 class="">Descripción</h2>  
+            <div v-if="!isEditing">
+              <p class="text-accent opacity-50">{{ sala.room.description }}</p>
+            </div>
+            <textarea v-else v-model="sala.room.description" class="textarea textarea-primary w-full"></textarea>
+          </div>
+          
           <!-- Boton de DropDown -->
           <div class="dropdown dropdown-left ">
             <div tabindex="0" role="button"
               class="btn rounded-full bg-transparent border-none hover:bg-transparent shadow-none">
               <Icon icon="iconamoon:menu-kebab-horizontal-circle-bold" class="w-6 h-6 lg:w-8 lg:h-8 text-primary" />
             </div>
-            <ul tabindex="0" class="dropdown-content menu bg-base-100 z-10 ">
+            <ul tabindex="0" class="dropdown-content menu bg-base-100 p-5 gap-1 rounded-xl shadow-lg z-10 ">
               <li><a :href="`../proposal?id=${sala.room.id}`" class="btn btn-primary btn-xs lg:btn-sm">Propuestas</a>
               </li>
               <li><a :href="`../formalSettingRoom?id=${sala.room.id}`"
@@ -80,21 +92,11 @@
             </ul>
           </div>
         </div>
-
-
-        <div v-if="!isEditing">
-          <p class="text-accent opacity-50">{{ sala.room.description }}</p>
-        </div>
-        <textarea v-else v-model="sala.room.description" class="textarea textarea-primary w-full"></textarea>
       </div>
-
     </div>
-
-
-    <div class="flex flex-col lg:flex-row justify-between gap-4 ">
-      <div class="lg:w-1/2 p-2 lg:p-6">
+      <div class="">
         <div class="">
-          <h2>Fecha y hora programada</h2>
+          <h2 class="mt-2">Fecha y hora programada</h2>
           <!-- Mostrar la fecha solo si startTime es válido -->
           <h2 v-if="sala.room.start_time" class="text-primary font-bold">
             {{ new Date(sala.room.start_time).toLocaleDateString('default', { month: 'long' }) }}
@@ -133,13 +135,13 @@
       </div>
 
     </div>
-
+  </div>
     <div class="flex justify-center p-2 ">
       <StartRoom client:load />
     </div>
   </div>
 
-
+  
 </template>
 
 <script setup>
@@ -275,3 +277,11 @@ onMounted(() => {
 });
 
 </script>
+
+
+<style>
+
+.main-info {
+  border-radius: 30px;
+}
+</style>
