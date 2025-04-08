@@ -1,16 +1,11 @@
 <template>
-  <div class="block lg:hidden  p-2">
-    <BackButton />
-  </div>
   <div v-if="sala" class="bg-neutral w-[90%] flex flex-col justify-center mx-auto">
     <div class="flex justify-between">      
-      <div class="hidden lg:block ">
-        <BackButton />
-      </div>
       <!-- Contenedor de imagen -->
-      <div :style="containerStyle" class="relative max-w-[80vw] max-h-[30vw] mx-auto overflow-hidden mt-0 p-0">
+      <div :style="containerStyle" class="relative max-w-[90vw] max-h-[40vh] mx-auto overflow-hidden mt-0 p-0">
         <img class="absolute inset-0 w-full h-full object-cover filter blur-md mt-0 p-0" :src="sala.room.image || defaultImage"
         alt="Imagen de fondo" crossOrigin="anonymous" />
+        <BackButton class="absolute top-2 left-2 z-10" />
       <!-- Imagen principal -->
       <img class="relative w-full h-full object-contain object-center mt-0 p-0" ref="imgElement"
         :src="sala.room.image || defaultImage" alt="Imagen de la sala" @load="extractDominantColor"
@@ -84,14 +79,14 @@
               class="btn rounded-full bg-transparent border-none hover:bg-transparent shadow-none">
               <Icon icon="iconamoon:menu-kebab-horizontal-circle-bold" class="w-6 h-6 lg:w-8 lg:h-8 text-primary" />
             </div>
-            <ul tabindex="0" class="dropdown-content menu bg-base-100 p-5 gap-1 rounded-xl shadow-lg z-10 ">
+            <ul tabindex="0" class="dropdown-content menu bg-base-100 p-5 gap-3 rounded-xl shadow-lg z-10 ">
               <li><a :href="`../proposal?id=${sala.room.id}`" class="btn btn-primary btn-xs lg:btn-sm">Propuestas</a>
               </li>
               <li><a :href="`../formalSettingRoom?id=${sala.room.id}`"
-                  class="btn btn-primary btn-xs mt-3 lg:btn-sm">Otras
+                  class="btn btn-primary btn-xs lg:btn-sm pb-1">Otras
                   Configuraciones</a></li>
               <li><a :href="`../user/addUser/${sala.room.id}`"
-                  class="btn btn-primary btn-xs mt-3 lg:btn-sm">Votantes</a></li>
+                  class="btn btn-primary btn-xs lg:btn-sm">Votantes</a></li>
             </ul>
           </div>
         </div>
@@ -306,4 +301,5 @@ onMounted(() => {
 .main-info {
   border-radius: 30px;
 }
+
 </style>
