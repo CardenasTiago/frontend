@@ -2,16 +2,19 @@
   <div class="block lg:hidden  p-2">
     <BackButton />
   </div>
-  <div v-if="sala" class="bg-neutral w-[80%] flex flex-col justify-center mx-auto">
+  <div v-if="sala" class="bg-neutral w-[90%] flex flex-col justify-center mx-auto">
     <div class="flex justify-between">      
       <div class="hidden lg:block ">
         <BackButton />
       </div>
-
       <!-- Contenedor de imagen -->
-      <div
-        class="w-full lg:max-w-md h-[240px] lg:h-[300px] bg-gray-200 rounded-lg overflow-hidden relative group mr-auto ml-auto">
-        <img :src="sala.room.image || defaultImage" alt="Imagen de la sala" class="object-cover w-full h-full" />
+      <div :style="containerStyle" class="relative max-w-[80vw] max-h-[30vw] mx-auto overflow-hidden mt-0 p-0">
+        <img class="absolute inset-0 w-full h-full object-cover filter blur-md mt-0 p-0" :src="sala.room.image || defaultImage"
+        alt="Imagen de fondo" crossOrigin="anonymous" />
+      <!-- Imagen principal -->
+      <img class="relative w-full h-full object-contain object-center mt-0 p-0" ref="imgElement"
+        :src="sala.room.image || defaultImage" alt="Imagen de la sala" @load="extractDominantColor"
+        crossOrigin="anonymous" />
 
         <!-- Botón para cambiar imagen (solo visible en pantallas grandes al hacer hover) -->
         <label for="fileInput"
@@ -145,11 +148,11 @@
 </template>
 
 <script setup>
-import { ref, onMounted, onUnmounted } from "vue";
+import { ref, onMounted, onUnmounted, computed } from "vue";
 import BackButton from "../reusable/BackButton2.vue";
 import StartRoom from "./lobby/StartRoom.vue";
 import { Icon } from "@iconify/vue";
-
+import ColorThief from 'colorthief';
 
 const props = defineProps({
   id: String
@@ -263,6 +266,25 @@ const copyToClipboard = () => {
   });
 };
 
+const defaultImage = '/src/assets/default-image.jpg';
+const dominantColor = ref('');
+const imgElement = ref(null);
+
+const extractDominantColor = () => {
+  if (imgElement.value && imgElement.value.complete) {
+    try {
+      const colorThief = new ColorThief();
+      const result = colorThief.getColor(imgElement.value);
+      dominantColor.value = `rgb(${result.join(',')})`;
+    } catch (error) {
+      console.error('Error al extraer el color dominante:', error);
+    }
+  }
+};
+
+const containerStyle = computed(() => ({
+  boxShadow: dominantColor.value ? `0 4px 10px ${dominantColor.value}` : 'none'
+}));
 
 
 // Función para limpiar currentRoom cuando el componente se desmonte
