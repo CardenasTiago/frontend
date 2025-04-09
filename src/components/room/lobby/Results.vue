@@ -1,5 +1,5 @@
 <template>
-    <div class="min-h-[80vh] flex flex-col gap-6 justify-center items-center">
+    <div class="h-screen p-10 flex flex-col gap-6 justify-center items-center">
         <h2>Resultados de la votación</h2>
         <CardResult 
             :result="displayResults" 
@@ -15,7 +15,7 @@
 
         <h1 v-if="socketStore.currentProposal.last_prop">fin de votacion</h1>
 
-       
+       <!-- <VotesScroll /> -->
     </div>
 </template>
 
@@ -23,6 +23,7 @@
 import { provide, onMounted, ref, computed, watch } from 'vue';
 import { useWebSocketStore } from '../stores/socketStore'
 import TabChat from './TabChat.vue';
+import VotesScroll from './Results.vue';
 import { useRouter } from 'vue-router';
 import CardResult from './CardResult.vue'
 

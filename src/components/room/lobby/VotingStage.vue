@@ -1,5 +1,5 @@
 <template>
-  <div class="flex flex-col items-center justify-center text-center min-h-[80vh] w-screen">
+  <div class="flex h-screen flex-col justify-center items-center text-center">
     <div>
       <h2>Tiempo restante</h2>
     </div>
@@ -8,7 +8,7 @@
         {{ socketStore.countdown }}
       </h1>
     </div>   
-    <div v-if="currentProposal" class="proposal-container max-w-[50%] pb-4 m-4">
+    <div v-if="currentProposal" class="proposal-container flex flex-col min-w-[40vw] max-w-[50vw] pb-4 m-4">
       <button 
         v-if="currentProposal.archive" 
         @click="openFile(currentProposal.archive)" 
@@ -22,7 +22,7 @@
         </svg>
       </button>
 
-      <div class="description bg-secondary p-4">
+      <div class="description bg-secondary font-semibold p-4">
         <p>{{ currentProposal.description }}</p>
       </div>
       <h1 class="font-semibold">{{ currentProposal.title }}</h1>

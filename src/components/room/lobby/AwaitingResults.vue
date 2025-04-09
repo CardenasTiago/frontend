@@ -1,5 +1,5 @@
 <template>
-  <div class="flex flex-col items-center justify-center text-center min-h-[70vh] w-screen">
+  <div class="flex flex-col items-center justify-center text-center h-screen w-screen">
     <div v-if="socketStore.timer !== null">
       <div>
         <h2>Tiempo restante</h2>

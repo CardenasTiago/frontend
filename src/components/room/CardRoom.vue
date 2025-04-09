@@ -1,8 +1,8 @@
 <template>
-  <div v-if="sala" class="bg-neutral w-[90%] flex flex-col justify-center mx-auto">
+  <div v-if="sala" class="bg-neutral w-[90%] flex flex-col justify-center mx-auto P-0">
     <div class="flex justify-between">      
       <!-- Contenedor de imagen -->
-      <div :style="containerStyle" class="relative max-w-[90vw] max-h-[40vh] mx-auto overflow-hidden mt-0 p-0">
+      <div :style="containerStyle" class="relative w-full max-h-[40vh] mx-auto overflow-hidden mt-0 p-0">
         <img class="absolute inset-0 w-full h-full object-cover filter blur-md mt-0 p-0" :src="sala.room.image || defaultImage"
         alt="Imagen de fondo" crossOrigin="anonymous" />
         <BackButton class="absolute top-2 left-2 z-10" />
