@@ -22,19 +22,22 @@
             leave-to="opacity-0 scale-95"
           >
             <DialogPanel class="w-full max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg transform overflow-hidden rounded-lg bg-neutral shadow-xl transition-all">
-              <DialogTitle class="text-2x1 font-semibold text-white bg-primary p-4">
+              <DialogTitle class="text-2x1 font-semibold text-white bg-primary p-2 text-center">
                 Agregar Votante
               </DialogTitle>
               
               <div class="mt-2 p-4">
                 <!-- <label class="block text-sm font-medium text-accent">Ingrese el Dato</label> -->
-                <input type="text" v-model="userInput" class="input input-primary w-full mt-1" placeholder="Ingrese username,email o dni" />
+                <input type="text" v-model="userInput" class="input input-primary w-full mt-1" placeholder="Ingrese username, email o DNI" />
               </div>  
               
   
-              <div class="mt-2 flex justify-center gap-10 p-4">
-                <button @click="addVoter" class="btn btn-primary btn-sm border-none">Agregar</button>
+              <div class=" flex justify-center gap-10 p-4">
+                
                 <button @click="handleClose" class="btn btn-secondary hover:bg-error btn-sm border-none">Cancelar</button>
+                <button @click="addVoter" class="btn btn-primary btn-sm border-none">
+                  Agregar
+                </button>
                 
               </div>
             </DialogPanel>
@@ -47,7 +50,8 @@
   <script setup>
   import { ref } from 'vue'
   import { Dialog, DialogPanel, DialogTitle, TransitionChild, TransitionRoot } from '@headlessui/vue'
-  
+  import { Icon } from "@iconify/vue";
+
   const userInput = ref("")//guarda el dato ingresado
   
   defineProps({

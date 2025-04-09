@@ -1,17 +1,15 @@
 <template>
-  <div class="block lg:hidden  p-2">
-    <BackButton />
-  </div>
-  <div v-if="sala" class="bg-neutral w-[80%] flex flex-col justify-center mx-auto">
+  <div v-if="sala" class="bg-neutral w-[90%] flex flex-col justify-center mx-auto P-0">
     <div class="flex justify-between">      
-      <div class="hidden lg:block ">
-        <BackButton />
-      </div>
-
       <!-- Contenedor de imagen -->
-      <div
-        class="w-full lg:max-w-md h-[240px] lg:h-[300px] bg-gray-200 rounded-lg overflow-hidden relative group mr-auto ml-auto">
-        <img :src="sala.room.image || defaultImage" alt="Imagen de la sala" class="object-cover w-full h-full" />
+      <div :style="containerStyle" class="relative w-full max-h-[40vh] mx-auto overflow-hidden mt-0 p-0">
+        <img class="absolute inset-0 w-full h-full object-cover filter blur-md mt-0 p-0" :src="sala.room.image || defaultImage"
+        alt="Imagen de fondo" crossOrigin="anonymous" />
+        <BackButton class="absolute top-2 left-2 z-10" />
+      <!-- Imagen principal -->
+      <img class="relative w-full h-full object-contain object-center mt-0 p-0" ref="imgElement"
+        :src="sala.room.image || defaultImage" alt="Imagen de la sala" @load="extractDominantColor"
+        crossOrigin="anonymous" />
 
         <!-- Botón para cambiar imagen (solo visible en pantallas grandes al hacer hover) -->
         <label for="fileInput"
@@ -58,43 +56,45 @@
       </div>
     </div>
 
+    <div class="main-info bg-base-100 p-2">    
     <!-- descripción -->
-    <div class="flex flex-col items-stretch gap-2 p-2 lg:p-6">
+    
+
+
+    <div class="flex flex-col justify-between p-4">
+      <div class="flex flex-col">
       <div class="relative">
-        <div class="flex justify-between ">
-          <h2 class="">Descripción</h2>
+        <div class="flex flex-row justify-between">
+          <div class="flex flex-col">
+            <h2 class="">Descripción</h2>  
+            <div v-if="!isEditing">
+              <p class="text-accent opacity-50">{{ sala.room.description }}</p>
+            </div>
+            <textarea v-else v-model="sala.room.description" class="textarea textarea-primary w-full"></textarea>
+          </div>
+          
           <!-- Boton de DropDown -->
           <div class="dropdown dropdown-left ">
             <div tabindex="0" role="button"
               class="btn rounded-full bg-transparent border-none hover:bg-transparent shadow-none">
               <Icon icon="iconamoon:menu-kebab-horizontal-circle-bold" class="w-6 h-6 lg:w-8 lg:h-8 text-primary" />
             </div>
-            <ul tabindex="0" class="dropdown-content menu bg-base-100 z-10 ">
+            <ul tabindex="0" class="dropdown-content menu bg-base-100 p-5 gap-3 rounded-xl shadow-lg z-10 ">
               <li><a :href="`../proposal?id=${sala.room.id}`" class="btn btn-primary btn-xs lg:btn-sm">Propuestas</a>
               </li>
               <li><a :href="`../formalSettingRoom?id=${sala.room.id}`"
-                  class="btn btn-primary btn-xs mt-3 lg:btn-sm">Otras
+                  class="btn btn-primary btn-xs lg:btn-sm pb-1">Otras
                   Configuraciones</a></li>
               <li><a :href="`../user/addUser/${sala.room.id}`"
-                  class="btn btn-primary btn-xs mt-3 lg:btn-sm">Votantes</a></li>
+                  class="btn btn-primary btn-xs lg:btn-sm">Votantes</a></li>
             </ul>
           </div>
         </div>
-
-
-        <div v-if="!isEditing">
-          <p class="text-accent opacity-50">{{ sala.room.description }}</p>
-        </div>
-        <textarea v-else v-model="sala.room.description" class="textarea textarea-primary w-full"></textarea>
       </div>
-
     </div>
-
-
-    <div class="flex flex-col lg:flex-row justify-between gap-4 ">
-      <div class="lg:w-1/2 p-2 lg:p-6">
+      <div class="">
         <div class="">
-          <h2>Fecha y hora programada</h2>
+          <h2 class="mt-2">Fecha y hora programada</h2>
           <!-- Mostrar la fecha solo si startTime es válido -->
           <h2 v-if="sala.room.start_time" class="text-primary font-bold">
             {{ new Date(sala.room.start_time).toLocaleDateString('default', { month: 'long' }) }}
@@ -133,21 +133,21 @@
       </div>
 
     </div>
-
+  </div>
     <div class="flex justify-center p-2 ">
       <StartRoom client:load />
     </div>
   </div>
 
-
+  
 </template>
 
 <script setup>
-import { ref, onMounted, onUnmounted } from "vue";
+import { ref, onMounted, onUnmounted, computed } from "vue";
 import BackButton from "../reusable/BackButton2.vue";
 import StartRoom from "./lobby/StartRoom.vue";
 import { Icon } from "@iconify/vue";
-
+import ColorThief from 'colorthief';
 
 const props = defineProps({
   id: String
@@ -261,6 +261,25 @@ const copyToClipboard = () => {
   });
 };
 
+const defaultImage = '/src/assets/default-image.jpg';
+const dominantColor = ref('');
+const imgElement = ref(null);
+
+const extractDominantColor = () => {
+  if (imgElement.value && imgElement.value.complete) {
+    try {
+      const colorThief = new ColorThief();
+      const result = colorThief.getColor(imgElement.value);
+      dominantColor.value = `rgb(${result.join(',')})`;
+    } catch (error) {
+      console.error('Error al extraer el color dominante:', error);
+    }
+  }
+};
+
+const containerStyle = computed(() => ({
+  boxShadow: dominantColor.value ? `0 4px 10px ${dominantColor.value}` : 'none'
+}));
 
 
 // Función para limpiar currentRoom cuando el componente se desmonte
@@ -275,3 +294,12 @@ onMounted(() => {
 });
 
 </script>
+
+
+<style>
+
+.main-info {
+  border-radius: 30px;
+}
+
+</style>
