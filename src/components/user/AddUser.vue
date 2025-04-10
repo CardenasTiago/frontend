@@ -2,8 +2,7 @@
   <div class="ml-4">
     <BackButton />
   </div>
-  <div class="flex flex-col gap-10 p-8 max-w-screen-md mx-auto ">
-
+  <div class="flex flex-col gap-5 p-4 max-w-screen-md mx-auto ">
     <h1 class="flex justify-center font-bold text-2xl">Votantes</h1>
     <div class="flex justify-center gap-10">
       <button class="btn btn-primary" @click="isModalOpen = true">
@@ -13,15 +12,14 @@
       <AddVoterModal v-model="isModalOpen" @add-voter="handleAddVoter" />
     </div>
 
-    <div class="flex flex-col lg:flex-row gap-2 ">
-      <div class="flex items-center w-2/3 lg:w-1/2 input input-primary ">
+    <div class="flex flex-col lg:flex-row gap-2 w-full">
+      <div class="flex items-center w-full input input-primary">
         <div>
           <Icon icon="mdi:magnify" class="w-5 h-5" />
         </div>
         <div class="flex-1">
           <input v-model="searchQuery" type="text" placeholder="Buscar" class="w-full ml-2 outline-none" />
         </div>
-
       </div>
       <!-- Alerta -->
       <div class="flex h-6 justify-center lg:mt-2">
@@ -36,13 +34,11 @@
           <span class="text-sm">{{ alertMessage }}</span>
         </div>
       </div>
-
     </div>
 
-
-    <ul role="list" class="flex flex-col gap-y-7 ">
-      <li v-for="user in filteredUsers" :key="user.email" class="flex justify-between">
-        <div class="flex min-w-0 gap-x-4 ">
+    <ul role="list" class="flex flex-col gap-5">
+      <li v-for="user in filteredUsers" :key="user.email" class="flex justify-between bg-base-100 p-4 rounded-xl">
+        <div class="flex min-w-0 gap-x-4">
           <img class="size-12  flex-none rounded-full bg-accent-50 mr-2" :src="user.image" alt="" />
           <div class="min-w-0 flex-auto">
             <p class="text-sm/6 font-semibold text-accent">{{ user.name }} {{ user.lastname }}</p>

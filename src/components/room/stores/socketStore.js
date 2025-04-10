@@ -140,7 +140,6 @@ export const useWebSocketStore = defineStore('webSocketStore', {
           this.pushMessage(`${eventData.payload.from} : ${eventData.payload.message}`, false );
           break;
         case "update_client_list":
-          console.log(eventData.payload)
           this.updateClientList(eventData.payload);
           break;
         case "first_proposal":
@@ -151,6 +150,7 @@ export const useWebSocketStore = defineStore('webSocketStore', {
           this.currentProposal = eventData.payload;
           break;
         case "results":
+          console.log(eventData.payload);
           this.resultsReady = true;
           this.results = eventData.payload;
           break
