@@ -158,7 +158,7 @@
 
 <script setup>
 import { ref, onMounted, computed } from 'vue';
-import BackButton from '../reusable/BackButton2.vue';
+import BackButton from '../reusable/BackButton.vue';
 
 const form = ref({
   title: '',
