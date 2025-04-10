@@ -13,7 +13,7 @@ const props = defineProps({
         required: true
     }
 });
-s
+
 const goBack = () => {
     window.location.href = `/protected/room/${props.roomId}`;
 };
