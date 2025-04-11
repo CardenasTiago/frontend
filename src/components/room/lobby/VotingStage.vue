@@ -9,18 +9,14 @@
       </h1>
     </div>   
     <div v-if="currentProposal" class="proposal-container flex flex-col min-w-[40vw] max-w-[50vw] pb-4 m-4">
-      <button 
+      <a 
         v-if="currentProposal.archive" 
         @click="openFile(currentProposal.archive)" 
-        class="view-btn absolute top-1 right-1 w-10 h-10 flex items-center justify-center rounded-full btn btn-primary"
+        class=" flex items-center justify-center rounded-full btn btn-primary"
         title="Ver archivo"
       >
-        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
-          <polyline points="15 3 21 3 21 9"></polyline>
-          <line x1="10" y1="14" x2="21" y2="3"></line>
-        </svg>
-      </button>
+        <Icon icon="material-symbols-light:docs-outline" width="24" height="24" />
+      </a>
 
       <div class="description bg-secondary font-semibold p-4">
         <p>{{ currentProposal.description }}</p>
@@ -49,6 +45,7 @@ import { onMounted, ref, watch } from 'vue';
 import { useWebSocketStore } from '../stores/socketStore';
 import { storeToRefs } from 'pinia';
 import { useRouter } from 'vue-router';
+import { Icon } from "@iconify/vue";
 
 const router = useRouter();
 const socketStore = useWebSocketStore();
@@ -146,10 +143,6 @@ button {
   width: 300px;
 }
 
-/* Anulamos el ancho para el botón de vista */
-.view-btn {
-  width: auto !important;
-}
 
 .selected {
   @apply text-accent bg-success;

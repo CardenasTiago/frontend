@@ -1,12 +1,10 @@
 <template>
-    <div class="h-screen p-10 flex flex-col gap-6 justify-center items-center">
+    <div class="p-10 flex flex-col gap-6 justify-center items-center">
         <h2>Resultados de la votación</h2>
-        <CardResult 
-            :result="displayResults" 
-            :proposal="socketStore.currentProposal"            
-        />      
-  
-        <TabChat /> 
+        <div class ="flex flex-row flex-wrap gap-4 justify-center ">
+            <CardResult :result="displayResults" :proposal="socketStore.currentProposal" />
+            <TabChat />
+        </div>
 
         <button class="btn btn-primary" v-if="room.privileges && !socketStore.currentProposal.last_prop"
             @click="nextProposal">
@@ -15,7 +13,7 @@
 
         <h1 v-if="socketStore.currentProposal.last_prop">fin de votacion</h1>
 
-       <!-- <VotesScroll /> -->
+        <!-- <VotesScroll /> -->
     </div>
 </template>
 
