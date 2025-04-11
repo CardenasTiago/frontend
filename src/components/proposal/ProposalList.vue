@@ -2,7 +2,7 @@
   <div class="space-y-6">
     <a 
       :href="`/protected/editProposal?roomId=${roomId}`"
-      class="btn w-full bg-primary hover:bg-primary/90 text-neutral"
+      class="btn w-full bg-primary hover:bg-primary/90"
     >
       Agregar propuesta
     </a>
@@ -23,7 +23,7 @@
       <div 
         v-for="proposal in proposals" 
         :key="proposal.id"
-        class="flex items-center justify-between p-3 bg-white rounded-lg shadow-sm"
+        class="flex items-center justify-between p-3 bg-neutral rounded-lg shadow-sm"
       >
         <span class="text-accent/80">{{ proposal.title }}</span>
         <div class="flex gap-2">
