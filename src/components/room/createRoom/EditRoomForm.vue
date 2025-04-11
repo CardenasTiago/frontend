@@ -1,5 +1,5 @@
 <template>
-  <div class="bg-base-100 p-8 rounded-xl shadow-lg">
+  <div class="bg-neutral p-8 rounded-xl shadow-lg">
     <div class="flex justify-between items-center mb-6">
       <BackButton />
     </div>
@@ -17,8 +17,8 @@
     </div>
 
     <div v-else>
-      <div class="aspect-video bg-gray-200 mb-6 rounded-lg flex items-center justify-center">
-        <input type="file" class="file-input file-input-ghost w-full max-w-xs" @change="handleFileChange" />
+      <div class="aspect-video bg-base-100-200 mb-6 rounded-lg flex items-center justify-center">
+        <input type="file" accept="image/*" class="file-input file-input-ghost w-full max-w-xs" @change="handleFileChange" />
       </div>
 
       <form @submit.prevent="handleSubmit" class="space-y-6">
