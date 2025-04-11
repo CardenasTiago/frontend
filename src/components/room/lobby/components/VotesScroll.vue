@@ -8,7 +8,7 @@
   </template>
   
   <script setup>
-  import { useWebSocketStore } from '../stores/socketStore'
+  import { useWebSocketStore } from '../../stores/socketStore'
   const socketStore = useWebSocketStore();
   
   /**

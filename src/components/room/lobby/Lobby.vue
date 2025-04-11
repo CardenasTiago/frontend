@@ -84,9 +84,9 @@ import { useWebSocketStore } from '../stores/socketStore'
 import { storeToRefs } from 'pinia'
 import { useRouter } from 'vue-router'
 import ColorThief from 'colorthief';
-import TabChat from './TabChat.vue';
-import TabInfo from './TabInfo.vue';
-import TabUsers from './TabUsers.vue';
+import TabChat from './components/TabChat.vue';
+import TabInfo from './components/TabInfo.vue';
+import TabUsers from './components/TabUsers.vue';
 import { Icon } from "@iconify/vue";
 
 const socketStore = useWebSocketStore();

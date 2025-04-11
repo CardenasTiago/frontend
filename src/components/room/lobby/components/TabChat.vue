@@ -34,7 +34,7 @@
 
 <script setup>
 import { inject, ref, onUpdated } from 'vue';
-import { useWebSocketStore } from '../stores/socketStore';
+import { useWebSocketStore } from '../../stores/socketStore';
 import { storeToRefs } from 'pinia'
 import { Icon } from "@iconify/vue";
 

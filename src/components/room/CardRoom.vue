@@ -145,7 +145,7 @@
 <script setup>
 import { ref, onMounted, onUnmounted, computed } from "vue";
 import BackButton from "../reusable/BackButton2.vue";
-import StartRoom from "./lobby/StartRoom.vue";
+import StartRoom from "./lobby/components/StartRoom.vue";
 import { Icon } from "@iconify/vue";
 import ColorThief from 'colorthief';
 

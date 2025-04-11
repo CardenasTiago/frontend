@@ -14,26 +14,8 @@
       <h2>Esperando resultados</h2>
       <div class="loader my-2" />
     </div>
-
-    <div class="w-full px-4 mx-4">
-      <ul class="users flex flex-wrap justify-center gap-4">
-        <li v-for="client in userList" :key="client.username" class="flex flex-col items-center">
-          <div :class="[
-            'w-16 h-16 rounded-full border-4',
-            client.voted ? 'border-green-500' : 'border-gray-500',
-          ]">
-            <!-- Si hay imagen, se muestra la etiqueta <img> -->
-            <img v-if="client.image" :src="client.image" alt="Foto de perfil"
-              class="w-full h-full rounded-full object-cover" />
-
-            <!-- Si no hay imagen, se muestra el componente Icon -->
-            <Icon v-else icon="ic:baseline-person" class="w-full h-full rounded-full object-cover p-2 text-secondary" width="58"
-              height="58" />
-          </div>
-          <p class="mt-2 font-semibold text-secondary">{{ client.username }}</p>
-        </li>
-      </ul>
-    </div>
+    <VoteState />
+    
     <TabChat />
   </div>
 </template>
@@ -41,7 +23,8 @@
 <script setup>
 import { useWebSocketStore } from '../stores/socketStore';
 import { onMounted, provide, onUnmounted, watch, ref } from 'vue';
-import TabChat from './TabChat.vue';
+import TabChat from './components/TabChat.vue';
+import VoteState from './components/VoteState.vue';
 import { storeToRefs } from 'pinia'
 import { useRouter } from 'vue-router'
 import { Icon } from "@iconify/vue";
