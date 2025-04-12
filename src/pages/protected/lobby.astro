@@ -1,13 +1,13 @@
 ---
 import Layout from "../../layouts/Layout.astro";
-import LobbyManager from "../../components/room/LobbyManager.vue";
+import LobbyIndex from "../../components/room/lobby/views/LobbyIndex.vue"
 import ProtectedRoute from "../../components/authentication/ProtectedRoute.vue";
 ---
 
 <Layout title="Suffgo | Lobby" hideHeader={true}>
     <ProtectedRoute client:load>
         <div class="place-items-center h-full p-0 m-0">
-            <LobbyManager client:load/>
+            <LobbyIndex client:load/>
         </div>
     </ProtectedRoute>
 </Layout>
