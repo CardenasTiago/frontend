@@ -203,7 +203,6 @@ const updateRoom = async () => {
         name: sala.value.room.room_title,
         link_invite: sala.value.room.link_invite,
         image: sala.value.room.image
-
       }),
       credentials: "include"
     });
