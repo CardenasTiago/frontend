@@ -260,7 +260,7 @@ const copyToClipboard = () => {
   });
 };
 
-const defaultImage = '/src/assets/default-image.jpg';
+const defaultImage = '/defaultRoomImage.png';
 const dominantColor = ref('');
 const imgElement = ref(null);
 
