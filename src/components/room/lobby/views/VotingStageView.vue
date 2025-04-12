@@ -42,7 +42,7 @@
 
 <script setup>
 import { onMounted, ref, watch } from 'vue';
-import { useWebSocketStore } from '../stores/socketStore';
+import { useWebSocketStore } from '../../stores/socketStore';
 import { storeToRefs } from 'pinia';
 import { useRouter } from 'vue-router';
 import { Icon } from "@iconify/vue";

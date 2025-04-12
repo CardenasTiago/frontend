@@ -13,18 +13,16 @@
         </button>
 
         <h1 v-if="socketStore.currentProposal.last_prop">fin de votacion</h1>
-        <!-- <VotesScroll /> -->
     </div>
 </template>
 
 <script setup>
 import { provide, onMounted, ref, computed, watch } from 'vue';
-import { useWebSocketStore } from '../stores/socketStore'
-import TabChat from './components/TabChat.vue';
-import VotesScroll from './Results.vue';
-import VoteState from './components/VoteState.vue';
+import { useWebSocketStore } from '../../stores/socketStore'
+import TabChat from '../components/TabChat.vue';
+import VoteState from '../components/VoteState.vue';
 import { useRouter } from 'vue-router';
-import CardResult from './components/CardResult.vue'
+import CardResult from '../components/CardResult.vue'
 
 const socketStore = useWebSocketStore();
 

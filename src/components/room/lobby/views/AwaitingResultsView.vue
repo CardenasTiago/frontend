@@ -21,10 +21,10 @@
 </template>
 
 <script setup>
-import { useWebSocketStore } from '../stores/socketStore';
+import { useWebSocketStore } from '../../stores/socketStore';
 import { onMounted, provide, onUnmounted, watch, ref } from 'vue';
-import TabChat from './components/TabChat.vue';
-import VoteState from './components/VoteState.vue';
+import TabChat from '../components/TabChat.vue';
+import VoteState from '../components/VoteState.vue';
 import { storeToRefs } from 'pinia'
 import { useRouter } from 'vue-router'
 import { Icon } from "@iconify/vue";
