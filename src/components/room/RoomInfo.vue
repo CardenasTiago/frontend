@@ -45,7 +45,7 @@
     </div>
 
     <div>
-      <h2 class="mb-2">Fecha y hora</h2>
+      <h2 v-if="formattedDate" class="mb-2">Fecha y hora</h2>
       <!-- Utilizamos la propiedad computada para formatear la fecha -->
       <h1 class="font-semibold mb-4">{{ formattedDate }}</h1>
     </div>
