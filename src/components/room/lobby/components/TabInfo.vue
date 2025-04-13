@@ -4,7 +4,7 @@
 
 <script setup>
 
-import RoomInfo from '../RoomInfo.vue';
+import RoomInfo from '../../RoomInfo.vue';
 
 </script>
 

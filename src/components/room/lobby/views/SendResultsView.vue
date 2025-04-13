@@ -14,7 +14,7 @@
 </template>
 
 <script setup>
-import { useWebSocketStore } from '../stores/socketStore'
+import { useWebSocketStore } from '../../stores/socketStore'
 import { useRouter } from 'vue-router'
 import { Icon } from "@iconify/vue";
 

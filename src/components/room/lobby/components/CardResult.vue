@@ -4,7 +4,7 @@
       {{ proposal?.title || 'Propuesta sin título' }}
     </h2>
 
-    <div class="flex flex-col md:flex-row gap-20 items-center p-6">    
+    <div class="flex flex-col md:flex-row gap-20 items-center p-6">
 
       <!-- Tabla -->
       <div class="overflow-x-auto rounded-box border border-base-content/5 bg-base-100 w-full hidden lg:block md:block p-4">

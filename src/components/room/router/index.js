@@ -1,10 +1,10 @@
 import { createMemoryHistory, createRouter } from 'vue-router'
 
-import LobbyView from '../lobby/Lobby.vue'
-import VotingView from '../lobby/VotingStage.vue'
-import SendResultsView from '../lobby/SendResults.vue'
-import ResultsView from '../lobby/Results.vue'
-import AwaitingResultsView from '../lobby/AwaitingResults.vue'
+import LobbyView from '../lobby/views/LobbyView.vue'
+import VotingView from '../lobby/views/VotingStageView.vue'
+import SendResultsView from '../lobby/views/SendResultsView.vue'
+import ResultsView from '../lobby/views/ResultsView.vue'
+import AwaitingResultsView from '../lobby/views/AwaitingResultsView.vue'
 
 const routes = [
   { path: '/', component: LobbyView },

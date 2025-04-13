@@ -2,6 +2,13 @@
   <div class="ml-4">
     <BackButton />
   </div>
+  <div v-if="salas.length === 0" class="flex flex-col items-center justify-center mt-10">
+    <h2 class="text-accent text-lg mb-4">Hmm, no hay nada aqui.</h2>
+    <a href="/protected/createRoom" class="btn btn-primary text-white">
+      Crear tu primera sala
+      <Icon icon="mdi:plus-circle-outline" width="24" height="24" class="ml-2" />
+    </a>
+  </div>
   <div v-for="(sala, index) in paginatedSalas" :key="index"
     class="max-w-screen-md mx-auto px-4 mt-8  bg-neutral rounded-lg">
     <a :href="`/protected/room/${sala.id}`" @click="handleCardClick"
@@ -17,7 +24,7 @@
         <div class="relative flex justify-between ">
           <button class="absolute top-2 lg:top-0 btn bg-transparent hover:bg-transparent border-none shadow-none p-0 "
             @click.stop.prevent="openDeleteModal(sala)">
-            <Icon icon="heroicons:trash" class="w-5 h-5 lg:w-6 lg:h-6 text-primary"/>
+            <Icon icon="heroicons:trash" class="w-5 h-5 lg:w-6 lg:h-6 text-primary hover:text-error"/>
           </button>
 
           <div class="absolute top-6 right-8 lg:hidden md:hidden text-accent opacity-70 flex items-center gap-x-1  ">
@@ -39,7 +46,7 @@
         </p>
       </div>
       <div v-else class="hidden lg:flex flex-col justify-center items-center lg:w-1/3 p-3 relative">
-        <p class="text-accent opacity-60">Fecha no disponible</p>
+        <p class="text-accent opacity-60">Fecha a determinar</p>
       </div>
 
       <div class="w-1/3 rounded-lg overflow-hidden">
@@ -49,7 +56,7 @@
   </div>
 
   <!-- Paginador -->
-  <div class="join flex justify-center mt-6 ">
+  <div v-if="salas.length > 3" class="join flex justify-center mt-6 ">
     <button class="join-item btn bg-primary hover:bg-primary" :disabled="currentPage === 1" @click="previousPage">
       <Icon icon="heroicons-solid:arrow-left" class="h-4 w-4"/>
     </button>
@@ -75,10 +82,8 @@
   
 
   const salas = ref([]); 
-  const defaultImage = ""; // Imagen por defecto 
+  const defaultImage = "/defaultRoomImage.png"; // Imagen por defecto 
   const deleteRoomRef = ref(null);  // Referencia para el componente DeleteRoom
-
-
 
    // Estado de la paginación
   const currentPage = ref(1);
