@@ -2,21 +2,21 @@
   <div v-if="sala" class="bg-neutral w-[90%] flex flex-col justify-center mx-auto P-0">
     <div class="flex justify-between">      
       <!-- Contenedor de imagen -->
-      <div :style="containerStyle" class="relative w-full max-h-[40vh] mx-auto overflow-hidden mt-0 p-0">
+      <div :style="containerStyle" class="group relative w-full max-h-[40vh] mx-auto overflow-hidden mt-0 p-0">
         <img class="absolute inset-0 w-full h-full object-cover filter blur-md mt-0 p-0" :src="sala.room.image || defaultImage"
         alt="Imagen de fondo" crossOrigin="anonymous" />
         <BackButton class="absolute top-2 left-2 z-10" />
       <!-- Imagen principal -->
-      <img class="relative w-full h-full object-contain object-center mt-0 p-0" ref="imgElement"
+        <img class="relative w-full h-full object-contain object-center mt-0 p-0" ref="imgElement"
         :src="sala.room.image || defaultImage" alt="Imagen de la sala" @load="extractDominantColor"
         crossOrigin="anonymous" />
 
         <!-- Botón para cambiar imagen (solo visible en pantallas grandes al hacer hover) -->
         <label for="fileInput"
-          class="absolute bottom-4 right-4 flex items-center font-bold py-1 px-4 rounded-full lg:opacity-0 group-hover:opacity-100 transition-opacity btn-primary btn-xs cursor-pointer">
+          class="z-11 absolute bottom-4 right-4 flex items-center font-bold py-1 px-4 rounded-full lg:opacity-0 group-hover:opacity-100 transition-opacity btn-primary btn-xs cursor-pointer">
           Cambiar Foto
         </label>
-        <input id="fileInput" type="file" class="hidden" @change="handleFileChange" />
+        <input id="fileInput" type="file" class="hidden z-10" @change="handleFileChange" />
       </div>
     </div>
     
@@ -94,7 +94,7 @@
     </div>
       <div class="">
         <div class="">
-          <h2 class="mt-2">Fecha y hora programada</h2>
+          <h2 v-if="sala.room.start_time" class="mt-2">Fecha y hora programada</h2>
           <!-- Mostrar la fecha solo si startTime es válido -->
           <h2 v-if="sala.room.start_time" class="text-primary font-bold">
             {{ new Date(sala.room.start_time).toLocaleDateString('default', { month: 'long' }) }}
@@ -108,9 +108,9 @@
         </div>
 
         <div class="mt-6">
-          <h2 class="text-sm">Link de Invitación</h2>
+          <h2 class="text-md">Codigo de sala</h2>
           <div class="flex gap-2 group">
-            <h2 class="text-primary text-md ">{{ sala.room.link_invite }}</h2>
+            <h2 class="text-primary text-md ">{{ sala.room.room_code }}</h2>
             <button @click="copyToClipboard"
               class="btn btn-sm lg:opacity-0 lg:group-hover:opacity-100 border-none shadow-none hover:bg-transparent bg-transparent p-0">
               <Icon icon="fa6-regular:copy" class="w-5 h-5 text-primary font-bold" />
@@ -124,7 +124,7 @@
         </div>
 
         <div class=" mt-4">
-          <h2 class="text-sm">Administrador</h2>
+          <h2 class="text-md">Administrador</h2>
           <div class="flex gap-16">
             <h2 class="text-primary text-md">{{ sala.room.admin_name }}</h2>
           </div>
