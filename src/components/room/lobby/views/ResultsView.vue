@@ -1,31 +1,28 @@
 <template>
-    <div class="h-screen p-10 flex flex-col gap-6 justify-center items-center">
+    <div class="p-10 flex flex-col gap-6 justify-center items-center">
         <h2>Resultados de la votación</h2>
-        <CardResult 
-            :result="displayResults" 
-            :proposal="socketStore.currentProposal"            
-        />      
-  
-        <TabChat /> 
+        <div class ="flex flex-row flex-wrap gap-4 justify-center ">
+            <CardResult :result="displayResults" :proposal="socketStore.currentProposal" />
+            <TabChat />
+        </div>
 
+        <VoteState />
         <button class="btn btn-primary" v-if="room.privileges && !socketStore.currentProposal.last_prop"
             @click="nextProposal">
             Siguiente propuesta
         </button>
 
         <h1 v-if="socketStore.currentProposal.last_prop">fin de votacion</h1>
-
-       <!-- <VotesScroll /> -->
     </div>
 </template>
 
 <script setup>
 import { provide, onMounted, ref, computed, watch } from 'vue';
-import { useWebSocketStore } from '../stores/socketStore'
-import TabChat from './TabChat.vue';
-import VotesScroll from './Results.vue';
+import { useWebSocketStore } from '../../stores/socketStore'
+import TabChat from '../components/TabChat.vue';
+import VoteState from '../components/VoteState.vue';
 import { useRouter } from 'vue-router';
-import CardResult from './CardResult.vue'
+import CardResult from '../components/CardResult.vue'
 
 const socketStore = useWebSocketStore();
 

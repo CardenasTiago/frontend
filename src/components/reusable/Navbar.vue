@@ -1,5 +1,5 @@
 <template>
-    <div v-if="!hideHeader">
+    <div v-if="!hideHeader ">
         <!-- Navbar de escritorio -->
         <div class="hidden md:flex justify-between items-center p-4">
             <div class="text-xl font-bold text-primary">
@@ -27,8 +27,8 @@
                         </label>
                     </li>
 
-                    <li v-show="!hideMenuItems"><a href="/protected/myRooms" class="text-m font-bold text-primary">Mis salas</a></li>
-                    <li v-show="!hideMenuItems"><a href="/protected/user/myProfile"
+                    <li v-show="!hideMenuItems && isAuthenticated"><a href="/protected/myRooms" class="text-m font-bold text-primary">Mis salas</a></li>
+                    <li v-show="!hideMenuItems && isAuthenticated"><a href="/protected/user/myProfile"
                             class="text-m font-bold text-primary">Mi perfil</a></li>
                     <li  v-show="!hideMenuItems">
                         <a @click="handleLogout" class="bg-base-100 text-accent">
@@ -49,7 +49,7 @@
                 </div>
                 <!-- Cuando se oculta el menu esto se muestra -->
                 <!-- Contenido a la derecha -->
-                <div v-if="hideMenuItems">
+                <div v-if="hideMenuItems || !isAuthenticated">
                     <!-- Solo el toggle de tema -->
                     <label class="flex cursor-pointer gap-2 items-center">
                         <Icon icon="ic:outline-wb-sunny" width="24" height="24" />
@@ -167,9 +167,9 @@ const handleLogout = async () => {
     }
 };
 
-
+const isAuthenticated = ref("");
 // Obtener el nombre de usuario desde localStorage al montar el componente
-onMounted(() => {
+onMounted(async() => {
     const loggedUser = localStorage.getItem('user');
     if (loggedUser) {
         user.value = JSON.parse(loggedUser);
@@ -179,6 +179,21 @@ onMounted(() => {
     if (user.image === "") {
         user.image = null;
     }
-});
 
+    try {
+      const response = await fetch("http://localhost:3000/v1/users/auth", {
+        credentials: 'include',
+      });
+  
+      if (response.status === 200) {
+        isAuthenticated.value = true;
+        // Lógica adicional si es necesario
+      } else {
+        isAuthenticated.value = false;
+      }
+    } catch (error) {
+      console.error('Error al verificar autenticación:', error);
+      isAuthenticated.value = false;
+    }
+});
 </script>

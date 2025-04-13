@@ -31,7 +31,7 @@
 </template>
 
 <script setup>
-import { useWebSocketStore } from '../stores/socketStore';
+import { useWebSocketStore } from '../../stores/socketStore';
 import { ref, onMounted } from 'vue'
 import { storeToRefs } from 'pinia'
 import { Icon } from "@iconify/vue";
