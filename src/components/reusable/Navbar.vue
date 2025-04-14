@@ -30,7 +30,7 @@
                     <li v-show="!hideMenuItems && isAuthenticated"><a href="/protected/myRooms" class="text-m font-bold text-primary">Mis salas</a></li>
                     <li v-show="!hideMenuItems && isAuthenticated"><a href="/protected/user/myProfile"
                             class="text-m font-bold text-primary">Mi perfil</a></li>
-                    <li>
+                    <li v-if="isAuthenticated">
                         <a @click="handleLogout" class="bg-base-100 text-accent">
                             <Icon icon="material-symbols:logout-rounded" width="24" height="24" color="#6B48FF"/>
                         </a>
