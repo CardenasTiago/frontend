@@ -53,17 +53,7 @@
           </a>
         </div>
         <div v-if="room.privileges" class="">
-          <a class="btn btn-primary initiliaze" @click="startVoting"
-            :class="{ 'cursor-not-allowed opacity-50 pointer-events-none': isVotingDisabled }">
-            Iniciar
-            <span :class="{
-              'text-error': connectedUsersCount < quorum,
-              'text-success': connectedUsersCount >= quorum
-            }">
-              {{ connectedUsersCount }}/{{ quorum }}
-            </span>
-            <Icon icon="ic:baseline-not-started" width="24" height="24" />
-          </a>
+          <QuorumButton buttonText="Iniciar" :action="startVoting"/>
         </div>
       </footer>
     </div>
@@ -87,6 +77,7 @@ import ColorThief from 'colorthief';
 import TabChat from '../components/TabChat.vue';
 import TabInfo from '../components/TabInfo.vue';
 import TabUsers from '../components/TabUsers.vue';
+import QuorumButton from '../components/QuorumButton.vue';
 import { Icon } from "@iconify/vue";
 
 const socketStore = useWebSocketStore();
@@ -100,8 +91,7 @@ const router = useRouter()
 const room = ref('');
 const user = ref('');
 const quorum = ref('');
-let wsUrl = ''; // Variable normal, ya que no se requiere reactividad
-const connectedUsersCount = computed(() => userList.value ? userList.value.length : 0);
+let wsUrl = ''; 
 
 const theme = ref(localStorage.getItem('theme') || 'mytheme');
 
@@ -175,6 +165,7 @@ watch(
 );
 
 provide('user', user);
+provide('quorum', quorum);
 
 const defaultImage = '/defaultRoomImage.png';
 const dominantColor = ref('');

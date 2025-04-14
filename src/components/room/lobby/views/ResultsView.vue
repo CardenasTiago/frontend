@@ -1,17 +1,13 @@
 <template>
     <div class="p-10 flex flex-col gap-6 justify-center items-center">
         <h2>Resultados de la votación</h2>
-        <div class ="flex flex-row flex-wrap gap-4 justify-center ">
+        <div class="flex flex-row flex-wrap gap-4 justify-center ">
             <CardResult :result="displayResults" :proposal="socketStore.currentProposal" />
             <TabChat />
         </div>
 
         <VoteState />
-        <button class="btn btn-primary" v-if="room.privileges && !socketStore.currentProposal.last_prop"
-            @click="nextProposal">
-            Siguiente propuesta
-        </button>
-
+        <QuorumButton v-if="room.privileges && !socketStore.currentProposal.last_prop" buttonText="Siguiente propuesta" :action="nextProposal" />
         <h1 v-if="socketStore.currentProposal.last_prop">fin de votacion</h1>
     </div>
 </template>
@@ -23,6 +19,7 @@ import TabChat from '../components/TabChat.vue';
 import VoteState from '../components/VoteState.vue';
 import { useRouter } from 'vue-router';
 import CardResult from '../components/CardResult.vue'
+import QuorumButton from '../components/QuorumButton.vue';
 
 const socketStore = useWebSocketStore();
 
@@ -31,6 +28,7 @@ const router = useRouter();
 
 const room = ref('');
 const user = ref('');
+const quorum = ref('');
 onMounted(() => {
     socketStore.resultsAvailable = false
 
@@ -44,6 +42,12 @@ onMounted(() => {
         room.value = JSON.parse(storedRoom);
     } else {
         console.error('No se encontró el room ID en el almacenamiento local.');
+    }
+
+    const settingsRoom = localStorage.getItem('settingsRoom');
+    if (settingsRoom) {
+        const settings = JSON.parse(settingsRoom);
+        quorum.value = settings.quorum;
     }
 });
 
@@ -74,4 +78,5 @@ watch(currentProposal, (newVal, oldVal) => {
 });
 
 provide('user', user);
+provide('quorum', quorum)
 </script>
