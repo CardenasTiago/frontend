@@ -139,7 +139,7 @@
       <StartRoom client:load />
     </div>
   </div>
-  <div v-for="propuesta in resultados" :key="propuesta.id" class="flex flex-row justify-center items-center gap-2">
+  <div v-for="propuesta in resultados" :key="propuesta.id" class="flex flex-row justify-center items-center">
     <div class="m-10 flex flex-row flex-wrap">
       <CardResult :proposal="propuesta" :result="propuesta.options.map(opt => ({
         value: opt.option_value,

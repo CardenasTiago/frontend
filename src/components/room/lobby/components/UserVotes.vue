@@ -9,9 +9,6 @@
             <ul v-if="option.votes && option.votes.length > 0" class="ml-4 list-disc">
                 <li v-for="vote in option.votes" :key="vote.vote_id" class="flex items-center gap-2">
                     <span class="font-medium">{{ vote.username }}</span>
-                    <!-- Mostrar imagen del usuario si la hay -->
-                    <img v-if="vote.user_image" :src="vote.user_image" alt="Imagen de usuario"
-                        class="w-6 h-6 rounded-full" />
                 </li>
             </ul>
             <!-- Mensaje si no hay votos en la opción -->
@@ -39,6 +36,7 @@ const props = defineProps({
 .proposal {
     border-radius: 15px;
 }
+
 .option {
     @apply bg-neutral;
     padding: 0.5rem;
