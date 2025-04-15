@@ -138,7 +138,7 @@
       <a :href="`../proposal?id=${sala.room.id}`" class="btn btn-primary">Crear Propuesta</a>
     </div>
   </div>
-  <div class="flex flex-col justify-center items-center">
+  <div v-if="state == 'finished'" class="flex flex-col justify-center items-center">
     <h1 class="mt-5">Resultados finales</h1>
     <div v-for="propuesta in resultados" :key="propuesta.id" class="flex flex-row flex-wrap justify-center items-center">
     <div class="m-10 flex flex-row flex-wrap justify-center gap-5">
@@ -173,6 +173,7 @@ const isEditing = ref(false); // Para controlar el modo de edición
 const copied = ref(false); // Estado para mostrar si el link fue copiado
 const resultados = ref(null);
 const hasProposal = ref(null);
+const state = ref('');
 
 const fetchSala = async () => {
   try {
@@ -186,7 +187,6 @@ const fetchSala = async () => {
     }
     sala.value = await response.json();
     localStorage.setItem("currentRoom", JSON.stringify(sala.value.room));
-    console.log("Sala guardada en localStorage:", sala.value);
 
     const urlConfig = "http://localhost:3000/v1/settingsRoom/byRoom/" + props.id;
     const response2 = await fetch(urlConfig, {
@@ -218,6 +218,8 @@ const fetchSala = async () => {
         resultados.value = await responseResultados.json();
       }
     }
+
+    state.value = sala.value.room.state;
   } catch (err) {
     error.value = err.message;
   }
