@@ -9,7 +9,6 @@
         <h4 class="text-base font-semibold text-primary">
           {{ option.option_value }}
         </h4>
-        <!-- Si la opción tiene votos, se listan con scroll si exceden la altura máxima -->
         <ul
           v-if="option.votes && option.votes.length > 0"
           class="ml-4 list-disc max-h-60 overflow-y-auto"
@@ -22,7 +21,6 @@
             <span class="font-medium">{{ vote.username }}</span>
           </li>
         </ul>
-        <!-- Mensaje si no hay votos en la opción -->
         <p v-else class="text-sm text-gray-500 ml-4">Sin votos</p>
       </div>
     </div>
