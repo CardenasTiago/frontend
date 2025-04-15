@@ -79,7 +79,7 @@
                   <li><a :href="`../proposal?id=${sala.room.id}`"
                       class="btn btn-primary btn-xs lg:btn-sm">Propuestas</a>
                   </li>
-                  <li><a :href="`../formalSettingRoom?id=${sala.room.id}`"
+                  <li v-if="sala.room.is_formal"><a :href="`../formalSettingRoom?id=${sala.room.id}`"
                       class="btn btn-primary btn-xs lg:btn-sm pb-1">Otras
                       Configuraciones</a></li>
                   <li><a :href="`../user/addUser/${sala.room.id}`" class="btn btn-primary btn-xs lg:btn-sm">Votantes</a>
@@ -131,8 +131,11 @@
 
       </div>
     </div>
-    <div class="flex justify-center p-2 ">
+    <div v-if="hasProposal" class="flex justify-center p-2 ">
       <StartRoom client:load />
+    </div>
+    <div v-else class="flex justify-center p-2 ">
+      <a :href="`../proposal?id=${sala.room.id}`" class="btn btn-primary">Crear Propuesta</a>
     </div>
   </div>
   <div class="flex flex-col justify-center items-center">
@@ -169,6 +172,7 @@ const error = ref(null);
 const isEditing = ref(false); // Para controlar el modo de edición
 const copied = ref(false); // Estado para mostrar si el link fue copiado
 const resultados = ref(null);
+const hasProposal = ref(null);
 
 const fetchSala = async () => {
   try {
@@ -219,6 +223,28 @@ const fetchSala = async () => {
   }
 };
 
+
+const getProposal = async () => {
+  try {
+    const response = await fetch(`http://localhost:3000/v1/proposals/byRoom/${props.id}`, {
+      method: "GET",
+      credentials: "include", // Enviar cookies con la solicitud
+
+    });
+
+    if (!response.ok) {
+      throw new Error("No se pudo obtener las propuestas");
+    }
+    const data = await response.json();
+    if (data === null) {
+      hasProposal.value = false;
+    } else {
+      hasProposal.value = true;
+    }
+  } catch (err) {
+    error.value = "Ocurrió un error al obtener las propuestas";
+  }
+}
 
 const updateRoom = async () => {
   if (!sala.value) return;
@@ -316,6 +342,7 @@ onUnmounted(() => {
 
 
 onMounted(() => {
+  getProposal();
   fetchSala();
 });
 

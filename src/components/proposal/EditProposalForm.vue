@@ -2,7 +2,7 @@
   <div class="bg-neutral p-8 rounded-xl shadow-lg">
     <div class="flex justify-between items-center mb-6">
       <BackButton />
-      <div class="dropdown dropdown-end">
+      <div v-if="isFormal" class="dropdown dropdown-end">
         <button tabindex="0" class="btn btn-circle bg-secondary/20 hover:bg-secondary/30 border-none">
           <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
@@ -11,14 +11,11 @@
         <ul tabindex="0" class="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-52">
           <li>
             <label class="flex items-center gap-2 p-2 hover:bg-secondary/10 rounded-lg cursor-pointer">
-              <input 
-                type="file" 
-                class="hidden" 
-                @change="handleFileUpload"
-                accept=".pdf,.doc,.docx,.txt,.xls,.xlsx"
-              />
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
+              <input type="file" class="hidden" @change="handleFileUpload" accept=".pdf,.doc,.docx,.txt,.xls,.xlsx" />
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+                stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
               </svg>
               Subir archivo
             </label>
@@ -41,14 +38,9 @@
           <div class="label">
             <span class="label-text text-accent/80 text-lg">Nombre de la propuesta</span>
           </div>
-          <input 
-            v-model="form.title"
-            type="text"
-            class="input input-bordered w-full bg-secondary/10 border-secondary/20"
-            required
-            maxlength="255"
-            @input="validateForm"
-          />
+          <input v-model="form.title" type="text"
+            class="input input-bordered w-full bg-secondary/10 border-secondary/20" required maxlength="255"
+            @input="validateForm" />
           <div class="label">
             <span class="label-text-alt text-accent/60">{{ form.title.length }}/255 caracteres</span>
             <span v-if="titleError" class="label-text-alt text-error">{{ titleError }}</span>
@@ -61,13 +53,9 @@
           <div class="label">
             <span class="label-text text-accent/80 text-lg">Descripción</span>
           </div>
-          <textarea 
-            v-model="form.description"
-            class="textarea textarea-bordered w-full bg-secondary/10 border-secondary/20 h-32"
-            required
-            maxlength="255"
-            @input="validateForm"
-          ></textarea>
+          <textarea v-model="form.description"
+            class="textarea textarea-bordered w-full bg-secondary/10 border-secondary/20 h-32" required maxlength="255"
+            @input="validateForm"></textarea>
           <div class="label">
             <span class="label-text-alt text-accent/60">{{ form.description.length }}/255 caracteres</span>
             <span v-if="descriptionError" class="label-text-alt text-error">{{ descriptionError }}</span>
@@ -78,16 +66,14 @@
       <!-- Archivo -->
       <div v-if="form.archiveData" class="flex items-center justify-between bg-secondary/10 p-3 rounded-lg">
         <div class="flex items-center gap-2">
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-primary" fill="none" viewBox="0 0 24 24"
+            stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
           </svg>
           <span class="truncate">{{ form.archive }}</span>
         </div>
-        <button 
-          type="button"
-          @click="removeFile"
-          class="text-accent/80 hover:text-accent"
-        >
+        <button type="button" @click="removeFile" class="text-accent/80 hover:text-accent">
           <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
           </svg>
@@ -96,59 +82,39 @@
 
       <!-- Opciones -->
       <div class="space-y-4">
-        <div 
-          v-for="(option, index) in form.options" 
-          :key="index"
-          class="relative"
-        >
-          <input 
-            v-model="option.value"
-            type="text"
-            :placeholder="`Opción ${index + 1}`"
-            class="input input-bordered w-full"
-            :class="[
+        <div v-for="(option, index) in form.options" :key="index" class="relative">
+          <input v-model="option.value" type="text" :placeholder="`Opción ${index + 1}`"
+            class="input input-bordered w-full" :class="[
               'bg-primary text-white placeholder-white/70 pr-10',
               optionErrors[index] ? 'border-error' : ''
-            ]"
-            required
-            @input="validateOptions"
-          />
+            ]" required @input="validateOptions" />
           <div v-if="optionErrors[index]" class="text-error text-sm mt-1">
             {{ optionErrors[index] }}
           </div>
-          <button 
-            v-if="form.options.length > 2"
-            type="button"
-            @click="removeOption(index)" 
-            class="absolute right-2 top-1/2 -translate-y-1/2 text-white/70 hover:text-white"
-          >
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <button v-if="form.options.length > 2" type="button" @click="removeOption(index)"
+            class="absolute right-2 top-1/2 -translate-y-1/2 text-white/70 hover:text-white">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+              stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
             </svg>
           </button>
         </div>
 
-        <button 
-          type="button"
-          @click="addOption"
-          class="btn w-full bg-secondary/20 hover:bg-secondary/30"
-          :disabled="form.options.length >= 5"
-        >
+        <button type="button" @click="addOption" class="btn w-full bg-secondary/20 hover:bg-secondary/30"
+          :disabled="form.options.length >= 5">
           + Añadir más opciones
         </button>
       </div>
 
-      <button 
-        type="submit" 
-        class="btn w-full bg-primary hover:bg-primary/90 text-white"
-        :disabled="isSubmitting || !isFormValid"
-      >
+      <button type="submit" class="btn w-full bg-primary hover:bg-primary/90 text-white"
+        :disabled="isSubmitting || !isFormValid">
         {{ isSubmitting ? 'Guardando...' : (isEditing ? 'Guardar cambios' : 'Crear propuesta') }}
       </button>
 
       <div v-if="error" class="alert alert-error">
         <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
         </svg>
         <span>{{ error }}</span>
       </div>
@@ -179,22 +145,24 @@ const roomId = ref(null);
 const descriptionError = ref('');
 const titleError = ref('');
 const optionErrors = ref([]);
+const room = ref(null);
+
 
 const isEditing = computed(() => !!proposalId.value);
 
 const validateOptions = () => {
   optionErrors.value = Array(form.value.options.length).fill('');
-  
+
   // Verificamos que no haya opciones duplicadas
   const values = form.value.options.map(opt => opt.value.trim().toLowerCase());
   const duplicates = new Set();
-  
+
   values.forEach((value, index) => {
     if (value === '') {
       optionErrors.value[index] = 'La opción no puede estar vacía';
       return;
     }
-    
+
     const firstIndex = values.indexOf(value);
     if (firstIndex !== index) {
       duplicates.add(value);
@@ -225,14 +193,14 @@ const validateForm = () => {
 
 const isFormValid = computed(() => {
   return form.value.title.length > 0 &&
-          form.value.title.length <= 255 &&
-          form.value.description.length <= 255 &&
-          form.value.options.length >= 2 &&
-          form.value.options.every(option => option.value.trim() !== '') &&
-          !titleError.value &&
-          !descriptionError.value &&
-          !optionErrors.value.some(error => error !== '') &&
-          roomId.value;
+    form.value.title.length <= 255 &&
+    form.value.description.length <= 255 &&
+    form.value.options.length >= 2 &&
+    form.value.options.every(option => option.value.trim() !== '') &&
+    !titleError.value &&
+    !descriptionError.value &&
+    !optionErrors.value.some(error => error !== '') &&
+    roomId.value;
 });
 
 const addOption = () => {
@@ -258,14 +226,14 @@ const removeFile = () => {
 const handleFileUpload = (event) => {
   const file = event.target.files[0];
   if (!file) return;
-  
+
   const maxSize = 5 * 1024 * 1024;
   if (file.size > maxSize) {
     error.value = `El archivo es demasiado grande. El tamaño máximo permitido es ${maxSize / (1024 * 1024)}MB`;
     return;
   }
   form.value.archive = file.name;
-  
+
   const reader = new FileReader();
   reader.onload = (e) => {
     form.value.archiveData = e.target.result;
@@ -337,12 +305,12 @@ const handleSubmit = async () => {
       title: form.value.title.trim(),
       description: form.value.description.trim(),
       archive: form.value.archiveData || '', // Enviamos los datos en base64 si existen
-      room_id: roomIdNumber 
+      room_id: roomIdNumber
     };
 
     let method = 'POST';
     let url = 'http://localhost:3000/v1/proposals';
-    
+
     if (isEditing.value) {
       method = 'PUT';
       url = `http://localhost:3000/v1/proposals/${proposalId.value}`;
@@ -350,7 +318,7 @@ const handleSubmit = async () => {
 
     const proposalResponse = await fetch(url, {
       method: method,
-      headers: { 
+      headers: {
         'Content-Type': 'application/json'
       },
       credentials: 'include',
@@ -378,8 +346,8 @@ const handleSubmit = async () => {
     }
 
 
-    const newProposalId = isEditing.value ? 
-      parseInt(proposalId.value, 10) : 
+    const newProposalId = isEditing.value ?
+      parseInt(proposalId.value, 10) :
       (proposalResult?.proposal?.id ? parseInt(proposalResult.proposal.id, 10) : null);
 
     if (!newProposalId || isNaN(newProposalId)) {
@@ -403,7 +371,7 @@ const handleSubmit = async () => {
                   method: 'DELETE',
                   credentials: 'include'
                 });
-                
+
                 if (!deleteResponse.ok) {
                   console.error(`Error al eliminar la opción ${option.id}`);
                 }
@@ -425,7 +393,7 @@ const handleSubmit = async () => {
 
       const optionResponse = await fetch('http://localhost:3000/v1/options', {
         method: 'POST',
-        headers: { 
+        headers: {
           'Content-Type': 'application/json'
         },
         credentials: 'include',
@@ -455,6 +423,26 @@ const handleSubmit = async () => {
   }
 };
 
+const fetchRoomDetails = async () => {
+  try {
+    const response = await fetch(`http://localhost:3000/v1/rooms/${roomId.value}`, {
+      method: 'GET',
+      credentials: 'include',
+    });
+
+    if (!response.ok) {
+      throw new Error('No se pudo obtener los detalles de la sala');
+    }
+
+    room.value = await response.json();
+
+  } catch (err) {
+    console.error('Error al obtener los datos de la sala:');
+
+  }
+};
+const isFormal = computed(() => room.value?.room?.is_formal);
+
 onMounted(() => {
   const urlParams = new URLSearchParams(window.location.search);
   proposalId.value = urlParams.get('id');
@@ -465,6 +453,8 @@ onMounted(() => {
     loading.value = false;
     return;
   }
+
+  fetchRoomDetails();
 
   if (isEditing.value) {
     fetchProposal();
@@ -480,6 +470,7 @@ input[type="number"]::-webkit-outer-spin-button {
   -webkit-appearance: none;
   margin: 0;
 }
+
 input[type="number"] {
   -moz-appearance: textfield;
 }

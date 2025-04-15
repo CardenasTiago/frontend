@@ -1,4 +1,5 @@
 <template>
+   
   <form @submit.prevent="handleSubmit">
     <div class="flex flex-col lg:flex-row gap-4">
       <div>
@@ -58,14 +59,19 @@
 
     </div>
   </form>
+  <!-- caja invisible para generar un espacio mas prolijo -->
+  <div class="h-4"></div>
 
-  <div v-if="successMessage" class="chat chat-end">
-    <div class="chat-bubble chat-bubble-success">{{ successMessage }}</div>
+  <div v-if="successMessage" role="alert" class="alert alert-success flex text-sm justify-center">
+    <Icon icon="ix:success" class="h-6 w-6"/>
+    <span>{{ successMessage }}</span>
   </div>
+  
 </template>
 
 <script setup>
 import { ref } from "vue";
+import {Icon} from "@iconify/vue";
 
 const form = ref({
   name: "",
