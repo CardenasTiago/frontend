@@ -57,10 +57,6 @@
     </div>
 
     <div class="main-info bg-base-100 p-2">
-      <!-- descripción -->
-
-
-
       <div class="flex flex-col justify-between p-4">
         <div class="flex flex-col">
           <div class="relative">
@@ -139,16 +135,19 @@
       <StartRoom client:load />
     </div>
   </div>
-  <div v-for="propuesta in resultados" :key="propuesta.id" class="flex flex-row justify-center items-center">
-    <div class="m-10 flex flex-row flex-wrap">
-      <CardResult :proposal="propuesta" :result="propuesta.options.map(opt => ({
+  <div class="flex flex-col justify-center items-center">
+    <h1 class="mt-5">Resultados finales</h1>
+    <div v-for="propuesta in resultados" :key="propuesta.id" class="flex flex-row flex-wrap justify-center items-center">
+    <div class="m-10 flex flex-row flex-wrap justify-center gap-5">
+      <CardResult  :proposal="propuesta" :result="propuesta.options.map(opt => ({
         value: opt.option_value,
         count: opt.votes.length
       }))" />
       <UserVotes :proposal="propuesta" />
     </div>
-
   </div>
+  </div>
+  
 
 </template>
 

@@ -1,8 +1,6 @@
 <template>
-    <div class="user-votes p-4 rounded-lg shadow-md shadow-secondary w=full">
+    <div class="user-votes p-4 rounded-lg shadow-md shadow-secondary flex-auto">
         <h2 class="text-xl font-bold mb-3">Votos por propuesta</h2>
-        <!-- Mostrar el título de la propuesta -->
-        <!-- Iteramos sobre cada opción de la propuesta -->
         <div v-for="option in proposal.options" :key="option.option_Id" class="option mb-6">
             <h4 class="text-base font-semibold text-primary "> {{ option.option_value }}</h4>
             <!-- Si la opción tiene votos, se listan -->
