@@ -2,10 +2,11 @@
   <form @submit.prevent="storeUser">
     <div class="avatar flex flex-col items-center">
         <div class="ring-primary ring-offset-base-100 w-24 h-24 rounded-full ring ring-offset-2 overflow-hidden">
-            <img :src="user.image || defaultImage" alt="Foto de perfil" class="w-full h-full object-cover" />
+            <img v-if="user.image" :src="user.image" alt="Foto de perfil" class="w-full h-full object-cover" />
+            <Icon v-else icon="ic:baseline-person" class="rounded-full object-cover text-secondary w-full h-full" />
         </div>
         <div v-if="isEditing" class="mt-2">
-          <label for="fileInput" class="btn btn-sm bg-secondary cursor-pointer">
+          <label for="fileInput" class="btn btn-sm bg-secondary cursor-pointer mt-2">
               Cambiar imagen
           </label>
           <input 
@@ -92,29 +93,26 @@
           <button
             v-if="!isEditing"
             type="button"
-            class="btn bg-secondary"
+            class="btn bg-primary"
             @click="toggleEdit"
           >
             Editar
           </button>
-
-          <!-- Botón Guardar -->
-          <button
-            v-if="isEditing"
-            type="submit"
-            class="btn bg-error"
-          >
-            Guardar
-          </button>
-
-          <!-- Botón Cancelar -->
           <button
             v-if="isEditing"
             type="button"
-            class="btn bg-secondary"
+            class="btn bg-error"
             @click="cancelEdit"
           >
             Cancelar
+          </button>
+
+          <button
+            v-if="isEditing"
+            type="submit"
+            class="btn bg-success"
+          >
+            Guardar
           </button>
         </div>
       </div>      

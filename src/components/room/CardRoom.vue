@@ -57,10 +57,6 @@
     </div>
 
     <div class="main-info bg-base-100 p-2">
-      <!-- descripción -->
-
-
-
       <div class="flex flex-col justify-between p-4">
         <div class="flex flex-col">
           <div class="relative">
@@ -142,7 +138,19 @@
       <a :href="`../proposal?id=${sala.room.id}`" class="btn btn-primary">Crear Propuesta</a>
     </div>
   </div>
-
+  <div class="flex flex-col justify-center items-center">
+    <h1 class="mt-5">Resultados finales</h1>
+    <div v-for="propuesta in resultados" :key="propuesta.id" class="flex flex-row flex-wrap justify-center items-center">
+    <div class="m-10 flex flex-row flex-wrap justify-center gap-5">
+      <CardResult  :proposal="propuesta" :result="propuesta.options.map(opt => ({
+        value: opt.option_value,
+        count: opt.votes.length
+      }))" />
+      <UserVotes :proposal="propuesta" />
+    </div>
+  </div>
+  </div>
+  
 
 </template>
 
@@ -152,6 +160,8 @@ import BackButton from "../reusable/BackButton2.vue";
 import StartRoom from "./lobby/components/StartRoom.vue";
 import { Icon } from "@iconify/vue";
 import ColorThief from 'colorthief';
+import CardResult from "./lobby/components/CardResult.vue";
+import UserVotes from "./lobby/components/UserVotes.vue";
 
 const props = defineProps({
   id: String
@@ -161,15 +171,14 @@ const sala = ref(null);
 const error = ref(null);
 const isEditing = ref(false); // Para controlar el modo de edición
 const copied = ref(false); // Estado para mostrar si el link fue copiado
+const resultados = ref(null);
 const hasProposal = ref(null);
 
-// Función para obtener los datos
 const fetchSala = async () => {
   try {
     const response = await fetch(`http://localhost:3000/v1/rooms/${props.id}`, {
       method: "GET",
-      credentials: "include", // Enviar cookies con la solicitud
-
+      credentials: "include",
     });
 
     if (!response.ok) {
@@ -179,8 +188,8 @@ const fetchSala = async () => {
     localStorage.setItem("currentRoom", JSON.stringify(sala.value.room));
     console.log("Sala guardada en localStorage:", sala.value);
 
-    const url = "http://localhost:3000/v1/settingsRoom/byRoom/" + props.id;
-    const response2 = await fetch(url, {
+    const urlConfig = "http://localhost:3000/v1/settingsRoom/byRoom/" + props.id;
+    const response2 = await fetch(urlConfig, {
       method: "GET",
       credentials: "include",
       headers: {
@@ -191,6 +200,23 @@ const fetchSala = async () => {
     if (response2.ok) {
       const config = await response2.json();
       localStorage.setItem("settingsRoom", JSON.stringify(config));
+    }
+
+    // Corrige la comprobación usando sala.value.room.state
+    if (sala.value.room.state === "finished") {
+      const urlResultados = "http://localhost:3000/v1/proposals/results/" + props.id;
+      const responseResultados = await fetch(urlResultados, {
+        method: "GET",
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (responseResultados.ok) {
+        // Actualiza la variable reactiva mediante .value
+        resultados.value = await responseResultados.json();
+      }
     }
   } catch (err) {
     error.value = err.message;
@@ -219,9 +245,6 @@ const getProposal = async () => {
     error.value = "Ocurrió un error al obtener las propuestas";
   }
 }
-
-
-
 
 const updateRoom = async () => {
   if (!sala.value) return;
@@ -321,7 +344,6 @@ onUnmounted(() => {
 onMounted(() => {
   getProposal();
   fetchSala();
-
 });
 
 </script>

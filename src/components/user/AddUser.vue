@@ -39,7 +39,9 @@
     <ul role="list" class="flex flex-col gap-5">
       <li v-for="user in filteredUsers" :key="user.email" class="flex justify-between bg-base-100 p-4 rounded-xl">
         <div class="flex min-w-0 gap-x-4">
-          <img class="size-12  flex-none rounded-full bg-accent-50 mr-2" :src="user.image" alt="" />
+          <img v-if="user.image" class="size-12  flex-none rounded-full bg-accent-50 mr-2" :src="user.image" alt="" />
+          <Icon v-else icon="ic:baseline-person" class="rounded-full object-cover text-secondary" height="40"
+            width="40" />
           <div class="min-w-0 flex-auto">
             <p class="text-sm/6 font-semibold text-accent">{{ user.name }} {{ user.lastname }}</p>
             <p class="mt-1 truncate text-xs/5 text-accent">{{ user.email }}</p>
@@ -51,22 +53,10 @@
           <ModalConfirm v-model="showDeleteModal" title="Eliminar votante"
             message="¿Estás seguro de que deseas eliminar el votante de la whitelist?" confirmText="Eliminar"
             cancelText="Cancelar" :confirmAction="removeVoter" />
-
         </div>
-
-
       </li>
     </ul>
-
   </div>
-
-
-
-
-
-
-
-
 </template>
 
 <script setup>
