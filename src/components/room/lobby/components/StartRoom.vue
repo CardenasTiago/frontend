@@ -1,6 +1,6 @@
 <template>
   <div class="flex justify-center mt-5">
-    <button v-if="room.privileges" class="btn btn-primary start-room" @click="startRoom">
+    <button v-if="room.privileges && room.state != 'finished'" class="btn btn-primary start-room" @click="startRoom">
       Iniciar Sala
     </button>
 
