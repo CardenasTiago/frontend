@@ -1,6 +1,6 @@
 <template>
   <div class="max-w-xs lg:max-w-3xl p-2 rounded-xl shadow-md shadow-secondary bg-base-100 flex flex-col border border-accent/10">
-    <h2 class="text-primary font-semibold mb-2 lg:border-b lg:border-accent/20 pb-1 text-center lg:text-start">
+    <h2 class="font-semibold mb-2 lg:border-b lg:border-accent/20 pb-1 text-center lg:text-start">
       {{ proposal?.title || 'Propuesta sin título' }}
     </h2>
 
@@ -9,7 +9,7 @@
       <!-- Tabla -->
       <div class="overflow-x-auto rounded-box border border-base-content/5 bg-base-100 w-full hidden lg:block md:block p-4">
         <!-- Se utiliza la propiedad computada opcionGanadora -->
-        <h2 class="text-sm">{{ opcionGanadora }}</h2> 
+        <h2 class="text-sm text-primary">{{ opcionGanadora }}</h2> 
         <table class="table">
           <thead class="">
             <tr>
@@ -29,7 +29,7 @@
       <!-- Dona -->
       <div class="text-center">
         <!-- También se puede usar en vistas móviles o donde se necesite -->
-        <h2 class="visible md:invisible ">{{ opcionGanadora }}</h2>
+        <h2 class="visible md:invisible text-primary">{{ opcionGanadora }}</h2>
         <Doughnut :data="chartData" :options="chartOptions" />
       </div>
     </div>
@@ -97,7 +97,7 @@ const opcionGanadora = computed(() => {
   const opcionesConMax = resultados.filter(item => item.count === maxVotos)
   
   // Si hay más de una opción con maxVotos, significa que hay empate
-  return opcionesConMax.length > 1 ? 'Empate' : opcionesConMax[0].value
+  return opcionesConMax.length > 1 ? 'Empate' : 'opcion elegida '+ opcionesConMax[0].value
 })
 
 // Config del gráfico
