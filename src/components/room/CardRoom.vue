@@ -306,7 +306,7 @@ const cancelEdit = () => {
 
 // Función para copiar al portapapeles
 const copyToClipboard = () => {
-  navigator.clipboard.writeText(sala.value.room.link_invite).then(() => {
+  navigator.clipboard.writeText(sala.value.room.room_code).then(() => {
     copied.value = true;
     setTimeout(() => {
       copied.value = false;

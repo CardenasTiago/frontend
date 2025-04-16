@@ -54,8 +54,11 @@ const handleSubmit = async () => {
         localStorage.setItem("settingsRoom", JSON.stringify(config));
       } 
 
-      // Redirigir a la sala
-      window.location.href = `/protected/roomInfo/${data.room.id}`;
+      if (data.room.privileges) {
+        window.location.href = `/protected/room/${data.room.id}`
+      } else {
+        window.location.href = `/protected/roomInfo/${data.room.id}`;
+      }
     } else {
       const data = await response.json();
       if (response.status === 400) {
