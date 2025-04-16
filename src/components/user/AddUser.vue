@@ -12,7 +12,7 @@
       <AddVoterModal v-model="isModalOpen" @add-voter="handleAddVoter" />
     </div>
 
-    <div class="flex flex-col lg:flex-row gap-2 w-full">
+    <div class="flex flex-col gap-2 w-full">
       <div class="flex items-center w-full input input-primary">
         <div>
           <Icon icon="mdi:magnify" class="w-5 h-5" />
@@ -22,16 +22,15 @@
         </div>
       </div>
       <!-- Alerta -->
-      <div class="flex h-6 justify-center lg:mt-2">
+      <div class="flex h-6 justify-center lg:mt-2 text-white">
         <div v-if="alertMessage" :class="`alert bg-${alertType}`" class="flex justify-center p-2 max-w-xs">
           <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 shrink-0 stroke-current" fill="none"
             viewBox="0 0 24 24">
-            <path v-if="alertType === 'success'" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-              d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-            <path v-else stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-              d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
+            <Icon v-if="alertType === 'success'" icon="material-symbols-light:check-circle-outline" width="24" height="24" class="text-white"/>
+
+            <Icon v-else icon="material-symbols-light:error-outline" width="24" height="24" class="text-white"/>
           </svg>
-          <span class="text-sm">{{ alertMessage }}</span>
+          <span class="text-sm text-white">{{ alertMessage }}</span>
         </div>
       </div>
     </div>
@@ -122,7 +121,7 @@ const handleAddVoter = async (userInput) => {
     const statusCode = Number(error.message);
 
     if (statusCode === 409) {
-      alertMessage.value = "El usuario ya se encuentra en la whitelist.";
+      alertMessage.value = "Ya se encuentra en la whitelist.";
     } else if (statusCode === 404) {
       alertMessage.value = "Error: el votante no está registrado.";
     } else {
