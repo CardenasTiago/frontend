@@ -64,45 +64,35 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { reactive, ref } from 'vue';
+import UserService from '../../services/user.service';
 
-const form = ref({
-  username: "",
-  password: "",
+const form = reactive({
+  username: '',
+  password: '',
 });
-
-const error = ref("");
+const error = ref('');
 
 const handleSubmit = async () => {
-  error.value = "";
-
+  error.value = '';
   try {
-    const response = await fetch("http://localhost:3000/v1/users/login", {
-      method: "POST",
-      credentials: "include",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(form.value),
-    });
-
-    if (response.ok) {
-      const data = await response.json();
-      const userName = data.user.name;
-      localStorage.setItem("userName", userName); 
-      localStorage.setItem('user',JSON.stringify(data.user));//guardo todo el usuario           
-      window.location.href = "/protected/menu"; // Redirige al menú principal
+    const json = await UserService.login(form);
+    
+    const data = JSON.parse(json);
+    if (data.user) {
+      localStorage.setItem('userName', data.user.name);
+      localStorage.setItem('user', JSON.stringify(data.user));
+      window.location.href = '/protected/menu';
     } else {
-      const data = await response.json();
-      error.value = data.error || "Usuario o contraseña incorrectos";
+      error.value = data.error || 'Usuario o contraseña incorrectos';
     }
   } catch (err) {
-    error.value = "Error en la conexión con el servidor";
+    error.value = err.error || 'Error en la conexión con el servidor';
   }
 };
 
 const redirectToRegister = () => {
-  window.location.href = "/auth/register"; // Cambia a la ruta de registro
+  window.location.href = '/auth/register';
 };
 </script>
 

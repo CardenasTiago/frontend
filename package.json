@@ -20,6 +20,7 @@
     "@iconify-json/mdi": "^1.2.3",
     "astro": "^4.16.18",
     "astro-icon": "^1.1.5",
+    "axios": "^1.8.4",
     "chart.js": "^4.4.8",
     "colorthief": "^2.6.0",
     "pinia": "^3.0.1",
