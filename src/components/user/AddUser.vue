@@ -64,6 +64,7 @@ import { Icon } from "@iconify/vue";
 import AddVoterModal from "./AddVoterModal.vue";
 import ModalConfirm from "../reusable/Modal.vue";
 import BackButton from '../reusable/BackButton2.vue';
+import UserService from '../../services/user.service';
 
 const users = ref([]); // Donde se guardarán los datos de la API
 const props = defineProps(["id"]); // Recibir el ID de la sala
@@ -143,23 +144,13 @@ const handleAddVoter = async (userInput) => {
 
 const fetchUsers = async () => {
   try {
-    const response = await fetch(`http://localhost:3000/v1/users/byRoom/${props.id}`, {
-      method: "GET",
-      credentials: "include", // Esto permite enviar cookies de autenticación
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
+    const response = await UserService.whitelist(props.id)
+    const data = JSON.parse(response)
 
-    if (!response.ok) {
-      throw new Error(`Error ${response.status}: No se pudo obtener la lista de usuarios`);
-    }
-
-    const data = await response.json();
     users.value = data.users.reverse();
     console.log(users.value);
-  } catch (error) {
-    console.error("Error al obtener usuarios:", error);
+  } catch (err) {
+    console.error("Error al obtener usuarios:", err.error);
   }
 };
 

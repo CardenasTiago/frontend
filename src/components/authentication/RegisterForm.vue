@@ -72,6 +72,7 @@
 <script setup>
 import { ref } from "vue";
 import {Icon} from "@iconify/vue";
+import UserService from "../../services/user.service";
 
 const form = ref({
   name: "",
@@ -112,17 +113,10 @@ const handleSubmit = async () => {
 
 
   try {
+    const json = await UserService.create(JSON.stringify(dataToSend));
+    const response = JSON.parse(json)
 
-    const response = await fetch("http://localhost:3000/v1/users", {
-      method: "POST",
-      credentials: "include",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(dataToSend),
-    });
-
-    if (response.ok) {
+    if (response) {
       successMessage.value =
         "Registro exitoso. Serás redirigido al inicio de sesión en unos momentos.";
 
@@ -130,12 +124,9 @@ const handleSubmit = async () => {
       setTimeout(() => {
         window.location.href = "/auth/login";
       }, 3000); // Redirige después de 3 segundos
-    } else {
-      const data = await response.json();
-      error.value = data.error || "Usuario o contraseña incorrectos";
     }
   } catch (err) {
-    error.value = "Error en la conexion con el servidor";
+    error.value = err.error || "error en la conexion con el servidor";
   }
 };
 </script>

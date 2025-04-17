@@ -10,8 +10,8 @@ const UserService = {
   create(payload: any): Promise<string> {
     return ApiService.post('/users', payload);
   },
-  update(id: string, payload: any): Promise<string> {
-    return ApiService.put(`/users/${id}`, payload);
+  update(payload: any): Promise<string> {
+    return ApiService.put(`/users/update`, payload);
   },
   remove(id: string): Promise<string> {
     return ApiService.delete(`/users/${id}`);
@@ -19,6 +19,20 @@ const UserService = {
   login(payload: any): Promise<string> {
     return ApiService.post('/users/login', payload);
   },
+  async authCheck(): Promise<boolean> {
+    try {
+      await ApiService.get('/users/auth');
+      return true;
+    } catch (_: any) {
+      return false;
+    }
+  },
+  logout(): Promise<string> {
+    return ApiService.post('/users/logout')
+  },
+  whitelist(id : string) : Promise<string> {
+    return ApiService.get(`/users/byRoom/${id}`)
+  }
 };
 
 export default UserService;

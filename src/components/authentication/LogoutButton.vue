@@ -3,21 +3,19 @@
   </template>
   
   <script setup>
+  import UserService from '../../services/user.service';
   const handleLogout = async () => {
     try {
-      const response = await fetch('http://localhost:3000/v1/users/logout', {
-        method: 'POST',
-        credentials: 'include',
-      });
-  
-      if (response.ok) {
+      const json = await UserService.logout();
+      response = JSON.parse(json)
+      if (response) {
         localStorage.removeItem('userName');
         window.location.href = '/auth/login'; // Redirige al inicio de sesión
       } else {
         console.error('Error al cerrar sesión');
       }
-    } catch (error) {
-      console.error('Error en la conexión con el servidor:', error);
+    } catch (err) {
+      console.error('Error en la conexión con el servidor:', error.error);
     }
   };
   </script>
