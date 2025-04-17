@@ -76,7 +76,7 @@ import TabInfo from '../components/TabInfo.vue';
 import TabUsers from '../components/TabUsers.vue';
 import QuorumButton from '../components/QuorumButton.vue';
 import { Icon } from "@iconify/vue";
-import ExitButton from '../components/ExitButton..vue';
+import ExitButton from '../components/ExitButton.vue';
 
 const socketStore = useWebSocketStore();
 const {
