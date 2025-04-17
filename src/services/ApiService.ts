@@ -1,23 +1,48 @@
 // src/services/ApiService.ts
 import http from './http-common';
+import type {  AxiosResponse } from 'axios';
+
+export interface ServiceError {
+  status: number;
+  error: string;
+}
+
+/**
+ * Envuelve cualquier llamada axios y extrae status + mensaje de error.
+ * Devuelve el body serializado o lanza ServiceError.
+ * Es como un middleware
+ */
+async function requestWrapper(
+  fn: Promise<AxiosResponse<any>>
+): Promise<string> {
+  try {
+    const res = await fn;
+    return JSON.stringify(res.data);
+  } catch (err: any) {
+    // extraemos status y error con prioridad a response.data.error
+    const status = err.response?.status ?? err.status ?? 500;
+    const error =
+      err.response?.data?.error ??
+      err.response?.data?.message ??
+      err.message ??
+      'Error inesperado';
+    throw { status, error } as ServiceError;
+  }
+}
 
 const ApiService = {
-  get(resource: string): Promise<string> {
-    return http.get(resource)
-      .then((resp: any) => JSON.stringify(resp.data));         // devuelvo JSON como string
+  get(path: string): Promise<string> {
+    return requestWrapper(http.get(path));
   },
-  post(resource: string, data: any): Promise<string> {
-    return http.post(resource, data)
-      .then((resp: any) => JSON.stringify(resp.data));
+  post(path: string, payload?: any): Promise<string> {
+    return requestWrapper(http.post(path, payload));
   },
-  put(resource: string, data: any): Promise<string> {
-    return http.put(resource, data)
-      .then((resp: any) => JSON.stringify(resp.data));
+  put(path: string, payload?: any): Promise<string> {
+    return requestWrapper(http.put(path, payload));
   },
-  delete(resource: string): Promise<string> {
-    return http.delete(resource)
-      .then((resp: any) => JSON.stringify(resp.data));
-  }
+  delete(path: string): Promise<string> {
+    return requestWrapper(http.delete(path));
+  },
 };
 
 export default ApiService;
