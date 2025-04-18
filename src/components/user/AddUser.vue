@@ -58,138 +58,113 @@
   </div>
 </template>
 
-<script setup>
-import { ref, defineProps, onMounted, computed } from 'vue';
-import { Icon } from "@iconify/vue";
-import AddVoterModal from "./AddVoterModal.vue";
-import ModalConfirm from "../reusable/Modal.vue";
-import BackButton from '../reusable/BackButton2.vue';
-import UserService from '../../services/user.service';
+<script setup lang="ts">
+import { ref, defineProps, onMounted, computed } from 'vue'
+import { Icon } from "@iconify/vue"
+import AddVoterModal from "./AddVoterModal.vue"
+import ModalConfirm from "../reusable/Modal.vue"
+import BackButton from '../reusable/BackButton2.vue'
+import UserService from '../../services/user.service'
+import RoomService from '../../services/room.service'
 
-const users = ref([]); // Donde se guardarán los datos de la API
-const props = defineProps(["id"]); // Recibir el ID de la sala
-const alertMessage = ref(""); // Mensaje de la alerta
-const alertType = ref(""); // Tipo de alerta (error o éxito)
-const isModalOpen = ref(false)
-const searchQuery = ref("");  // Valor del input de búsqueda
-const showDeleteModal = ref(false)
-const selectedUser = ref(null)
+// recibimos el ID de sala
+const props = defineProps<{ id: string }>()
 
+// estado reactivo
+const users            = ref<any[]>([])
+const searchQuery      = ref('')
+const alertMessage     = ref('')
+const alertType        = ref<'success'|'error'>('success')
+const isModalOpen      = ref(false)
+const showDeleteModal  = ref(false)
+const selectedUser     = ref<any>(null)
 
+// lista filtrada según búsqueda
+const filteredUsers = computed(() =>
+  searchQuery.value
+    ? users.value.filter(u =>
+        `${u.name} ${u.lastname}`.toLowerCase()
+          .includes(searchQuery.value.toLowerCase())
+      )
+    : users.value
+)
 
-// Computed property para filtrar usuarios en base a searchQuery
-const filteredUsers = computed(() => {
-  return searchQuery.value
-    ? users.value.filter(user =>
-      `${user.name} ${user.lastname}`.toLowerCase().includes(searchQuery.value.toLowerCase())
-    )
-    : users.value; // Si no hay búsqueda, muestra todos
-});
-
-
-const handleAddVoter = async (userInput) => {
+// traigo la whitelist
+async function fetchUsers() {
   try {
-    const response = await fetch("http://localhost:3000/v1/rooms/addUser", {
-      method: "POST",
-      credentials: "include", // Envía cookies de autenticación
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        user_data: userInput,
-        room_id: Number(props.id),
-      }),
-    });
-
-    if (!response.ok) {
-      throw new Error(response.status); // Lanzamos el código de estado como error
-    }
-
-    const data = await response.json();
-    console.log("Votante agregado:", data);
-
-    // Mostrar alerta de éxito
-    alertMessage.value = "El votante ha sido agregado";
-    alertType.value = "success";
-
-    // Actualizar la lista de votantes sin refrescar la página
-    await fetchUsers();
-
-  } catch (error) {
-    console.error("Error en la solicitud:", error);
-
-    // Convertimos el error en un número para poder compararlo
-    const statusCode = Number(error.message);
-
-    if (statusCode === 409) {
-      alertMessage.value = "Ya se encuentra en la whitelist.";
-    } else if (statusCode === 404) {
-      alertMessage.value = "Error: el votante no está registrado.";
-    } else {
-      alertMessage.value = "Error de conexión o inesperado.";
-    }
-
-    alertType.value = "error";
+    const resp = await UserService.whitelist(props.id)
+    const data = JSON.parse(resp)
+    users.value = data.users.reverse()
+  } catch (e) {
+    console.error('Error fetchUsers:', e)
   }
+}
 
-  // Ocultar la alerta después de 3 segundos (ya sea éxito o error)
-  setTimeout(() => {
-    alertMessage.value = "";
-    alertType.value = "";
-  }, 3000);
-};
-
-
-
-
-const fetchUsers = async () => {
+// agregar un votante
+async function handleAddVoter(userInput: any) {
   try {
-    const response = await UserService.whitelist(props.id)
-    const data = JSON.parse(response)
+    // pasamos objeto, NO JSON.stringify
+    const resp = await RoomService.addUser({
+      user_data: userInput,
+      room_id: Number(props.id),
+    })
+    const data = JSON.parse(resp)
+    console.log('Votante agregado:', data)
 
-    users.value = data.users.reverse();
-    console.log(users.value);
-  } catch (err) {
-    console.error("Error al obtener usuarios:", err.error);
+    alertMessage.value = data.success || 'Votante agregado correctamente'
+    alertType.value = 'success'
+    isModalOpen.value = false
+
+    await fetchUsers()
+  } catch (err: any) {
+    console.error('Error en handleAddVoter:', err)
+    alertType.value = 'error'
+    switch (err.status) {
+      case 409:
+        alertMessage.value = 'Ya está en la whitelist.'
+        break
+      case 404:
+        alertMessage.value = 'Usuario no registrado.'
+        break
+      default:
+        alertMessage.value = 'Error de conexión o inesperado.'
+    }
+  } finally {
+    setTimeout(() => (alertMessage.value = ''), 3000)
   }
-};
+}
 
-
-const openDeleteModal = (user) => {
+// abre modal de confirmación
+function openDeleteModal(user: any) {
   selectedUser.value = user
   showDeleteModal.value = true
 }
 
-
-const removeVoter = async () => {
+// eliminar un votante
+async function removeVoter() {
   try {
-    const response = await fetch('http://localhost:3000/v1/rooms/whitelist/removeUser', {
-      method: 'DELETE',
-      credentials: 'include',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        user_id: selectedUser.value.id,
-        room_id: Number(props.id),
-      }),
+    const resp = await RoomService.removeUser({
+      user_id: selectedUser.value.id,
+      room_id: Number(props.id),
     })
+    const data = JSON.parse(resp)
+    console.log('Votante eliminado:', data)
 
-    if (!response.ok) {
-      const errorMsg = await response.text()
-      throw new Error(`Error: ${errorMsg}`)
-    }
+    alertMessage.value = data.success || 'Votante eliminado correctamente'
+    alertType.value = 'success'
+    showDeleteModal.value = false
 
-    isModalOpen.value = false
-    // Actualizar la lista de votantes sin refrescar la página
-    await fetchUsers();
-  } catch (error) {
-    console.error('Error al eliminar usuario:', error)
+    await fetchUsers()
+  } catch (err) {
+    console.error('Error en removeVoter:', err)
+    alertMessage.value = 'No se pudo eliminar el votante.'
+    alertType.value = 'error'
+  } finally {
+    setTimeout(() => (alertMessage.value = ''), 3000)
   }
 }
 
-
-
-onMounted(fetchUsers);
-
+// carga inicial
+onMounted(fetchUsers)
 </script>
+

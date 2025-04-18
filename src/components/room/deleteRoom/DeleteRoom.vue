@@ -24,6 +24,7 @@
   <script setup>
   import { ref,watch } from 'vue';
   import ConfirmModal from '../../reusable/Modal.vue';  
+import RoomService from '../../../services/room.service';
   
   const isModalOpen = ref(false); // Estado para el modal de confirmación
   const isSuccessModalOpen = ref(false); // Para el modal de éxito  
@@ -43,12 +44,10 @@
   
   const deleteRoom = async () => {
     try {
-      const response = await fetch(`http://localhost:3000/v1/rooms/${roomDelete.value.id}`, {
-        method: 'DELETE',
-        credentials: 'include',
-      });
+
+      const response = await RoomService.remove(roomDelete.value.id)
   
-      if (!response.ok) {
+      if (!response) {
         const errorMessage = await response.text();
         throw new Error(`Error al eliminar la sala: ${errorMessage}`);
       }

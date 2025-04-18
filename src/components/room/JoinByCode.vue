@@ -16,6 +16,7 @@
 <script setup>
 import { ref } from "vue";
 import { Icon } from "@iconify/vue";
+import RoomService from "../../services/room.service";
 
 const room_code = ref("");
 const error = ref("");
@@ -24,17 +25,11 @@ const handleSubmit = async () => {
   error.value = "";
 
   try {
-    const response = await fetch("http://localhost:3000/v1/rooms/join", {
-      method: "POST",
-      credentials: "include",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ room_code: room_code.value }),
-    });
 
-    if (response.ok) {
-      const data = await response.json();
+    const response = await RoomService.join(JSON.stringify({ room_code: room_code.value }))
+
+    if (response) {
+      const data = JSON.parse(response);
 
       // Guardar los datos de la sala en localStorage
       localStorage.setItem("currentRoom", JSON.stringify(data.room));

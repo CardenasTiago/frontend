@@ -40,7 +40,12 @@ const ApiService = {
   put(path: string, payload?: any): Promise<string> {
     return requestWrapper(http.put(path, payload));
   },
-  delete(path: string): Promise<string> {
+  delete(path: string, payload?: any): Promise<string> {
+    if (payload !== undefined) {
+      return requestWrapper(
+        http.delete(path, { data: payload })
+      );
+    }
     return requestWrapper(http.delete(path));
   },
 };

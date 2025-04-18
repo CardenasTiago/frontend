@@ -162,6 +162,7 @@ import { Icon } from "@iconify/vue";
 import ColorThief from 'colorthief';
 import CardResult from "./lobby/components/CardResult.vue";
 import UserVotes from "./lobby/components/UserVotes.vue";
+import RoomService from "../../services/room.service";
 
 const props = defineProps({
   id: String
@@ -177,15 +178,9 @@ const state = ref('');
 
 const fetchSala = async () => {
   try {
-    const response = await fetch(`http://localhost:3000/v1/rooms/${props.id}`, {
-      method: "GET",
-      credentials: "include",
-    });
+    const response = await RoomService.find(props.id);
 
-    if (!response.ok) {
-      throw new Error("Error al obtener la sala");
-    }
-    sala.value = await response.json();
+    sala.value = JSON.parse(response);
     localStorage.setItem("currentRoom", JSON.stringify(sala.value.room));
 
     const urlConfig = "http://localhost:3000/v1/settingsRoom/byRoom/" + props.id;
@@ -250,21 +245,16 @@ const getProposal = async () => {
 
 const updateRoom = async () => {
   if (!sala.value) return;
-  try {
-    const response = await fetch(`http://localhost:3000/v1/rooms/${props.id}`, {
-      method: "PUT",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
+  const payload = JSON.stringify({
         description: sala.value.room.description,
         name: sala.value.room.room_title,
         link_invite: sala.value.room.link_invite,
         image: sala.value.room.image
-      }),
-      credentials: "include"
-    });
-    if (!response.ok) {
-      throw new Error("Error al actualizar la sala");
-    }
+      })
+
+  try {
+    const response =  await RoomService.update(props.id, payload);
+    
     isEditing.value = false; // Salir del modo edición
   } catch (err) {
     console.error("Error al actualizar la sala:", err);
