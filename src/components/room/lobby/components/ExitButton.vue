@@ -14,6 +14,4 @@ const closeConnection = () => {
   socketStore.close();
   window.location.href = '/protected/menu';
 };
-
-
 </script>

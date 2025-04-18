@@ -4,12 +4,12 @@
     <div class="flex flex-col lg:flex-row gap-4">
       <div>
         <label class="flex input input-bordered input-primary items-center p-2">Nombre
-          <input v-model="form.name" type="text" class="text-center" required />
+          <input v-model="form.name" type="text" class="p-2" required />
         </label>
       </div>
       <div>
         <label class="flex input input-bordered input-primary items-center p-2">Apellido
-          <input v-model="form.lastname" type="text" class="text-center" required />
+          <input v-model="form.lastname" type="text" class="p-2" required />
         </label>
       </div>
     </div>
