@@ -1,0 +1,25 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import BackButton from '../../components/reusable/BackButton.vue';
+import FormalRoomForm from '../../components/room/createRoom/FormalRoomForm.vue';
+---
+
+<Layout title="Configurar sala formal - Suffgo">
+  <div class="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-[160px]">
+    <div class="grid grid-cols-12 gap-8">
+      <div class="col-span-12">
+        <div class="bg-neutral p-8 rounded-xl shadow-lg">
+          <div class="mb-6">
+            <BackButton client:load roomId={Astro.url.searchParams.get('id') ?? ''}/>
+          </div>
+
+          <h1 class="text-2xl font-bold text-primary text-center mb-6">
+            Configuración de sala formal
+          </h1>
+
+          <FormalRoomForm client:load />
+        </div>
+      </div>
+    </div>
+  </div>
+</Layout>

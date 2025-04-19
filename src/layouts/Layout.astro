@@ -1,18 +1,18 @@
 ---
 import "../global.css";
-
+import Header from "../components/reusable/Navbar.vue";
 import ViewTransitions from "astro/components/ViewTransitions.astro";
-import { fade } from "astro:transitions";
-
 interface Props {
   title: string;
+  hideMenuItems?: boolean;
+  hideHeader?: boolean;
 }
 
-const { title } = Astro.props;
+const { title, hideMenuItems=false, hideHeader = false } = Astro.props;
 ---
 
 <!doctype html>
-<html lang="es" data-theme="mytheme">
+<html lang="es" data-theme="mytheme" class="bg-neutral">
   <head>
     <meta charset="UTF-8" />
     <meta name="description" content="Astro description" />
@@ -21,15 +21,17 @@ const { title } = Astro.props;
     <meta name="generator" content={Astro.generator} />
     <title>{title}</title>
     <ViewTransitions />
+    <Header client:only="vue" hideMenuItems={hideMenuItems} hideHeader={hideHeader} />
   </head>
   <body
-    class="items-center flex justify-center"
-    transition:animate={fade({ duration: "0.7s" })}
-  >
-    <slot />
+    class="items-center justify-center">
+    <div class="">
+      <div class="">
+          <slot />
+      </div>
+    </div>
   </body>
 </html>
-
 
 <style is:global>
   html {
@@ -49,7 +51,7 @@ const { title } = Astro.props;
   }
 
   body {
-    @apply bg-base-100;
+    @apply bg-neutral min-h-screen w-full;
   }
 
   h1 {
@@ -57,14 +59,18 @@ const { title } = Astro.props;
     font-size: 24px;
   }
 
-  a {
-    @apply bg-primary;
-    @apply bg-neutral;
-  }
-
   h2 {
     @apply text-secondary;
     font-weight: 600;
     font-size: 20px;
   }
+
+  .btn-primary {
+    @apply bg-primary text-white;
+  }
+  
+  .btn-secondary {
+    @apply bg-secondary text-white;
+  }
 </style>
+

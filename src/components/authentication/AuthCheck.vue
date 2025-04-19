@@ -1,4 +1,3 @@
-<!-- src/components/AuthCheck.vue -->
 <template>
     <div v-if="isAuthenticated === true">
       <slot></slot>
@@ -7,15 +6,15 @@
   
   <script setup>
   import { ref, onMounted } from 'vue';
-  
+  import UserService from '../../services/user.service';
+
   const isAuthenticated = ref(null);
   
   onMounted(async () => {
     try {
-      const response = await fetch("http://localhost:3000/v1/users/auth", {
-        credentials: 'include',
-      });
-  
+      const json = UserService.authCheck();
+      const response = JSON.parse(json)
+      
       if (response.status === 200) {
         isAuthenticated.value = true;
         // Lógica adicional si es necesario
@@ -23,8 +22,8 @@
         isAuthenticated.value = false;
         window.location.href = '/login';
       }
-    } catch (error) {
-      console.error('Error al verificar autenticación:', error);
+    } catch (err) {
+      console.error('Error al verificar autenticación:', err.error);
       isAuthenticated.value = false;
       window.location.href = '/login';
     }

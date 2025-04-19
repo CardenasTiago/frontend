@@ -1,0 +1,14 @@
+---
+import Layout from "../../../../layouts/Layout.astro";
+import ProtectedRoute from "../../../../components/authentication/ProtectedRoute.vue";
+import AddUserComponent from  "../../../../components/user/AddUser.vue";
+const { id } = Astro.params;
+---
+
+<Layout title="addUser" >
+    <ProtectedRoute client:load>            
+        <AddUserComponent client:load id={id}/>         
+    </ProtectedRoute>
+
+</Layout>   
+

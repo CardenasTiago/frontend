@@ -1,0 +1,19 @@
+---
+import CardRoom from "../../../components/room/CardRoom.vue";
+import ProtectedRoute from "../../../components/authentication/ProtectedRoute.vue";
+import Layout from "../../../layouts/Layout.astro";
+const { id } = Astro.params;
+---
+
+<Layout title="Sala">
+  <ProtectedRoute client:load>
+    <CardRoom client:load id={id} />
+  </ProtectedRoute>
+</Layout>
+
+<style>
+  main {
+    min-height: 100vh;
+    background-color: #f9fafb;
+  }
+</style>

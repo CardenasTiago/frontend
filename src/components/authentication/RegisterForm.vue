@@ -1,50 +1,46 @@
 <template>
+   
   <form @submit.prevent="handleSubmit">
-    <div>
-      <label class="input input-bordered input-primary flex items-center gap-2"
-        >Nombre
-        <input v-model="form.name" type="text" required />
-      </label>
+    <div class="flex flex-col lg:flex-row gap-4">
+      <div>
+        <label class="flex input input-bordered input-primary items-center p-2">Nombre
+          <input v-model="form.name" type="text" class="p-2" required />
+        </label>
+      </div>
+      <div>
+        <label class="flex input input-bordered input-primary items-center p-2">Apellido
+          <input v-model="form.lastname" type="text" class="p-2" required />
+        </label>
+      </div>
     </div>
     <div>
-      <label class="input input-bordered input-primary flex items-center gap-2"
-        >Apellido
-        <input v-model="form.lastname" type="text" required />
-      </label>
-    </div>
-    <div>
-      <label class="input input-bordered input-primary flex items-center gap-2"
-        >Nombre de Usuario
+      <label class="input input-bordered input-primary flex items-center gap-2 p-2">Nombre de Usuario
         <input v-model="form.username" type="text" required />
       </label>
     </div>
     <div>
       <label class="input input-bordered input-primary flex items-center gap-2">
         DNI
-        <input v-model="form.dni" type="text" required maxlength="10" minlength="8"/>
+        <input v-model="form.dni" type="text" required maxlength="10" minlength="8" />
       </label>
     </div>
     <div>
-      <label class="input input-bordered input-primary flex items-center gap-2"
-        >Email
+      <label class="input input-bordered input-primary flex items-center gap-2">Email
         <input v-model="form.email" type="email" required />
       </label>
     </div>
     <div>
-      <label class="input input-bordered input-primary flex items-center gap-2"
-        >Confirmar Email
+      <label class="input input-bordered input-primary flex items-center gap-2">Confirmar Email
         <input v-model="form.confirmEmail" type="email" required />
       </label>
     </div>
     <div>
-      <label class="input input-bordered input-primary flex items-center gap-2"
-        >Contraseña
+      <label class="input input-bordered input-primary flex items-center gap-2">Contraseña
         <input v-model="form.password" type="password" required />
       </label>
     </div>
     <div>
-      <label class="input input-bordered input-primary flex items-center gap-2"
-        >Confirmar Contraseña
+      <label class="input input-bordered input-primary flex items-center gap-2">Confirmar Contraseña
         <input v-model="form.confirmPassword" type="password" required />
       </label>
     </div>
@@ -55,22 +51,28 @@
       </div>
 
       <div>
-        <p class="mt-4 text-slate-600">
+        <p class="mt-4 text-accent">
           Ya tiene cuenta?
-          <a href="/auth/login">Inicie sesion</a>
+          <a href="/auth/login" class="bg-base-100 text-primary">Inicie sesion</a>
         </p>
       </div>
 
     </div>
   </form>
+  <!-- caja invisible para generar un espacio mas prolijo -->
+  <div class="h-4"></div>
 
-  <div v-if="successMessage" class="chat chat-end">
-    <div class="chat-bubble chat-bubble-success">{{ successMessage }}</div>
+  <div v-if="successMessage" role="alert" class="alert alert-success flex text-sm justify-center">
+    <Icon icon="ix:success" class="h-6 w-6"/>
+    <span>{{ successMessage }}</span>
   </div>
+  
 </template>
 
 <script setup>
 import { ref } from "vue";
+import {Icon} from "@iconify/vue";
+import UserService from "../../services/user.service";
 
 const form = ref({
   name: "",
@@ -111,17 +113,10 @@ const handleSubmit = async () => {
 
 
   try {
+    const json = await UserService.create(JSON.stringify(dataToSend));
+    const response = JSON.parse(json)
 
-    const response = await fetch("http://localhost:3000/v1/users", {
-      method: "POST",
-      credentials: "include",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(dataToSend),
-    });
-
-    if (response.ok) {
+    if (response) {
       successMessage.value =
         "Registro exitoso. Serás redirigido al inicio de sesión en unos momentos.";
 
@@ -129,12 +124,9 @@ const handleSubmit = async () => {
       setTimeout(() => {
         window.location.href = "/auth/login";
       }, 3000); // Redirige después de 3 segundos
-    } else {
-      const data = await response.json();
-      error.value = data.error || "Usuario o contraseña incorrectos";
     }
   } catch (err) {
-    error.value = "Error en la conexion con el servidor";
+    error.value = err.error || "error en la conexion con el servidor";
   }
 };
 </script>
@@ -146,14 +138,6 @@ form {
   gap: 1rem;
 }
 
-.btn-primary {
-  @apply text-neutral;
-}
-
-a {
-  @apply bg-neutral;
-  @apply text-primary
-}
 
 label {
   font-weight: 600;
@@ -162,6 +146,6 @@ label {
 
 input {
   font-weight: 500;
-  color: black;
+  @apply text-accent;
 }
 </style>

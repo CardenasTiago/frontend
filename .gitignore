@@ -1,6 +1,6 @@
 # Dependencias de node_modules (generadas por npm/yarn)
 node_modules/
-
+pnpm-lock.yaml
 # Archivos de logs
 npm-debug.log*
 yarn-debug.log*
@@ -30,3 +30,6 @@ build/
 # Archivos de sistema
 .DS_Store
 Thumbs.db
+
+
+

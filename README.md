@@ -1,31 +1,27 @@
 # Docker set up
 
-Prerrequisito, la aplicacion de go debe encontrarse corriendo. 
+Prerrequisito 
 
-Si todavia no creaste la red externa, ejecutar el siguiente comando
+- la API debe encontrarse en ejecucion. 
 
-    docker network create suffgo-network
+## Iniciar aplicacion por primera vez
 
-Luego arrancar el contenedor que tiene instalado node 20 y pnpm
+Completar variable de entorno del path base de la API
 
-    docker compose run astro-app sh
-    
-Instalar dependencias
+    cp .env.sample .env
 
-    pnpm install
+> PUBLIC_API_BASE_URL
 
-Ahora salis del contenedor escribiendo `exit`e ingresar el siguiente comando
+Para iniciar la aplicacion, se debe ejecutar el siguiente comando en la raiz del proyecto
 
-    docker compose up
+    sh scripts/init.sh
 
-El front deberia verse en 
-    
-    localhost:4321
+El front deberia verse en el puerto 4321 
 
 > Si la API de go esta apagada, va a tirar error
 
-Si hay que actualizar la lista de dependencias
+## Reinstalar aplicacion
 
-    docker exec -it astro-app sh
+En caso de que desees reinstalar los paquetes de node, puedes hacerlo con el siguiente comando
 
-    pnpm update
+    sh scripts/reset.sh

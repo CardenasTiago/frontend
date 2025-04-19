@@ -1,4 +1,3 @@
-<!-- src/components/WelcomeMessage.vue -->
 <template>
     <div>
       <h2>¡Bienvenido, {{ userName }}!</h2>
@@ -11,6 +10,6 @@
   const userName = ref('');
   
   onMounted(() => {
-    userName.value = localStorage.getItem('userName') || 'Usuario';
+    userName.value = localStorage.getItem('userName') || 'Usuario';   
   });
   </script>
