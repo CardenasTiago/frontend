@@ -140,214 +140,126 @@
   </div>
   <div v-if="state == 'finished'" class="flex flex-col justify-center items-center">
     <h1 class="mt-5">Resultados finales</h1>
-    <div v-for="propuesta in resultados" :key="propuesta.id" class="flex flex-row flex-wrap justify-center items-center">
-    <div class="m-10 flex flex-row flex-wrap justify-center gap-5">
-      <CardResult  :proposal="propuesta" :result="propuesta.options.map(opt => ({
-        value: opt.option_value,
-        count: opt.votes.length
-      }))" />
-      <UserVotes :proposal="propuesta" />
+    <div v-for="propuesta in resultados" :key="propuesta.id"
+      class="flex flex-row flex-wrap justify-center items-center">
+      <div class="m-10 flex flex-row flex-wrap justify-center gap-5">
+        <CardResult :proposal="propuesta" :result="propuesta.options.map(opt => ({
+          value: opt.option_value,
+          count: opt.votes.length
+        }))" />
+        <UserVotes :proposal="propuesta" />
+      </div>
     </div>
   </div>
-  </div>
-  
+
 
 </template>
 
 <script setup>
-import { ref, onMounted, onUnmounted, computed } from "vue";
-import BackButton from "../reusable/BackButton2.vue";
-import StartRoom from "./lobby/components/StartRoom.vue";
-import { Icon } from "@iconify/vue";
+import { ref, onMounted, onUnmounted, computed } from 'vue';
+import BackButton from '../reusable/BackButton2.vue';
+import StartRoom from './lobby/components/StartRoom.vue';
+import { Icon } from '@iconify/vue';
 import ColorThief from 'colorthief';
-import CardResult from "./lobby/components/CardResult.vue";
-import UserVotes from "./lobby/components/UserVotes.vue";
+import CardResult from './lobby/components/CardResult.vue';
+import UserVotes from './lobby/components/UserVotes.vue';
+import RoomService from '../../services/room.service';
+import SettingRoomService from '../../services/settingroom.service';
+import ProposalService from '../../services/proposal.service';
 
-const props = defineProps({
-  id: String
-});
+const props = defineProps({ id: String });
 
 const sala = ref(null);
 const error = ref(null);
-const isEditing = ref(false); // Para controlar el modo de edición
-const copied = ref(false); // Estado para mostrar si el link fue copiado
-const resultados = ref(null);
-const hasProposal = ref(null);
+const isEditing = ref(false);
+const copied = ref(false);
+const resultados = ref([]);
+const hasProposal = ref(false);
 const state = ref('');
-
-const fetchSala = async () => {
-  try {
-    const response = await fetch(`http://localhost:3000/v1/rooms/${props.id}`, {
-      method: "GET",
-      credentials: "include",
-    });
-
-    if (!response.ok) {
-      throw new Error("Error al obtener la sala");
-    }
-    sala.value = await response.json();
-    localStorage.setItem("currentRoom", JSON.stringify(sala.value.room));
-
-    const urlConfig = "http://localhost:3000/v1/settingsRoom/byRoom/" + props.id;
-    const response2 = await fetch(urlConfig, {
-      method: "GET",
-      credentials: "include",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
-
-    if (response2.ok) {
-      const config = await response2.json();
-      localStorage.setItem("settingsRoom", JSON.stringify(config));
-    }
-
-    // Corrige la comprobación usando sala.value.room.state
-    if (sala.value.room.state === "finished") {
-      const urlResultados = "http://localhost:3000/v1/proposals/results/" + props.id;
-      const responseResultados = await fetch(urlResultados, {
-        method: "GET",
-        credentials: "include",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
-
-      if (responseResultados.ok) {
-        // Actualiza la variable reactiva mediante .value
-        resultados.value = await responseResultados.json();
-      }
-    }
-
-    state.value = sala.value.room.state;
-  } catch (err) {
-    error.value = err.message;
-  }
-};
-
-
-const getProposal = async () => {
-  try {
-    const response = await fetch(`http://localhost:3000/v1/proposals/byRoom/${props.id}`, {
-      method: "GET",
-      credentials: "include", // Enviar cookies con la solicitud
-
-    });
-
-    if (!response.ok) {
-      throw new Error("No se pudo obtener las propuestas");
-    }
-    const data = await response.json();
-    if (data === null) {
-      hasProposal.value = false;
-    } else {
-      hasProposal.value = true;
-    }
-  } catch (err) {
-    error.value = "Ocurrió un error al obtener las propuestas";
-  }
-}
-
-const updateRoom = async () => {
-  if (!sala.value) return;
-  try {
-    const response = await fetch(`http://localhost:3000/v1/rooms/${props.id}`, {
-      method: "PUT",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        description: sala.value.room.description,
-        name: sala.value.room.room_title,
-        link_invite: sala.value.room.link_invite,
-        image: sala.value.room.image
-      }),
-      credentials: "include"
-    });
-    if (!response.ok) {
-      throw new Error("Error al actualizar la sala");
-    }
-    isEditing.value = false; // Salir del modo edición
-  } catch (err) {
-    console.error("Error al actualizar la sala:", err);
-  }
-};
-
-const toggleEdit = () => {
-  isEditing.value = !isEditing.value;
-
-};
-
-
-const handleFileChange = (event) => {
-  const file = event.target.files[0];
-  if (!file) return;
-
-  const reader = new FileReader();
-  reader.readAsDataURL(file);
-  reader.onload = () => {
-    sala.value.room.image = reader.result;
-    updateRoom();
-  };
-  reader.onerror = (error) => {
-    console.error("Error al convertir la imagen:", error);
-  };
-};
-
-
-// Función para cancelar la edición
-const cancelEdit = () => {
-  const storedRoom = localStorage.getItem("currentRoom");
-
-  if (storedRoom) {
-    sala.value.room = JSON.parse(storedRoom); // Restaurar valores originales
-  }
-
-  isEditing.value = false; // Salir del modo edición
-};
-
-// Función para copiar al portapapeles
-const copyToClipboard = () => {
-  navigator.clipboard.writeText(sala.value.room.link_invite).then(() => {
-    copied.value = true;
-    setTimeout(() => {
-      copied.value = false;
-    }, 2000); // Ocultar el mensaje después de 2 segundos
-  }).catch((err) => {
-    console.error('Error al copiar el texto:', err);
-  });
-};
-
 const defaultImage = '/defaultRoomImage.png';
+
+// Estilos dinámicos
 const dominantColor = ref('');
 const imgElement = ref(null);
-
 const extractDominantColor = () => {
-  if (imgElement.value && imgElement.value.complete) {
+  if (imgElement.value?.complete) {
     try {
-      const colorThief = new ColorThief();
-      const result = colorThief.getColor(imgElement.value);
-      dominantColor.value = `rgb(${result.join(',')})`;
-    } catch (error) {
-      console.error('Error al extraer el color dominante:', error);
-    }
+      const [r, g, b] = new ColorThief().getColor(imgElement.value);
+      dominantColor.value = `rgb(${r},${g},${b})`;
+    } catch { }
   }
 };
-
 const containerStyle = computed(() => ({
   boxShadow: dominantColor.value ? `0 4px 10px ${dominantColor.value}` : 'none'
 }));
 
+// Copiar código
+const copyToClipboard = () => {
+  navigator.clipboard.writeText(sala.value.room.room_code).then(() => {
+    copied.value = true;
+    setTimeout(() => (copied.value = false), 2000);
+  });
+};
 
-// Función para limpiar currentRoom cuando el componente se desmonte
-onUnmounted(() => {
-  localStorage.removeItem("currentRoom");
-});
-
-
+// Carga de datos
 onMounted(() => {
-  getProposal();
-  fetchSala();
+  RoomService.find(props.id)
+    .then(txt => {
+      sala.value = JSON.parse(txt);
+      state.value = sala.value.room.state;
+      localStorage.setItem('currentRoom', JSON.stringify(sala.value.room));
+      return SettingRoomService.byRoom(props.id);
+    })
+    .then(txt => {
+      localStorage.setItem('settingsRoom', txt);
+      return ProposalService.byRoom(props.id);
+    })
+    .then(txt => {
+      hasProposal.value = JSON.parse(txt)?.length > 0;
+      if (state.value === 'finished') {
+        return ProposalService.results(props.id);
+      }
+    })
+    .then(txt => {
+      if (txt) resultados.value = JSON.parse(txt);
+    })
+    .catch(err => (error.value = err.message))
+    .finally(() => { });
 });
 
+// Edición de sala
+const toggleEdit = () => (isEditing.value = !isEditing.value);
+const updateRoom = () => {
+  const payload = {
+    name: sala.value.room.room_title,
+    description: sala.value.room.description,
+    link_invite: sala.value.room.link_invite,
+    image: sala.value.room.image
+  };
+  RoomService.update(props.id, payload).then(() => (isEditing.value = false));
+};
+const cancelEdit = () => {
+  const stored = JSON.parse(localStorage.getItem('currentRoom'));
+  sala.value.room = stored;
+  isEditing.value = false;
+};
+
+// Archivo
+const handleFileChange = e => {
+  const file = e.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = () => {
+    sala.value.room.image = reader.result;
+    updateRoom();
+  };
+  reader.readAsDataURL(file);
+};
+
+// Limpiar storage
+onUnmounted(() => {
+  localStorage.removeItem('currentRoom');
+});
 </script>
 
 

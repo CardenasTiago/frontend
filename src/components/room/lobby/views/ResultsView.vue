@@ -25,7 +25,7 @@ import VoteState from '../components/VoteState.vue';
 import { useRouter } from 'vue-router';
 import CardResult from '../components/CardResult.vue'
 import QuorumButton from '../components/QuorumButton.vue';
-import ExitButton from '../components/ExitButton..vue';
+import ExitButton from '../components/ExitButton.vue';
 
 const socketStore = useWebSocketStore();
 

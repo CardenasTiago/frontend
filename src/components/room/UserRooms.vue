@@ -79,6 +79,7 @@
   import DeleteRoom from "../room/deleteRoom/DeleteRoom.vue";
   import BackButton from "../reusable/BackButton2.vue"
   import {Icon} from "@iconify/vue";
+import RoomService from '../../services/room.service';
   
 
   const salas = ref([]); 
@@ -129,16 +130,9 @@
   //obtener salas
    const obtenerDatosSala = async () => {    
   try {
-    const response = await fetch("http://localhost:3000/v1/rooms/myRooms",{
-      method: 'GET',
-      credentials: 'include',
-    });
+    const response = await RoomService.adminRooms();
 
-    if (!response.ok) {
-      throw new Error('Error al obtener los datos')
-    }
-
-    const data = await response.json();
+    const data = JSON.parse(response)
 
     if (data === null) {
       console.log('No se encontraron salas.');
@@ -162,17 +156,10 @@
   }
 }
 
-
-
-
   // Llamamos a la función del componente hijo cuando se hace clic en el botón "Eliminar"
   const openDeleteModal = (sala) => {    
     deleteRoomRef.value.openModal(sala);
   };
-
-
-
-
 
   onMounted(() => {
     obtenerDatosSala();

@@ -1,9 +1,7 @@
 <template>
-    <a v-if="socketStore.connected" @click="closeConnection" class="btn btn-error text-white">
-        <!-- boton salir sala -->
+    <a v-if="socketStore.connected" @click="closeConnection()" class="btn btn-error text-white">
         <Icon icon="ic:baseline-exit-to-app" width="24" height="24" />
     </a>
-
 </template>
 
 <script setup>
@@ -12,10 +10,8 @@ import { Icon } from "@iconify/vue";
 
 const socketStore = useWebSocketStore();
 
-function closeConnection() {
-    socketStore.close();
-    window.location.href = '/protected/menu'
+const closeConnection = () => {
+  socketStore.close();
+  window.location.href = '/protected/menu';
 };
-
-
 </script>

@@ -14,61 +14,48 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
-import { Icon } from "@iconify/vue";
+import { ref } from 'vue';
+import { Icon } from '@iconify/vue';
+import RoomService from '../../services/room.service';
+import SettingRoomService from '../../services/settingroom.service';
 
-const room_code = ref("");
-const error = ref("");
+const room_code = ref('');
+const error = ref('');
 
 const handleSubmit = async () => {
-  error.value = "";
+  error.value = '';
 
   try {
-    const response = await fetch("http://localhost:3000/v1/rooms/join", {
-      method: "POST",
-      credentials: "include",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ room_code: room_code.value }),
-    });
+    // Intentar unirse a la sala
+    const respString = await RoomService.join({ room_code: room_code.value });
+    const data = JSON.parse(respString);
 
-    if (response.ok) {
-      const data = await response.json();
+    // Guardar datos de la sala
+    localStorage.setItem('currentRoom', JSON.stringify(data.room));
 
-      // Guardar los datos de la sala en localStorage
-      localStorage.setItem("currentRoom", JSON.stringify(data.room));
+    // Cargar configuración de la sala
+    const settingsString = await SettingRoomService.byRoom(String(data.room.id));
+    const config = JSON.parse(settingsString);
+    localStorage.setItem('settingsRoom', JSON.stringify(config));
 
-      // Obtener la configuración
-      const url = "http://localhost:3000/v1/settingsRoom/byRoom/" + data.room.id;
-      const response2 = await fetch(url, {
-        method: "GET",
-        credentials: "include",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
-
-      if (response2.ok) {
-        const config = await response2.json();
-        localStorage.setItem("settingsRoom", JSON.stringify(config));
-      } 
-
-      // Redirigir a la sala
-      window.location.href = `/protected/roomInfo/${data.room.id}`;
+    // Redirigir según privilegios
+    if (data.room.privileges) {
+      window.location.href = `/protected/room/${data.room.id}`;
     } else {
-      const data = await response.json();
-      if (response.status === 400) {
-        error.value = "Código de sala inválido.";
-      } else if (response.status === 403) {
-        error.value = "No tienes permiso para unirte a esta sala.";
-      } else {
-        error.value = data.message || "Error al ingresar a la sala.";
-      }
+      window.location.href = `/protected/roomInfo/${data.room.id}`;
     }
+
   } catch (err) {
-    console.error(err);
-    error.value = "Ocurrió un error al intentar ingresar a la sala.";
+    // Manejo de errores según status de respuesta
+    if (err.status === 400) {
+      error.value = 'Código de sala inválido.';
+    } else if (err.status === 403) {
+      error.value = 'No tienes permiso para unirte a esta sala.';
+    }else if ( err.status === 404) {
+        error.value = "Codigo de sala inexistente";
+      } else {
+      error.value = err.message || 'Ocurrió un error al intentar ingresar a la sala.';
+    }
   }
 };
 </script>

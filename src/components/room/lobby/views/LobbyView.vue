@@ -76,7 +76,7 @@ import TabInfo from '../components/TabInfo.vue';
 import TabUsers from '../components/TabUsers.vue';
 import QuorumButton from '../components/QuorumButton.vue';
 import { Icon } from "@iconify/vue";
-import ExitButton from '../components/ExitButton..vue';
+import ExitButton from '../components/ExitButton.vue';
 
 const socketStore = useWebSocketStore();
 const {
@@ -88,7 +88,6 @@ const router = useRouter()
 const room = ref('');
 const user = ref('');
 const quorum = ref('');
-let wsUrl = '';
 
 const theme = ref(localStorage.getItem('theme') || 'mytheme');
 
@@ -112,14 +111,11 @@ onMounted(() => {
     const settings = JSON.parse(settingsRoom);
     quorum.value = settings.quorum;
   }
-
-  wsUrl = `ws://localhost:3000/v1/rooms/ws/${room.value.id}`;
-
-  socketStore.connect(wsUrl);
+  socketStore.connect(room.value.id);
 });
 
 function connect() {
-  socketStore.connect(wsUrl);
+  socketStore.connect(room.value.id);
 };
 
 function startVoting() {

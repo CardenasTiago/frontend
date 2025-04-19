@@ -39,7 +39,7 @@
             <span class="label-text text-accent/80 text-lg">Nombre de la propuesta</span>
           </div>
           <input v-model="form.title" type="text"
-            class="input input-bordered w-full bg-secondary/10 border-secondary/20" required maxlength="255"
+            class="input w-full bg-secondary/10 border-secondary/20" required maxlength="255"
             @input="validateForm" />
           <div class="label">
             <span class="label-text-alt text-accent/60">{{ form.title.length }}/255 caracteres</span>
@@ -54,7 +54,7 @@
             <span class="label-text text-accent/80 text-lg">Descripción</span>
           </div>
           <textarea v-model="form.description"
-            class="textarea textarea-bordered w-full bg-secondary/10 border-secondary/20 h-32" required maxlength="255"
+            class="textarea w-full bg-secondary/10 border-secondary/20 h-32" required maxlength="255"
             @input="validateForm"></textarea>
           <div class="label">
             <span class="label-text-alt text-accent/60">{{ form.description.length }}/255 caracteres</span>
@@ -125,7 +125,11 @@
 <script setup>
 import { ref, onMounted, computed } from 'vue';
 import BackButton from '../reusable/BackButton.vue';
+import ProposalService from '../../services/proposal.service';
+import OptionService   from '../../services/option.service';
+import RoomService     from '../../services/room.service';
 
+// Estado del formulario
 const form = ref({
   title: '',
   description: '',
@@ -137,70 +141,46 @@ const form = ref({
   ]
 });
 
-const isSubmitting = ref(false);
-const error = ref(null);
-const loading = ref(true);
-const proposalId = ref(null);
-const roomId = ref(null);
+const isSubmitting    = ref(false);
+const error           = ref(null);
+const loading         = ref(true);
+const proposalId      = ref(null);
+const roomId          = ref(null);
 const descriptionError = ref('');
-const titleError = ref('');
-const optionErrors = ref([]);
-const room = ref(null);
-
+const titleError      = ref('');
+const optionErrors    = ref([]);
+const room            = ref(null);
 
 const isEditing = computed(() => !!proposalId.value);
 
+// Validaciones
 const validateOptions = () => {
   optionErrors.value = Array(form.value.options.length).fill('');
-
-  // Verificamos que no haya opciones duplicadas
-  const values = form.value.options.map(opt => opt.value.trim().toLowerCase());
-  const duplicates = new Set();
-
-  values.forEach((value, index) => {
-    if (value === '') {
-      optionErrors.value[index] = 'La opción no puede estar vacía';
-      return;
-    }
-
-    const firstIndex = values.indexOf(value);
-    if (firstIndex !== index) {
-      duplicates.add(value);
-      optionErrors.value[firstIndex] = 'Opción duplicada';
-      optionErrors.value[index] = 'Opción duplicada';
-    }
+  const vals = form.value.options.map(o => o.value.trim().toLowerCase());
+  const dup = new Set();
+  vals.forEach((v,i) => {
+    if (!v) { optionErrors.value[i] = 'La opción no puede estar vacía'; return; }
+    const first = vals.indexOf(v);
+    if (first !== i) { dup.add(v); optionErrors.value[first] = 'Opción duplicada'; optionErrors.value[i] = 'Opción duplicada'; }
   });
 };
 
 const validateForm = () => {
-  // Validar título
-  if (form.value.title.length > 255) {
-    titleError.value = 'El título no puede exceder los 255 caracteres';
-  } else {
-    titleError.value = '';
-  }
-
-  // Validar descripción
-  if (form.value.description.length > 255) {
-    descriptionError.value = 'La descripción no puede exceder los 255 caracteres';
-  } else {
-    descriptionError.value = '';
-  }
-
-  // Validar opciones
+  titleError.value = form.value.title.length > 255 ? 'El título no puede exceder 255 caracteres' : '';
+  descriptionError.value = form.value.description.length > 255 ? 'La descripción no puede exceder 255 caracteres' : '';
   validateOptions();
 };
 
 const isFormValid = computed(() => {
-  return form.value.title.length > 0 &&
-    form.value.title.length <= 255 &&
-    form.value.description.length <= 255 &&
-    form.value.options.length >= 2 &&
-    form.value.options.every(option => option.value.trim() !== '') &&
-    !titleError.value &&
-    !descriptionError.value &&
-    !optionErrors.value.some(error => error !== '') &&
-    roomId.value;
+  return form.value.title
+    && form.value.title.length <= 255
+    && form.value.description.length <= 255
+    && form.value.options.length >= 2
+    && form.value.options.every(o=>o.value.trim())
+    && !titleError.value
+    && !descriptionError.value
+    && !optionErrors.value.some(e=>e)
+    && roomId.value;
 });
 
 const addOption = () => {
@@ -210,10 +190,10 @@ const addOption = () => {
   }
 };
 
-const removeOption = (index) => {
+const removeOption = idx => {
   if (form.value.options.length > 2) {
-    form.value.options.splice(index, 1);
-    optionErrors.value.splice(index, 1);
+    form.value.options.splice(idx,1);
+    optionErrors.value.splice(idx,1);
     validateOptions();
   }
 };
@@ -223,246 +203,127 @@ const removeFile = () => {
   form.value.archiveData = null;
 };
 
-const handleFileUpload = (event) => {
-  const file = event.target.files[0];
+const handleFileUpload = e => {
+  const file = e.target.files[0];
   if (!file) return;
-
-  const maxSize = 5 * 1024 * 1024;
-  if (file.size > maxSize) {
-    error.value = `El archivo es demasiado grande. El tamaño máximo permitido es ${maxSize / (1024 * 1024)}MB`;
-    return;
-  }
+  const max = 5 * 1024 * 1024;
+  if (file.size > max) { error.value = `Tamaño máximo ${max/1024/1024}MB`; return; }
   form.value.archive = file.name;
-
   const reader = new FileReader();
-  reader.onload = (e) => {
-    form.value.archiveData = e.target.result;
-  };
-  reader.onerror = () => {
-    error.value = 'Error al leer el archivo';
-    form.value.archive = null;
-    form.value.archiveData = null;
-  };
+  reader.onload = ev => form.value.archiveData = ev.target.result;
+  reader.onerror = () => { error.value = 'Error al leer archivo'; form.value.archive = null; form.value.archiveData = null; };
   reader.readAsDataURL(file);
 };
 
+// Carga de datos para edición
 const fetchProposal = async () => {
   try {
-    const response = await fetch(`http://localhost:3000/v1/proposals/${proposalId.value}`, {
-      credentials: 'include'
-    });
+    loading.value = true;
+    error.value   = null;
 
-    if (!response.ok) {
-      throw new Error('Error al obtener la propuesta');
-    }
-
-    const data = await response.json();
-    form.value.title = data.title || '';
+    const text = await ProposalService.find(String(proposalId.value));
+    const data = JSON.parse(text);
+    form.value.title       = data.title || '';
     form.value.description = data.description || '';
-    form.value.archive = data.archive || null;
-    // No podemos recuperar el contenido en base64 del archivo ya guardado
+    form.value.archive     = data.archive || null;
 
-    // Obtener las opciones de la propuesta
-    const optionsResponse = await fetch(`http://localhost:3000/v1/options/byProposal/${proposalId.value}`, {
-      credentials: 'include'
-    });
-
-    if (optionsResponse.ok) {
-      const optionsData = await optionsResponse.json();
-      if (Array.isArray(optionsData.options)) {
-        form.value.options = optionsData.options.map(option => ({ value: option.value }));
-        optionErrors.value = Array(form.value.options.length).fill('');
-      }
+    const optsText = await OptionService.byProposal(String(proposalId.value));
+    const optsData = JSON.parse(optsText);
+    if (Array.isArray(optsData.options)) {
+      form.value.options = optsData.options.map(o=>({ value: o.value }));
+      optionErrors.value = Array(form.value.options.length).fill('');
     }
 
     validateForm();
   } catch (err) {
     error.value = err.message;
-    console.error('Error:', err);
+    console.error(err);
   } finally {
     loading.value = false;
   }
 };
 
+// Guardar (crear/actualizar)
 const handleSubmit = async () => {
   try {
-    if (!isFormValid.value) {
-      error.value = 'Por favor, verifica todos los campos del formulario';
-      return;
-    }
-
+    if (!isFormValid.value) { error.value = 'Verifica los campos'; return; }
     isSubmitting.value = true;
-    error.value = null;
+    error.value        = null;
 
-    // Verificar que el roomId sea un número
-    const roomIdNumber = parseInt(roomId.value, 10);
-    if (isNaN(roomIdNumber)) {
-      throw new Error('ID de sala inválido');
-    }
+    const roomNum = parseInt(roomId.value,10);
+    if (isNaN(roomNum)) throw new Error('ID sala inválido');
 
-    // Crear la propuesta
-    const proposalPayload = {
+    const payload = {
       title: form.value.title.trim(),
       description: form.value.description.trim(),
-      archive: form.value.archiveData || '', // Enviamos los datos en base64 si existen
-      room_id: roomIdNumber
+      archive: form.value.archiveData||'',
+      room_id: roomNum
     };
 
-    let method = 'POST';
-    let url = 'http://localhost:3000/v1/proposals';
-
+    let resultText;
     if (isEditing.value) {
-      method = 'PUT';
-      url = `http://localhost:3000/v1/proposals/${proposalId.value}`;
+      resultText = await ProposalService.update(String(proposalId.value), payload);
+    } else {
+      resultText = await ProposalService.create(payload);
     }
 
-    const proposalResponse = await fetch(url, {
-      method: method,
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      credentials: 'include',
-      body: JSON.stringify(proposalPayload)
-    });
+    const result = resultText ? JSON.parse(resultText) : null;
+    const newId = isEditing.value ? parseInt(proposalId.value,10) : (result?.proposal?.id?parseInt(result.proposal.id,10):null);
+    if (!newId) throw new Error('No se obtuvo ID propuesta');
 
-    if (!proposalResponse.ok) {
-      const errorText = await proposalResponse.text();
-      let errorMessage;
-      try {
-        const errorData = JSON.parse(errorText);
-        errorMessage = errorData.error || 'Error al guardar la propuesta';
-      } catch {
-        errorMessage = errorText || `Error del servidor: ${proposalResponse.status}`;
-      }
-      throw new Error(errorMessage);
-    }
-
-    const proposalText = await proposalResponse.text();
-    let proposalResult;
-    try {
-      proposalResult = proposalText ? JSON.parse(proposalText) : null;
-    } catch {
-      throw new Error('Error al procesar la respuesta del servidor');
-    }
-
-
-    const newProposalId = isEditing.value ?
-      parseInt(proposalId.value, 10) :
-      (proposalResult?.proposal?.id ? parseInt(proposalResult.proposal.id, 10) : null);
-
-    if (!newProposalId || isNaN(newProposalId)) {
-      throw new Error('No se pudo obtener el ID de la propuesta');
-    }
-
-    // Si estamos editando, primero eliminamos las opciones existentes una por una
+    // Si edito, elimino opciones previas
     if (isEditing.value) {
-      const existingOptionsResponse = await fetch(`http://localhost:3000/v1/options/byProposal/${newProposalId}`, {
-        credentials: 'include'
-      });
-
-      if (existingOptionsResponse.ok) {
-        const existingOptionsText = await existingOptionsResponse.text();
-        try {
-          if (existingOptionsText) {
-            const existingOptions = JSON.parse(existingOptionsText);
-            if (Array.isArray(existingOptions.options)) {
-              for (const option of existingOptions.options) {
-                const deleteResponse = await fetch(`http://localhost:3000/v1/options/${option.id}`, {
-                  method: 'DELETE',
-                  credentials: 'include'
-                });
-
-                if (!deleteResponse.ok) {
-                  console.error(`Error al eliminar la opción ${option.id}`);
-                }
-              }
-            }
-          }
-        } catch (e) {
-          console.error('Error al procesar las opciones existentes:', e);
+      const existText = await OptionService.byProposal(String(newId));
+      const existData = JSON.parse(existText);
+      if (Array.isArray(existData.options)) {
+        for (const opt of existData.options) {
+          await OptionService.remove(String(opt.id));
         }
       }
     }
 
-    // Crear las nuevas opciones
-    for (const option of form.value.options) {
-      const optionPayload = {
-        value: option.value.trim(),
-        proposal_id: newProposalId
-      };
-
-      const optionResponse = await fetch('http://localhost:3000/v1/options', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        credentials: 'include',
-        body: JSON.stringify(optionPayload)
-      });
-
-      if (!optionResponse.ok) {
-        const errorText = await optionResponse.text();
-        let errorMessage;
-        try {
-          const errorData = JSON.parse(errorText);
-          errorMessage = errorData.error || 'Error al guardar una opción';
-        } catch {
-          errorMessage = errorText || `Error del servidor: ${optionResponse.status}`;
-        }
-        throw new Error(errorMessage);
-      }
+    // Creo nuevas opciones
+    for (const o of form.value.options) {
+      await OptionService.create({ value: o.value.trim(), proposal_id: newId });
     }
 
-    // Redirigir a la página de propuestas
-    window.location.href = `/protected/proposal?id=${roomIdNumber}`;
+    window.location.href = `/protected/proposal?id=${roomId.value}`;
   } catch (err) {
     error.value = err.message;
-    console.error('Error:', err);
+    console.error(err);
   } finally {
     isSubmitting.value = false;
   }
 };
 
+// Detalle sala
 const fetchRoomDetails = async () => {
   try {
-    const response = await fetch(`http://localhost:3000/v1/rooms/${roomId.value}`, {
-      method: 'GET',
-      credentials: 'include',
-    });
-
-    if (!response.ok) {
-      throw new Error('No se pudo obtener los detalles de la sala');
-    }
-
-    room.value = await response.json();
-
+    const text = await RoomService.find(String(roomId.value));
+    room.value = JSON.parse(text);
   } catch (err) {
-    console.error('Error al obtener los datos de la sala:');
-
+    console.error('Error sala:', err);
   }
 };
+
 const isFormal = computed(() => room.value?.room?.is_formal);
 
 onMounted(() => {
-  const urlParams = new URLSearchParams(window.location.search);
-  proposalId.value = urlParams.get('id');
-  roomId.value = urlParams.get('roomId');
+  const params = new URLSearchParams(window.location.search);
+  proposalId.value = params.get('id');
+  roomId.value     = params.get('roomId');
 
   if (!roomId.value) {
-    error.value = 'No se encontró el ID de la sala';
+    error.value   = 'No se encontró ID de sala';
     loading.value = false;
     return;
   }
 
   fetchRoomDetails();
-
-  if (isEditing.value) {
-    fetchProposal();
-  } else {
-    loading.value = false;
-  }
+  if (isEditing.value) fetchProposal(); else loading.value = false;
 });
 </script>
+
 
 <style scoped>
 input[type="number"]::-webkit-inner-spin-button,

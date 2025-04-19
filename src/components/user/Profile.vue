@@ -122,6 +122,7 @@
 <script setup>
 import { ref,onMounted } from 'vue';
 import {Icon} from "@iconify/vue";
+import UserService from '../../services/user.service';
 
 const user = ref({
   name: "",
@@ -166,17 +167,10 @@ const handleFileChange = (event) => {
 
 const storeUser = async () => {
   try {
-    const response = await fetch("http://localhost:3000/v1/users/update", {
-      method: "PUT",
-      credentials: "include",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(user.value),
-    });
-
-    if (response.ok) {      
-      const updatedUser = await response.json();           
+    const response = await UserService.update(JSON.stringify(user.value))
+   
+    if (response) {      
+      const updatedUser = JSON.parse(response);           
       localStorage.setItem("user", JSON.stringify(updatedUser.user)); // Actualizar localStorage      
       user.value = { ...updatedUser.user };      
       isEditing.value = false;                  
