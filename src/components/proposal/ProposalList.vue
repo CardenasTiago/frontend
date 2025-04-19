@@ -76,6 +76,8 @@
 
 <script setup>
 import { ref, onMounted, onUnmounted } from 'vue';
+import ProposalService from '../../services/proposal.service';
+import OptionService   from '../../services/option.service';
 
 const props = defineProps({
   roomId: {
@@ -84,36 +86,28 @@ const props = defineProps({
   }
 });
 
-const proposals = ref([]);
-const loading = ref(true);
-const error = ref(null);
-const deleteModal = ref(null);
+const proposals        = ref([]);
+const loading          = ref(true);
+const error            = ref(null);
+const deleteModal      = ref(null);
 const proposalToDelete = ref(null);
-const isDeleting = ref(false);
+const isDeleting       = ref(false);
 
 const fetchProposals = async () => {
   try {
     loading.value = true;
-    error.value = null;
-    
+    error.value   = null;
+
     if (!props.roomId) {
       throw new Error('No se encontró el ID de la sala');
     }
 
-    const response = await fetch(`http://localhost:3000/v1/proposals/byRoom/${props.roomId}`, {
-      credentials: 'include'
-    });
-
-    if (!response.ok) {
-      throw new Error('Error al cargar las propuestas');
-    }
-
-    const data = await response.json();
+    const respString = await ProposalService.byRoom(String(props.roomId));
+    const data       = JSON.parse(respString);
     proposals.value = Array.isArray(data) ? data : [];
-    
   } catch (err) {
     error.value = err.message;
-    console.error('Error:', err);
+    console.error('Error al cargar propuestas:', err);
   } finally {
     loading.value = false;
   }
@@ -129,29 +123,15 @@ const closeModal = () => {
   proposalToDelete.value = null;
 };
 
+// Eliminar opciones de una propuesta con el service
 const deleteOptions = async (proposalId) => {
   try {
-    const optionsResponse = await fetch(`http://localhost:3000/v1/options/byProposal/${proposalId}`, {
-      credentials: 'include'
-    });
+    const optsString = await OptionService.byProposal(String(proposalId));
+    const optsData   = JSON.parse(optsString);
 
-    if (!optionsResponse.ok) {
-      throw new Error('Error al obtener las opciones de la propuesta');
-    }
-
-    const optionsData = await optionsResponse.json();
-    
-    if (optionsData.options && Array.isArray(optionsData.options)) {
-      // Eliminar cada opción 
-      for (const option of optionsData.options) {
-        const deleteResponse = await fetch(`http://localhost:3000/v1/options/${option.id}`, {
-          method: 'DELETE',
-          credentials: 'include'
-        });
-
-        if (!deleteResponse.ok) {
-          throw new Error(`Error al eliminar la opción ${option.id}`);
-        }
+    if (optsData.options && Array.isArray(optsData.options)) {
+      for (const option of optsData.options) {
+        await OptionService.remove(String(option.id));
       }
     }
   } catch (err) {
@@ -159,36 +139,22 @@ const deleteOptions = async (proposalId) => {
   }
 };
 
+// Manejar borrado de propuesta
 const handleDelete = async () => {
   if (!proposalToDelete.value) return;
 
   try {
     isDeleting.value = true;
-    error.value = null;
+    error.value      = null;
 
-    // Primero eliminamos todas las opciones
     await deleteOptions(proposalToDelete.value);
+    await ProposalService.remove(String(proposalToDelete.value));
 
-    // Luego eliminamos la propuesta
-    const response = await fetch(`http://localhost:3000/v1/proposals/${proposalToDelete.value}`, {
-      method: 'DELETE',
-      credentials: 'include',
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    });
-
-    if (!response.ok) {
-      const errorData = await response.json();
-      throw new Error(errorData.error || 'Error al eliminar la propuesta');
-    }
-
-    // Se actualiza la lista de propuestas
     await fetchProposals();
     closeModal();
   } catch (err) {
     error.value = err.message;
-    console.error('Error:', err);
+    console.error('Error al eliminar propuesta:', err);
   } finally {
     isDeleting.value = false;
   }
@@ -196,13 +162,13 @@ const handleDelete = async () => {
 
 onMounted(() => {
   if (!props.roomId) {
-    error.value = 'No se encontró el ID de la sala';
+    error.value   = 'No se encontró el ID de la sala';
     loading.value = false;
     return;
   }
-  
+
   fetchProposals();
-  
+
   const refreshInterval = setInterval(() => {
     if (!loading.value) {
       fetchProposals();

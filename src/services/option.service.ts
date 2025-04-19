@@ -16,6 +16,9 @@ const OptionService = {
   remove(id: string): Promise<string> {
     return ApiService.delete(`/options/${id}`);
   },
+  byRoom(room_id : string): Promise<string> {
+    return ApiService.get(`/options/byRoom/${room_id}`)
+  }
 };
 
 export default OptionService;
