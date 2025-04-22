@@ -202,30 +202,30 @@ const copyToClipboard = () => {
 };
 
 // Carga de datos
-onMounted(() => {
-  RoomService.find(props.id)
-    .then(txt => {
-      sala.value = JSON.parse(txt);
-      state.value = sala.value.room.state;
-      localStorage.setItem('currentRoom', JSON.stringify(sala.value.room));
-      return SettingRoomService.byRoom(props.id);
-    })
-    .then(txt => {
-      localStorage.setItem('settingsRoom', txt);
-      return ProposalService.byRoom(props.id);
-    })
-    .then(txt => {
-      hasProposal.value = JSON.parse(txt)?.length > 0;
-      if (state.value === 'finished') {
-        return ProposalService.results(props.id);
-      }
-    })
-    .then(txt => {
-      if (txt) resultados.value = JSON.parse(txt);
-    })
-    .catch(err => (error.value = err.message))
-    .finally(() => { });
+onMounted(async () => {
+  try {
+    const roomTxt = await RoomService.find(props.id);
+    sala.value = JSON.parse(roomTxt);
+    state.value = sala.value.room.state;
+    localStorage.setItem('currentRoom', JSON.stringify(sala.value.room));
+
+    const settingsTxt = await SettingRoomService.byRoom(props.id);
+    localStorage.setItem('settingsRoom', settingsTxt);
+
+    const proposalsTxt = await ProposalService.byRoom(props.id);
+    const proposals = JSON.parse(proposalsTxt);
+    hasProposal.value = proposals.length > 0;
+
+    if (state.value === 'finished') {
+      const resultsTxt = await ProposalService.results(props.id);
+      resultados.value = JSON.parse(resultsTxt);
+    }
+
+  } catch (err) {
+    error.value = err.error;
+  }
 });
+
 
 // Edición de sala
 const toggleEdit = () => (isEditing.value = !isEditing.value);
