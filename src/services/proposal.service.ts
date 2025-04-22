@@ -18,6 +18,9 @@ const ProposalService = {
   },
   byRoom(room_id : string): Promise<string> {
     return ApiService.get(`/proposals/byRoom/${room_id}`)
+  },
+  results(prop_id : string): Promise<string> {
+    return ApiService.get(`/proposals/results/${prop_id}`)
   }
 };
 
