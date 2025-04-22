@@ -123,22 +123,6 @@ const closeModal = () => {
   proposalToDelete.value = null;
 };
 
-// Eliminar opciones de una propuesta con el service
-const deleteOptions = async (proposalId) => {
-  try {
-    const optsString = await OptionService.byProposal(String(proposalId));
-    const optsData   = JSON.parse(optsString);
-
-    if (optsData.options && Array.isArray(optsData.options)) {
-      for (const option of optsData.options) {
-        await OptionService.remove(String(option.id));
-      }
-    }
-  } catch (err) {
-    throw new Error(`Error al eliminar las opciones: ${err.message}`);
-  }
-};
-
 // Manejar borrado de propuesta
 const handleDelete = async () => {
   if (!proposalToDelete.value) return;
@@ -146,8 +130,6 @@ const handleDelete = async () => {
   try {
     isDeleting.value = true;
     error.value      = null;
-
-    await deleteOptions(proposalToDelete.value);
     await ProposalService.remove(String(proposalToDelete.value));
 
     await fetchProposals();
