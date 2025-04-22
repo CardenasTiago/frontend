@@ -44,7 +44,7 @@
         <input
           v-model.number="form.quorum"
           type="number"
-          min="1"
+          min="2"
           max="100"
           class="input input-bordered w-full bg-secondary/10 border-secondary/20 h-12 text-lg"
           required
@@ -87,7 +87,6 @@
           v-model.number="form.voterLimit"
           type="number"
           min="2"
-          max="255"
           class="input input-bordered w-full bg-secondary/10 border-secondary/20 h-12 text-lg"
           required
         />
@@ -123,7 +122,7 @@ import SettingRoomService from '../../../services/settingroom.service';
 
 // Estado del formulario
 const form = ref({
-  privacy: true,
+  privacy: false,
   proposalTimer: 5,
   quorum: 50,
   date: '',
