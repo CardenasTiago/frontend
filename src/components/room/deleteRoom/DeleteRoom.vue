@@ -54,8 +54,11 @@ import RoomService from '../../../services/room.service';
   
       // Si la eliminación es exitosa, actualizamos el estado
       successMessage.value = `Se eliminó la sala "${roomDelete.value.room_title}"`;
-      isSuccessModalOpen.value = true;
-      isModalOpen.value = false;  
+      // Añadir un pequeño retraso para asegurarnos de que el estado se haya actualizado correctamente
+      setTimeout(() => {
+        isSuccessModalOpen.value = true;
+        isModalOpen.value = false;
+      }, 100);  // Retraso de 100 ms 
       roomDelete.value = null;
         
       
