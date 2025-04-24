@@ -1,5 +1,6 @@
 <template>
-    <div class="chat-container flex justify-between bg-base-100 border-secondary p-2 shadow-md shadow-secondary gap-2 max-h-[60vh]">
+    <div class="chat-container flex justify-between bg-base-100 border-secondary p-2 shadow-md shadow-secondary gap-2 "
+        :style="{ maxHeight: props.maxVh + 'vh' }">
         <div v-if="socketStore.connected" class="text-success font-semibold flex items-end text-end">
             Conectado
         </div>
@@ -49,13 +50,18 @@ const {
 const inputMessageLocal = ref('');
 const messagesContainer = ref(null);
 
-
+const props = defineProps({
+    maxVh: {
+        type: [Number, String],
+        default: 60
+    }
+})
 const sendMessage = () => {
     const msg = inputMessageLocal.value.trim();
     if (msg === '') return;
     if (socket && socketStore.connected) {
         socket.sendEvents("send_message", { from: user.value.username, message: msg });
-        socketStore.pushMessage("tu: " + msg, true );
+        socketStore.pushMessage("tu: " + msg, true);
         inputMessageLocal.value = '';
     } else {
         console.warn('No estás conectado al WebSocket.');
