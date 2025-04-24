@@ -70,7 +70,7 @@
               </div>
 
               <!-- Boton de DropDown -->
-              <div class="dropdown dropdown-left ">
+              <div v-if="sala.room.state != 'finished'" class="dropdown dropdown-left ">
                 <div tabindex="0" role="button"
                   class="btn rounded-full bg-transparent border-none hover:bg-transparent shadow-none">
                   <Icon icon="iconamoon:menu-kebab-horizontal-circle-bold" class="w-6 h-6 lg:w-8 lg:h-8 text-primary" />

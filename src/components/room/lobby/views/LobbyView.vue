@@ -27,7 +27,7 @@
         <v-tabs-window v-model="tab">
           <v-tabs-window-item :key="1" :value="1">
             <v-container>
-              <TabChat />
+              <TabChat :max-vh="50" />
             </v-container>
           </v-tabs-window-item>
           <v-tabs-window-item :key="2" :value="2">
