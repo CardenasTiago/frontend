@@ -82,7 +82,7 @@
                   <li v-if="sala.room.is_formal"><a :href="`../formalSettingRoom?id=${sala.room.id}`"
                       class="btn btn-primary btn-xs lg:btn-sm pb-1">Otras
                       Configuraciones</a></li>
-                  <li><a :href="`../user/addUser/${sala.room.id}`" class="btn btn-primary btn-xs lg:btn-sm">Votantes</a>
+                  <li v-if="settingsRoom.privacy"><a :href="`../user/addUser/${sala.room.id}`" class="btn btn-primary btn-xs lg:btn-sm">Votantes</a>
                   </li>
                 </ul>
               </div>
@@ -177,6 +177,8 @@ const resultados = ref([]);
 const hasProposal = ref(false);
 const state = ref('');
 const defaultImage = '/defaultRoomImage.png';
+const settingsRoom = ref(null);
+
 
 // Estilos dinámicos
 const dominantColor = ref('');
@@ -210,6 +212,7 @@ onMounted(async () => {
     localStorage.setItem('currentRoom', JSON.stringify(sala.value.room));
 
     const settingsTxt = await SettingRoomService.byRoom(props.id);
+    settingsRoom.value = JSON.parse(settingsTxt);    
     localStorage.setItem('settingsRoom', settingsTxt);
 
     const proposalsTxt = await ProposalService.byRoom(props.id);

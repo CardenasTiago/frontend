@@ -11,7 +11,7 @@ const UserService = {
     return ApiService.post('/users', payload);
   },
   update(payload: any): Promise<string> {
-    return ApiService.put(`/users`, payload);
+    return ApiService.put(`/users/`, payload);
   },
   remove(id: string): Promise<string> {
     return ApiService.delete(`/users/${id}`);

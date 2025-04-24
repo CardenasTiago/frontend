@@ -18,7 +18,7 @@
           />
         </div>
     </div> 
-
+    
     <div class="p-4 flex flex-col gap-8 ">
         <fieldset class="fieldset flex">
             <legend class="fieldset-legend font-semi-bold text-secondary">Nombre</legend>
@@ -113,8 +113,9 @@
             class="btn bg-success"
           >
             Guardar
-          </button>
+          </button>         
         </div>
+        
       </div>      
   </form> 
 </template>
