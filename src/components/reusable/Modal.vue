@@ -56,8 +56,7 @@
   
     const emit = defineEmits(['update:modelValue'])
   
-    const handleClose = () => {
-      console.log('Se intentó cerrar el modal');
+    const handleClose = () => {     
       emit('update:modelValue', false)
     }
 
