@@ -15,7 +15,7 @@ import ProposalList from '../../components/proposal/ProposalList.vue';
 
             <h1 class="text-xl sm:text-2xl font-bold text-primary mb-4 sm:mb-6 text-center">Propuestas</h1>
 
-            <ProposalList client:load roomId={Astro.url.searchParams.get('id') ?? ''} />
+            <ProposalList client:load roomId={Astro.url.searchParams.get('id') ?? ''}/>
             </div>
         </div>
     </main>
