@@ -27,7 +27,7 @@
         <v-tabs-window v-model="tab">
           <v-tabs-window-item :key="1" :value="1">
             <v-container>
-              <TabChat />
+              <TabChat :max-vh="50" />
             </v-container>
           </v-tabs-window-item>
           <v-tabs-window-item :key="2" :value="2">
@@ -44,26 +44,13 @@
       </v-card>
       <footer class="absolute bottom-0 z-10 flex flex-row justify-between py-2 px-4 w-full">
         <div>
-          <a v-if="socketStore.connected" @click="closeConnection" class="btn btn-error text-white">
-            <!-- boton salir sala -->
-            <Icon icon="ic:baseline-exit-to-app" width="24" height="24" />
-          </a>
-          <a v-else @click="connect" class="btn btn-warning text-white">
+          <ExitButton />
+          <a v-if="!socketStore.connected" @click="connect" class="btn btn-warning text-white">
             <Icon icon="ic:baseline-replay" width="24" height="24" />
           </a>
         </div>
         <div v-if="room.privileges" class="">
-          <a class="btn btn-primary initiliaze" @click="startVoting"
-            :class="{ 'cursor-not-allowed opacity-50 pointer-events-none': isVotingDisabled }">
-            Iniciar
-            <span :class="{
-              'text-error': connectedUsersCount < quorum,
-              'text-success': connectedUsersCount >= quorum
-            }">
-              {{ connectedUsersCount }}/{{ quorum }}
-            </span>
-            <Icon icon="ic:baseline-not-started" width="24" height="24" />
-          </a>
+          <QuorumButton buttonText="Iniciar" :action="startVoting" />
         </div>
       </footer>
     </div>
@@ -87,12 +74,13 @@ import ColorThief from 'colorthief';
 import TabChat from '../components/TabChat.vue';
 import TabInfo from '../components/TabInfo.vue';
 import TabUsers from '../components/TabUsers.vue';
+import QuorumButton from '../components/QuorumButton.vue';
 import { Icon } from "@iconify/vue";
+import ExitButton from '../components/ExitButton.vue';
 
 const socketStore = useWebSocketStore();
 const {
   voting,
-  userList,
 } = storeToRefs(socketStore)
 
 
@@ -100,8 +88,6 @@ const router = useRouter()
 const room = ref('');
 const user = ref('');
 const quorum = ref('');
-let wsUrl = ''; // Variable normal, ya que no se requiere reactividad
-const connectedUsersCount = computed(() => userList.value ? userList.value.length : 0);
 
 const theme = ref(localStorage.getItem('theme') || 'mytheme');
 
@@ -125,25 +111,11 @@ onMounted(() => {
     const settings = JSON.parse(settingsRoom);
     quorum.value = settings.quorum;
   }
-
-  wsUrl = `ws://localhost:3000/v1/rooms/ws/${room.value.id}`;
-
-  socketStore.connect(wsUrl);
+  socketStore.connect(room.value.id);
 });
-
-const isVotingDisabled = computed(() => {
-  // Bloquear si el quorum es mayor que la cantidad de usuarios conectados
-  return quorum.value > (userList.value ? userList.value.length : 0);
-});
-
 
 function connect() {
-  socketStore.connect(wsUrl);
-};
-
-function closeConnection() {
-  socketStore.close();
-  window.location.href = '/protected/menu'
+  socketStore.connect(room.value.id);
 };
 
 function startVoting() {
@@ -175,6 +147,7 @@ watch(
 );
 
 provide('user', user);
+provide('quorum', quorum);
 
 const defaultImage = '/defaultRoomImage.png';
 const dominantColor = ref('');

@@ -6,6 +6,12 @@ Prerrequisito
 
 ## Iniciar aplicacion por primera vez
 
+Completar variable de entorno del path base de la API
+
+    cp .env.sample .env
+
+> PUBLIC_API_BASE_URL
+
 Para iniciar la aplicacion, se debe ejecutar el siguiente comando en la raiz del proyecto
 
     sh scripts/init.sh

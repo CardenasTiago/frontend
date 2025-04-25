@@ -44,7 +44,7 @@
         <input
           v-model.number="form.quorum"
           type="number"
-          min="1"
+          min="2"
           max="100"
           class="input input-bordered w-full bg-secondary/10 border-secondary/20 h-12 text-lg"
           required
@@ -87,7 +87,6 @@
           v-model.number="form.voterLimit"
           type="number"
           min="2"
-          max="255"
           class="input input-bordered w-full bg-secondary/10 border-secondary/20 h-12 text-lg"
           required
         />
@@ -119,16 +118,17 @@
 <script setup>
 import { ref, computed, onMounted } from 'vue';
 import AdminField from '../../reusable/AdminField.vue';
+import SettingRoomService from '../../../services/settingroom.service';
 
+// Estado del formulario
 const form = ref({
-  privacy: true,
+  privacy: false,
   proposalTimer: 5,
   quorum: 50,
   date: '',
   time: '',
   voterLimit: 2,
 });
-
 const isSubmitting = ref(false);
 const error = ref('');
 const loading = ref(true);
@@ -136,140 +136,85 @@ const roomId = ref(null);
 const settingId = ref(null);
 const dateError = ref('');
 
-const minDate = computed(() => {
-  const today = new Date();
-  return today.toISOString().split('T')[0];
-});
+// Fecha mínima (hoy)
+const minDate = computed(() => new Date().toISOString().split('T')[0]);
 
+// Carga de configuración existente
 const fetchSettings = async () => {
   try {
-    const response = await fetch(`http://localhost:3000/v1/settingsRoom/byRoom/${roomId.value}`, {
-      credentials: 'include'
-    });
-
-    if (response.ok) {
-      const data = await response.json();
-      if (data) {
-        settingId.value = data.id;
-        form.value.privacy = data.privacy;
-        form.value.proposalTimer = data.proposal_timer;
-        form.value.quorum = data.quorum;
-        
-        // Convierte el formato datetime a date y time
-        if (data.start_time) {
-          const datetime = new Date(data.start_time);
-          form.value.date = datetime.toISOString().split('T')[0];
-          form.value.time = datetime.toTimeString().slice(0, 5);
-        }
-        
-        form.value.voterLimit = data.voter_limit;
+    const txt = await SettingRoomService.byRoom(String(roomId.value));
+    const data = JSON.parse(txt);
+    if (data) {
+      settingId.value         = data.id;
+      form.value.privacy      = data.privacy;
+      form.value.proposalTimer = data.proposal_timer;
+      form.value.quorum       = data.quorum;
+      if (data.start_time) {
+        const dt = new Date(data.start_time);
+        form.value.date = dt.toISOString().split('T')[0];
+        form.value.time = dt.toTimeString().slice(0,5);
       }
+      form.value.voterLimit = data.voter_limit;
     }
   } catch (err) {
-    console.error('Error fetching settings:', err);
+    console.error('Error cargando configuración:', err);
   }
 };
 
-// Validadores del formulario
+// Validar campos
 const validateForm = () => {
-  if (!roomId.value) {
-    throw new Error('No se encontró el ID de la sala');
-  }
-
-  if (form.value.proposalTimer < 1 || form.value.proposalTimer > 10000) {
-    throw new Error('El tiempo por propuesta debe estar entre 1 y 10000 minutos');
-  }
-
-  if (form.value.quorum < 1 || form.value.quorum > 100) {
-    throw new Error('El quórum debe estar entre 1 y 100');
-  }
-
-  if (form.value.voterLimit < 2 || form.value.voterLimit > 255) {
-    throw new Error('El límite de votantes debe estar entre 2 y 255');
-  }
-
-  const selectedDateTime = new Date(`${form.value.date}T${form.value.time}`);
-  const now = new Date();
-  
-  if (selectedDateTime <= now) {
-  dateError.value = 'La fecha y hora deben ser futuras';
-  return null;
-} else {
+  if (!roomId.value) throw new Error('No se encontró el ID de la sala');
   dateError.value = '';
-}
-
-
-  return selectedDateTime;
+  const dt = new Date(`${form.value.date}T${form.value.time}`);
+  if (dt <= new Date()) {
+    dateError.value = 'La fecha y hora deben ser futuras';
+    return null;
+  }
+  return dt;
 };
 
+// Enviar formulario
 const handleSubmit = async () => {
   try {
     isSubmitting.value = true;
     error.value = '';
 
-    const selectedDateTime = validateForm();
+    const dt = validateForm();
+    if (!dt) return;
 
-    const settingRoomData = {
+    const payload = {
       privacy: form.value.privacy,
       proposal_timer: form.value.proposalTimer,
       quorum: form.value.quorum,
-      date_time: selectedDateTime.toISOString(),
+      start_time: dt.toISOString(),
       voter_limit: form.value.voterLimit,
-      room_id: parseInt(roomId.value),
+      room_id: parseInt(roomId.value, 10),
     };
 
-    const method = settingId.value ? 'PUT' : 'POST';
-    const url = settingId.value 
-      ? `http://localhost:3000/v1/settingsRoom/${settingId.value}`
-      : 'http://localhost:3000/v1/settingsRoom';
-
-    const response = await fetch(url, {
-      method: method,
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      credentials: 'include',
-      body: JSON.stringify(settingRoomData),
-    });
-
-    if (!response.ok) {
-      const data = await response.json();
-      throw new Error(data.error || data.message || `Error del servidor: ${response.status}`);
+    if (settingId.value) {
+      await SettingRoomService.update(String(settingId.value), payload);
+    } else {
+      const resp = await SettingRoomService.create(payload);
+      const created = JSON.parse(resp);
+      settingId.value = created.id;
     }
 
-    // Redireccionar a la página de mis salas
     window.location.href = `/protected/room/${settingId.value}`;
-
   } catch (err) {
-    error.value = err.message || 'Error al guardar la configuración de la sala';
-    console.error('Error:', err);
+    error.value = err.message || 'Error al guardar la configuración';
+    console.error(err);
   } finally {
     isSubmitting.value = false;
   }
 };
 
 onMounted(async () => {
-  try {
-    const urlParams = new URLSearchParams(window.location.search);
-    roomId.value = urlParams.get('id');
+  const params = new URLSearchParams(window.location.search);
+  roomId.value = params.get('id');
+  form.value.date = minDate.value;
+  form.value.time = new Date().toTimeString().slice(0,5);
 
-    if (!roomId.value) {
-      error.value = 'No se encontró el ID de la sala';
-      return;
-    }
-
-    // Establece valores por defecto
-    form.value.date = minDate.value;
-    const now = new Date();
-    now.setHours(now.getHours());
-    form.value.time = now.toTimeString().slice(0, 5);
-
-    // Intenta obtener la configuración existente
-    await fetchSettings();
-  } catch (err) {
-    error.value = err.message;
-  } finally {
-    loading.value = false;
-  }
+  await fetchSettings();
+  loading.value = false;
 });
 </script>

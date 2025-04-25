@@ -1,4 +1,18 @@
 <template>
+  <div v-if="props.showImage && room">
+    <div class="flex justify-between">
+      <!-- Contenedor de imagen -->
+      <div :style="containerStyle" class="group relative w-full max-h-[40vh] mx-auto overflow-hidden mt-0 p-0">
+        <img class="absolute inset-0 w-full h-full object-cover filter blur-md mt-0 p-0"
+          :src="room.image || defaultImage" alt="Imagen de fondo" crossOrigin="anonymous" />
+        <BackButton class="absolute top-2 left-2 z-10" />
+        <!-- Imagen principal -->
+        <img class="relative w-full h-full object-contain object-center mt-0 p-0" ref="imgElement"
+          :src="room.image || defaultImage" alt="Imagen de la sala" @load="extractDominantColor"
+          crossOrigin="anonymous" />
+      </div>
+    </div>
+  </div>
   <div v-if="room" class="bg-base-100 rounded-xl p-5 mb-5">
     <h1 class="font-semibold text-center">{{ room.room_title }}</h1>
 
@@ -46,7 +60,6 @@
 
     <div>
       <h2 v-if="formattedDate" class="mb-2">Fecha y hora</h2>
-      <!-- Utilizamos la propiedad computada para formatear la fecha -->
       <h1 class="font-semibold mb-4">{{ formattedDate }}</h1>
     </div>
 
@@ -62,6 +75,15 @@
 <script setup>
 import { ref, onMounted, computed } from 'vue';
 import { Icon } from "@iconify/vue";
+import BackButton from "../reusable/BackButton2.vue";
+import ColorThief from 'colorthief';
+
+const props = defineProps({
+  showImage: {
+    type: Boolean,  // Nótese la B mayúscula: el constructor Boolean
+    default: false
+  }
+})
 
 const room = ref(null);
 const error = ref('');
@@ -124,6 +146,27 @@ const toggleBlur = () => {
   isBlurred.value = !isBlurred.value;
 };
 
+
+const defaultImage = '/defaultRoomImage.png';
+const dominantColor = ref('');
+const imgElement = ref(null);
+
+
+const extractDominantColor = () => {
+  if (imgElement.value && imgElement.value.complete) {
+    try {
+      const colorThief = new ColorThief();
+      const result = colorThief.getColor(imgElement.value);
+      dominantColor.value = `rgb(${result.join(',')})`;
+    } catch (error) {
+      console.error('Error al extraer el color dominante:', error);
+    }
+  }
+};
+
+const containerStyle = computed(() => ({
+  boxShadow: dominantColor.value ? `0 4px 10px ${dominantColor.value}` : 'none'
+}));
 </script>
 
 <style scoped>

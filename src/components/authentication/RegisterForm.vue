@@ -1,14 +1,15 @@
 <template>
+   
   <form @submit.prevent="handleSubmit">
     <div class="flex flex-col lg:flex-row gap-4">
       <div>
         <label class="flex input input-bordered input-primary items-center p-2">Nombre
-          <input v-model="form.name" type="text" class="text-center" required />
+          <input v-model="form.name" type="text" class="p-2" required />
         </label>
       </div>
       <div>
         <label class="flex input input-bordered input-primary items-center p-2">Apellido
-          <input v-model="form.lastname" type="text" class="text-center" required />
+          <input v-model="form.lastname" type="text" class="p-2" required />
         </label>
       </div>
     </div>
@@ -58,14 +59,20 @@
 
     </div>
   </form>
+  <!-- caja invisible para generar un espacio mas prolijo -->
+  <div class="h-4"></div>
 
-  <div v-if="successMessage" class="chat chat-end">
-    <div class="chat-bubble chat-bubble-success">{{ successMessage }}</div>
+  <div v-if="successMessage" role="alert" class="alert alert-success flex text-sm justify-center">
+    <Icon icon="ix:success" class="h-6 w-6"/>
+    <span>{{ successMessage }}</span>
   </div>
+  
 </template>
 
 <script setup>
 import { ref } from "vue";
+import {Icon} from "@iconify/vue";
+import UserService from "../../services/user.service";
 
 const form = ref({
   name: "",
@@ -106,17 +113,10 @@ const handleSubmit = async () => {
 
 
   try {
+    const json = await UserService.create(JSON.stringify(dataToSend));
+    const response = JSON.parse(json)
 
-    const response = await fetch("http://localhost:3000/v1/users", {
-      method: "POST",
-      credentials: "include",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(dataToSend),
-    });
-
-    if (response.ok) {
+    if (response) {
       successMessage.value =
         "Registro exitoso. Serás redirigido al inicio de sesión en unos momentos.";
 
@@ -124,12 +124,9 @@ const handleSubmit = async () => {
       setTimeout(() => {
         window.location.href = "/auth/login";
       }, 3000); // Redirige después de 3 segundos
-    } else {
-      const data = await response.json();
-      error.value = data.error || "Usuario o contraseña incorrectos";
     }
   } catch (err) {
-    error.value = "Error en la conexion con el servidor";
+    error.value = err.error || "error en la conexion con el servidor";
   }
 };
 </script>

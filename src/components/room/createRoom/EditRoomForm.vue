@@ -93,6 +93,7 @@
 import { ref, onMounted, computed } from 'vue';
 import AdminField from '../../reusable/AdminField.vue';
 import BackButton from '../../reusable/BackButton2.vue';
+import RoomService from '../../../services/room.service';
 
 const form = ref({
   name: '',
@@ -154,17 +155,15 @@ onMounted(() => {
 
 const fetchRoomData = async () => {
   try {
-    const response = await fetch(`http://localhost:3000/v1/rooms/${roomId.value}`, {
-      method: 'GET',
-      credentials: 'include',
-    });
 
-    if (!response.ok) {
+    const response = await RoomService.find(roomId.value)
+
+    if (!response) {
       const errorData = await response.json();
       throw new Error(errorData.error || 'Error al obtener los datos de la sala');
     }
 
-    const data = await response.json();
+    const data = JSON.parse(response);
     if (!data.room) {
       throw new Error('No se encontraron datos de la sala');
     }
@@ -175,8 +174,8 @@ const fetchRoomData = async () => {
     validateForm();
 
   } catch (err) {
-    error.value = err.message || 'Error al cargar los datos de la sala';
-    console.error('Error:', err);
+    error.value = err.error || 'Error al cargar los datos de la sala';
+    console.error('Error:', err.error);
   } finally {
     loading.value = false;
   }
@@ -202,27 +201,14 @@ const handleSubmit = async () => {
       image: form.value.imageBase64
     };
 
-    // Si estamos editando, usamos PUT, si es nueva sala usamos POST
-    const method = roomId.value ? 'PUT' : 'POST';
-    const url = roomId.value 
-      ? `http://localhost:3000/v1/rooms/${roomId.value}`
-      : 'http://localhost:3000/v1/rooms';
-
-    const response = await fetch(url, {
-      method: method,
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      credentials: 'include',
-      body: JSON.stringify(roomData),
-    });
-
-    if (!response.ok) {
-      const errorData = await response.json();
-      throw new Error(errorData.error || errorData.message || `Error del servidor: ${response.status}`);
+    let response
+    if (roomId.value) {
+      response = await RoomService.update(roomId.value);
+    } else {
+      response = await RoomService.create(JSON.stringify(roomData));
     }
 
-    const responseData = await response.json();
+    const responseData = JSON.parse(response)
     const newRoomId = roomId.value || responseData.room.id;
     const isFormal = roomType.value === 'formal' || responseData.room.is_formal;
 

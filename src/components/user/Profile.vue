@@ -2,10 +2,11 @@
   <form @submit.prevent="storeUser">
     <div class="avatar flex flex-col items-center">
         <div class="ring-primary ring-offset-base-100 w-24 h-24 rounded-full ring ring-offset-2 overflow-hidden">
-            <img :src="user.image || defaultImage" alt="Foto de perfil" class="w-full h-full object-cover" />
+            <img v-if="user.image" :src="user.image" alt="Foto de perfil" class="w-full h-full object-cover" />
+            <Icon v-else icon="ic:baseline-person" class="rounded-full object-cover text-secondary w-full h-full" />
         </div>
         <div v-if="isEditing" class="mt-2">
-          <label for="fileInput" class="btn btn-sm bg-secondary cursor-pointer">
+          <label for="fileInput" class="btn btn-sm bg-secondary cursor-pointer mt-2">
               Cambiar imagen
           </label>
           <input 
@@ -17,7 +18,7 @@
           />
         </div>
     </div> 
-
+    
     <div class="p-4 flex flex-col gap-8 ">
         <fieldset class="fieldset flex">
             <legend class="fieldset-legend font-semi-bold text-secondary">Nombre</legend>
@@ -92,31 +93,29 @@
           <button
             v-if="!isEditing"
             type="button"
-            class="btn bg-secondary"
+            class="btn bg-primary"
             @click="toggleEdit"
           >
             Editar
           </button>
-
-          <!-- Botón Guardar -->
-          <button
-            v-if="isEditing"
-            type="submit"
-            class="btn bg-error"
-          >
-            Guardar
-          </button>
-
-          <!-- Botón Cancelar -->
           <button
             v-if="isEditing"
             type="button"
-            class="btn bg-secondary"
+            class="btn bg-error"
             @click="cancelEdit"
           >
             Cancelar
           </button>
+
+          <button
+            v-if="isEditing"
+            type="submit"
+            class="btn bg-success"
+          >
+            Guardar
+          </button>         
         </div>
+        
       </div>      
   </form> 
 </template>
@@ -124,6 +123,7 @@
 <script setup>
 import { ref,onMounted } from 'vue';
 import {Icon} from "@iconify/vue";
+import UserService from '../../services/user.service';
 
 const user = ref({
   name: "",
@@ -168,17 +168,10 @@ const handleFileChange = (event) => {
 
 const storeUser = async () => {
   try {
-    const response = await fetch("http://localhost:3000/v1/users/update", {
-      method: "PUT",
-      credentials: "include",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(user.value),
-    });
-
-    if (response.ok) {      
-      const updatedUser = await response.json();           
+    const response = await UserService.update(JSON.stringify(user.value))
+   
+    if (response) {      
+      const updatedUser = JSON.parse(response);           
       localStorage.setItem("user", JSON.stringify(updatedUser.user)); // Actualizar localStorage      
       user.value = { ...updatedUser.user };      
       isEditing.value = false;                  
