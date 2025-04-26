@@ -130,15 +130,15 @@ const truncateText = (text, maxLength) => {
 const stateClasses = (state) => {
   switch (state) {
     case 'created':
-      return 'bg-info/70 text-white border-2 border-info'
+      return 'bg-info/60 text-white border-2 border-info/80'
     case 'online':
-      return 'bg-success/70 text-white border-2 border-success'
+      return 'bg-success/60 text-white border-2 border-success/80 animate-bounce'
     case 'voting':
-      return 'bg-alert/70 text-white border-2 border-alert'
+      return 'bg-alert/60 text-white border-2 border-alert/80'
     case 'finished':
-      return 'bg-error/70 text-white border-2 border-error'
+      return 'bg-error/60 text-white border-2 border-error/80'
     default:
-      return 'bg-gray-300/70 text-gray-700 border-2 border-gray'
+      return 'bg-gray-300/60 text-gray-700 border-2 border-gray/80'
   }
 }
 
