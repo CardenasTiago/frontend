@@ -1,77 +1,80 @@
 <template>
-  <div class="ml-4">
-    <BackButton />
-  </div>
-  <div v-if="salas.length === 0" class="flex flex-col items-center justify-center mt-10">
-    <h2 class="text-accent text-lg mb-4">Hmm, no hay nada aqui.</h2>
-    <a href="/protected/createRoom" class="btn btn-primary text-white">
-      Crear tu primera sala
-      <Icon icon="mdi:plus-circle-outline" width="24" height="24" class="ml-2" />
-    </a>
-  </div>
-  <div v-for="(sala, index) in paginatedSalas" :key="index"
-    class="max-w-screen-md mx-auto px-4 mt-8  bg-neutral rounded-lg">
-    <a :href="`/protected/room/${sala.id}`" @click="handleCardClick"
-      class="card card-side bg-neutral flex items-stretch h-[150px] lg:h-[180px] md:h-[180px] hover:shadow-lg hover:-translate-y-1 transition duration-300 border-2 border-secondary/30">
+  <div v-bind="$attrs">
+    <div class="ml-4">
+      <BackButton />
+    </div>
+    <div v-if="salas.length === 0" class="flex flex-col items-center justify-center mt-10">
+      <h2 class="text-accent text-lg mb-4">Hmm, no hay nada aqui.</h2>
+      <a href="/protected/createRoom" class="btn btn-primary text-white">
+        Crear tu primera sala
+        <Icon icon="mdi:plus-circle-outline" width="24" height="24" class="ml-2" />
+      </a>
+    </div>
+    <div class="flex flex-col items-center justify-center" v-else>
+      <h1 class="font-semibold">Mis salas</h1>
+    </div>
+    <div class="grid grid-rows-2 min-h-[75vh]">
+      <div v-for="(sala, index) in paginatedSalas" :key="index"
+        class="md:w-full lg:min-w-[60vw] lg:max-w-[70vw] lg:mx-auto px-4 mt-8 bg-neutral rounded-lg">
+        <a :href="`/protected/room/${sala.id}`" @click="handleCardClick"
+          class="card card-side bg-neutral flex items-stretch h-[150px] lg:h-[180px] md:h-[180px] hover:shadow-lg hover:-translate-y-1 transition duration-300 border-2 border-secondary/30">
 
-      <div class="mt-1 p-3 w-2/3 ml-3 flex flex-col gap-3 ">
-        <p class="text-secondary text-xs font-bold lg:text-sm  md:text-sm">{{ sala.state }}</p>
-        <h2 class="card-title text-accent opacity-80 text-xs lg:text-xl md:text-md">{{ truncateText(sala.room_title, 28)
-        }}</h2>
-        <p class="text-xs text-accent opacity-60 lg:text-sm hidden lg:block md:block ">{{ truncateText
-          (sala.description, 50) }}</p>
+          <div class="mt-1 p-3 w-2/3 ml-3 flex flex-col gap-3">
+            <p class="self-start inline-block text-xs font-bold px-3 py-1 rounded-[15px] capitalize"
+              :class="stateClasses(sala.state)">
+              {{ sala.state }}
+            </p>
+            <h2 class="card-title text-accent opacity-80 text-xs lg:text-xl md:text-md">{{ truncateText(sala.room_title,
+              28)
+              }}</h2>
+            <p class="text-xs text-accent opacity-60 lg:text-sm hidden lg:block md:block ">{{ truncateText
+              (sala.description, 50) }}</p>
 
-        <div class="relative flex justify-between ">
-          <button class="absolute top-2 lg:top-0 btn bg-transparent hover:bg-transparent border-none shadow-none p-0 "
-            @click.stop.prevent="openDeleteModal(sala)">
-            <Icon icon="heroicons:trash" class="w-5 h-5 lg:w-6 lg:h-6 text-primary hover:text-error" />
-          </button>
-
-          <div class="absolute top-6 right-8 lg:hidden md:hidden text-accent opacity-70 flex items-center gap-x-1  ">
-            <p class="text-xs">Ver más</p>
-            <Icon icon="emojione-monotone:right-arrow" class="w-4 h-4" />
+              <button
+                class="self-start btn bg-transparent hover:bg-transparent border-none shadow-none p-0 "
+                @click.stop.prevent="openDeleteModal(sala)">
+                <Icon icon="heroicons:trash" class="w-5 h-5 lg:w-6 lg:h-6 text-primary hover:text-error" />
+              </button>
           </div>
-        </div>
-      </div>
 
-      <div v-if="sala.startTime"
-        class="hidden lg:flex flex-col justify-center items-center lg:w-1/3 p-3 relative md:flex md:w-1/3 ">
-        <div class="absolute top-center left-0 h-36 w-px bg-accent opacity-30 "></div>
-        <p class="  text-accent opacity-60 ">{{ sala.startTime.toLocaleString('default', { month: 'long' }) }}</p>
-        <h2 class="m-3 text-accent opacity-80 lg:text-4xl md:text-4xl">{{ sala.startTime.getDate() }}</h2>
-        <p class="text-accent opacity-60">
-          <span v-if="sala.startTime">
-            {{ sala.startTime.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit', hour12: false }) }}
-          </span>
-        </p>
+          <div v-if="sala.startTime"
+            class="hidden lg:flex flex-col justify-center items-center lg:w-1/3 p-3 relative md:flex md:w-1/3 ">
+            <div class="absolute top-center left-0 h-36 w-px bg-accent opacity-30 "></div>
+            <p class="  text-accent opacity-60 ">{{ sala.startTime.toLocaleString('default', { month: 'long' }) }}</p>
+            <h2 class="m-3 text-accent opacity-80 lg:text-4xl md:text-4xl">{{ sala.startTime.getDate() }}</h2>
+            <p class="text-accent opacity-60">
+              <span v-if="sala.startTime">
+                {{ sala.startTime.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit', hour12: false }) }}
+              </span>
+            </p>
+          </div>
+          <div v-else class="hidden lg:flex flex-col justify-center items-center lg:w-1/3 p-3 relative">
+            <p class="text-accent opacity-60">Fecha a determinar</p>
+          </div>
+          <div class="w-1/3 rounded-lg overflow-hidden">
+            <img class="w-full h-full object-cover" :src="sala.image || defaultImage" alt="Imagen de la sala" />
+          </div>
+        </a>
       </div>
-      <div v-else class="hidden lg:flex flex-col justify-center items-center lg:w-1/3 p-3 relative">
-        <p class="text-accent opacity-60">Fecha a determinar</p>
-      </div>
+    </div>
 
-      <div class="w-1/3 rounded-lg overflow-hidden">
-        <img class="w-full h-full object-cover" :src="sala.image || defaultImage" alt="Imagen de la sala" />
-      </div>
-    </a>
+
+    <!-- Paginador -->
+    <div v-if="salas.length > 3" class="join flex justify-center mt-6 ">
+      <button class="join-item btn bg-primary hover:bg-primary" :disabled="currentPage === 1" @click="previousPage">
+        <Icon icon="heroicons-solid:arrow-left" class="h-4 w-4" />
+      </button>
+
+      <button class="join-item btn bg-primary hover:bg-primary">Página {{ currentPage }}</button>
+
+      <button class="join-item btn bg-primary hover:bg-primary" :disabled="currentPage === totalPages"
+        @click="nextPage">
+        <Icon icon="heroicons-solid:arrow-right" class="h-4 w-4" />
+      </button>
+    </div>
+    <!-- Insertamos el componente DeleteRoom -->
+    <DeleteRoom ref="deleteRoomRef" />
   </div>
-
-  <!-- Paginador -->
-  <div v-if="salas.length > 3" class="join flex justify-center mt-6 ">
-    <button class="join-item btn bg-primary hover:bg-primary" :disabled="currentPage === 1" @click="previousPage">
-      <Icon icon="heroicons-solid:arrow-left" class="h-4 w-4" />
-    </button>
-
-    <button class="join-item btn bg-primary hover:bg-primary">Página {{ currentPage }}</button>
-
-    <button class="join-item btn bg-primary hover:bg-primary" :disabled="currentPage === totalPages" @click="nextPage">
-      <Icon icon="heroicons-solid:arrow-right" class="h-4 w-4" />
-    </button>
-  </div>
-
-
-  <!-- Insertamos el componente DeleteRoom -->
-  <DeleteRoom ref="deleteRoomRef" />
-
 </template>
 
 <script setup>
@@ -124,7 +127,20 @@ const truncateText = (text, maxLength) => {
   return text.length > maxLength ? text.slice(0, maxLength) + '...' : text;
 }
 
-
+const stateClasses = (state) => {
+  switch (state) {
+    case 'created':
+      return 'bg-info/70 text-white border-2 border-info'
+    case 'online':
+      return 'bg-success/70 text-white border-2 border-success'
+    case 'voting':
+      return 'bg-alert/70 text-white border-2 border-alert'
+    case 'finished':
+      return 'bg-error/70 text-white border-2 border-error'
+    default:
+      return 'bg-gray-300/70 text-gray-700 border-2 border-gray'
+  }
+}
 
 
 //obtener salas
@@ -167,10 +183,6 @@ onMounted(() => {
 
 
 </script>
-
-
-
-
 <style>
 .card {
   border-radius: 15px;

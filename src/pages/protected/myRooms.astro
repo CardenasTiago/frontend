@@ -1,28 +1,23 @@
 ---
-
 import Layout from "../../layouts/Layout.astro";
 import ProtectedRoute from "../../components/authentication/ProtectedRoute.vue";
-import UserRoom from "../../components/room/UserRooms.vue"
-import BackButton from "../../components/reusable/BackButton2.vue"
+import UserRoom from "../../components/room/UserRooms.vue";
+import BackButton from "../../components/reusable/BackButton2.vue";
 ---
 
-
-<Layout title="Suffgo | Mis salas">    
-    <ProtectedRoute client:load>              
-        <UserRoom client:load/> 
-    </ProtectedRoute>    
+<Layout title="Suffgo | Mis salas">
+  <ProtectedRoute client:load>
+    <UserRoom client:load />
+  </ProtectedRoute>
 </Layout>
 
 <style>
-    
-    .svg-container {
-        margin-right: 20px; 
-    }
+  .svg-container {
+    margin-right: 20px;
+  }
 
-    main {
-        min-height: 100vh;
-        background-color: #f9fafb;
-    }   
-
-
+  main {
+    min-height: 100vh;
+    background-color: #f9fafb;
+  }
 </style>

@@ -8,7 +8,7 @@ interface Props {
   hideHeader?: boolean;
 }
 
-const { title, hideMenuItems=false, hideHeader = false } = Astro.props;
+const { title, hideMenuItems = false, hideHeader = false } = Astro.props;
 ---
 
 <!doctype html>
@@ -21,13 +21,16 @@ const { title, hideMenuItems=false, hideHeader = false } = Astro.props;
     <meta name="generator" content={Astro.generator} />
     <title>{title}</title>
     <ViewTransitions />
-    <Header client:only="vue" hideMenuItems={hideMenuItems} hideHeader={hideHeader} />
+    <Header
+      client:only="vue"
+      hideMenuItems={hideMenuItems}
+      hideHeader={hideHeader}
+    />
   </head>
-  <body
-    class="items-center justify-center">
+  <body class="items-center justify-center">
     <div class="">
       <div class="">
-          <slot />
+        <slot />
       </div>
     </div>
   </body>
@@ -68,9 +71,8 @@ const { title, hideMenuItems=false, hideHeader = false } = Astro.props;
   .btn-primary {
     @apply bg-primary text-white;
   }
-  
+
   .btn-secondary {
     @apply bg-secondary text-white;
   }
 </style>
-
