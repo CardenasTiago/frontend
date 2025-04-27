@@ -5,7 +5,7 @@ import LoginFormVue from "../../components/authentication/LoginVue.vue";
 
 <Layout title="Suffgo | Iniciar sesion" hideMenuItems={true}>
   <div class="min-h-[80vh] flex items-center justify-center">
-    <div class="h-fit p-10 main-container bg-base-100">
+    <div class="h-fit p-10 main-container">
       <h1 class="text-center font-bold">Bienvenido nuevamente</h1>
       <div class="text-center items-center mt-10">
         <LoginFormVue client:load />
@@ -17,7 +17,6 @@ import LoginFormVue from "../../components/authentication/LoginVue.vue";
 <style>
   .main-container{
     border-radius: 15px;
-    box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 2px 6px 2px;
   }
 
 </style>

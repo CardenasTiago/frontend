@@ -53,7 +53,7 @@
         <div>
           <p class="mt-4 text-accent">
             Ya tiene cuenta?
-            <a href="/auth/login" class="bg-base-100 text-primary">Inicie sesion</a>
+            <a href="/auth/login" class="font-bold text-primary">Inicie sesion</a>
           </p>
         </div>
 
