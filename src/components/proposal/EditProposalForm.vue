@@ -2,13 +2,13 @@
   <div class="bg-neutral p-8 rounded-xl shadow-lg">
     <div class="flex justify-between items-center mb-6">
       <BackButton />
-      <div v-if="isFormal" class="dropdown dropdown-end">
+      <div v-if="isFormal" class="dropdown dropdown-end tooltip tooltip-secondary  tooltip-left" data-tip="subir archivo" >
         <button tabindex="0" class="btn btn-circle bg-secondary/20 hover:bg-secondary/30 border-none">
           <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
           </svg>
         </button>
-        <ul tabindex="0" class="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-52">
+        <ul tabindex="0"  class="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-52">
           <li>
             <label class="flex items-center gap-2 p-2 hover:bg-secondary/10 rounded-lg cursor-pointer">
               <input type="file" class="hidden" @change="handleFileUpload" accept=".pdf,.doc,.docx,.txt,.xls,.xlsx" />

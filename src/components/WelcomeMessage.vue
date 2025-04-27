@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div v-bind="$attrs">
       <h2>¡Bienvenido, {{ userName }}!</h2>
     </div>
   </template>

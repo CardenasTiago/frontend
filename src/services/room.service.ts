@@ -110,7 +110,9 @@ const RoomService = {
   removeUser(payload: any): Promise<string> {
     return ApiService.delete("rooms/whitelist/removeUser", payload);
   },
-
+  history(): Promise<string> {
+    return ApiService.get("rooms/history");
+  },
   socket(roomId: string): RoomSocket {
     return new RoomSocket(roomId);
   }

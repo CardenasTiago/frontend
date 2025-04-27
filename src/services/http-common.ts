@@ -15,7 +15,6 @@ http.interceptors.request.use(config => {
     config.headers = config.headers ?? {};
     config.headers.Authorization = `Bearer ${token}`;
   }
-  console.log(import.meta.env.PUBLIC_API_BASE_URL)
   return config;
 });
 

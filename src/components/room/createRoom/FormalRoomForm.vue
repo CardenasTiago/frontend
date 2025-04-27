@@ -11,7 +11,7 @@
         </div>
         <select 
           v-model="form.privacy"
-          class="select select-bordered w-full bg-secondary/10 border-secondary/20 h-12 text-lg"
+          class="select w-full bg-secondary/10 border-secondary/20 h-12 text-lg"
           required
         >
           <option :value="true">Privada</option>
@@ -30,7 +30,7 @@
           type="number"
           min="1"
           max="10000"
-          class="input input-bordered w-full bg-secondary/10 border-secondary/20 h-12 text-lg"
+          class="input w-full bg-secondary/10 border-secondary/20 h-12 text-lg"
           required
         />
       </label>
@@ -46,7 +46,7 @@
           type="number"
           min="2"
           max="100"
-          class="input input-bordered w-full bg-secondary/10 border-secondary/20 h-12 text-lg"
+          class="input w-full bg-secondary/10 border-secondary/20 h-12 text-lg"
           required
         />
       </label>
@@ -61,14 +61,14 @@
           <input
             v-model="form.date"
             type="date"
-            class="input input-bordered w-full bg-secondary/10 border-secondary/20 h-12 text-lg"
+            class="input w-full bg-secondary/10 border-secondary/20 h-12 text-lg"
             required
             :min="minDate"
           />
           <input
             v-model="form.time"
             type="time"
-            class="input input-bordered w-full bg-secondary/10 border-secondary/20 h-12 text-lg"
+            class="input w-full bg-secondary/10 border-secondary/20 h-12 text-lg"
             required
           />
           <div class="label">
@@ -87,7 +87,7 @@
           v-model.number="form.voterLimit"
           type="number"
           min="2"
-          class="input input-bordered w-full bg-secondary/10 border-secondary/20 h-12 text-lg"
+          class="input w-full bg-secondary/10 border-secondary/20 h-12 text-lg"
           required
         />
         <div class="label">
