@@ -9,7 +9,7 @@ import EditProposalForm from '../../components/proposal/EditProposalForm.vue';
         <div class="grid grid-cols-12 gap-6">
             <div class="col-span-12">
                 <div class="mb-4"></div>
-                    <EditProposalForm client:load />
+                    <EditProposalForm client:load roomId={Astro.url.searchParams.get('id') ?? ''}/>
                 </div>
             </div>
         </div>

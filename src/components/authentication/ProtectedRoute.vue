@@ -1,5 +1,7 @@
 <template>
+    <div v-bind="$attrs">
       <slot v-if="isAuthenticated"></slot>
+    </div>
 </template>
   
 <script setup>

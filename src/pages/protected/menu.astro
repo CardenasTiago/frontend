@@ -3,28 +3,32 @@
 import WelcomeMessage from "../../components/WelcomeMessage.vue";
 import Layout from "../../layouts/Layout.astro";
 import ProtectedRoute from "../../components/authentication/ProtectedRoute.vue";
+import { Icon } from 'astro-icon/components'
 ---
 
 <Layout title="Suffgo | Menu">
   <ProtectedRoute client:load>
     <div class="min-h-[80vh] flex items-center justify-center">
-      <div class="h-fit p-10 main-container bg-base-100">
+      <div class="h-fit p-10 main-container">
         <h1 class="text-center font-bold">
           <WelcomeMessage client:load />
         </h1>
         <div class="text-center items-center mt-10">
           <div>
-            <a href="/protected/joinRoom" class="btn btn-primary mb-4">Unirse a sala
+            <a href="/protected/joinRoom" class="btn btn-primary mb-4">
+              <Icon name="mdi:account-multiple-plus" class="mr-2" size={24} />Unirse a sala
             </a>
               
           </div>
 
           <div>
-            <a href="/protected/createRoom" class="btn btn-primary mb-4">Crear sala</a>
+            <a href="/protected/createRoom" class="btn btn-primary mb-4">
+              <Icon name="mdi:plus-circle-outline" class="mr-2" size={24}/>Crear sala</a>
           </div>
 
           <div>
-            <a href="/protected/myRooms" class="btn btn-primary mb-4">Mis salas</a>
+            <a href="/protected/myRooms" class="btn btn-primary mb-4">
+              <Icon name="mdi:format-list-bulleted" class="mr-2" size={24}/>Mis salas</a>
           </div>
         </div>
       </div>
@@ -39,9 +43,6 @@ import ProtectedRoute from "../../components/authentication/ProtectedRoute.vue";
 
     .main-container {
       border-radius: 15px;
-      box-shadow:
-        rgba(60, 64, 67, 0.3) 0px 1px 2px 0px,
-        rgba(60, 64, 67, 0.15) 0px 2px 6px 2px;
     }
 
     button, a{

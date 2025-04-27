@@ -1,14 +1,15 @@
 <template>
-  <div class="flex justify-center mt-5">
-    <button v-if="room.privileges && room.state != 'finished'" class="btn btn-primary start-room" @click="startRoom">
-      Iniciar Sala
-    </button>
+  <div v-bind="$attrs">
+    <div class="flex justify-center mt-5">
+      <button v-if="room.privileges && room.state != 'finished'" class="btn btn-primary start-room" @click="startRoom">
+        Iniciar Sala
+      </button>
 
-    <button v-if="room.state != 'created' && !room.privileges" class="btn btn-primary start-room" @click="startRoom">
-      Ingresar
-    </button>
+      <button v-if="room.state != 'created' && !room.privileges" class="btn btn-primary start-room" @click="startRoom">
+        Ingresar
+      </button>
+    </div>
   </div>
-
 
 </template>
 
@@ -19,10 +20,10 @@ const room = ref('');
 
 onMounted(() => {
   // Se asume que el ID de la sala se guarda en localStorage
-  const storedRoom = localStorage.getItem('currentRoom'); 
-   
+  const storedRoom = localStorage.getItem('currentRoom');
+
   if (storedRoom) {
-    room.value = JSON.parse(storedRoom);       
+    room.value = JSON.parse(storedRoom);
   } else {
     console.error('No se encontró el room ID en el almacenamiento local.');
   }

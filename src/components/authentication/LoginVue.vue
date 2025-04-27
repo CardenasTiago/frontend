@@ -33,7 +33,7 @@
       <a
         @click="redirectToRegister"
         href="/auth/register"
-        class="bg-base-100 text-primary"
+        class="font-bold text-primary"
       >
         Registrese aqui</a
       >

@@ -7,21 +7,21 @@
       <h1 v-if="settingsRoom && settingsRoom.proposal_timer" class="font-bold">
         {{ socketStore.countdown }}
       </h1>
-    </div>   
+    </div>
     <div v-if="currentProposal" class="proposal-container flex flex-col min-w-[40vw] max-w-[50vw] pb-4 m-4">
-      <a 
-        v-if="currentProposal.archive" 
-        @click="openFile(currentProposal.archive)" 
-        class=" flex items-center justify-center rounded-full btn btn-primary"
-        title="Ver archivo"
-      >
-        <Icon icon="material-symbols-light:docs-outline" width="24" height="24" />
-      </a>
-
       <div class="description bg-secondary font-semibold p-4">
         <p>{{ currentProposal.description }}</p>
       </div>
-      <h1 class="font-semibold">{{ currentProposal.title }}</h1>
+      <div class="proposal-header grid grid-cols-3 items-center py-2">
+        <div></div>
+        <h1 class="justify-self-center font-semibold">
+          {{ currentProposal.title }}
+        </h1>
+        <a v-if="currentProposal.archive" @click="openFile(currentProposal.archive)"
+          class="justify-self-end btn btn-primary btn-circle btn-sm mr-2 " title="Ver archivo">
+          <Icon icon="material-symbols-light:docs-outline" width="20" height="20" />
+        </a>
+      </div>
     </div>
 
     <div v-for="(option, index) in currentProposal.options" :key="index">
@@ -34,7 +34,10 @@
     <div v-if="selectedIndex !== null" class="mt-4 flex justify-end">
       <a class="flex justify-end btn btn-primary font-bold" @click="confirmVote">
         Enviar
-        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="m3.4 20.4l17.45-7.48a1 1 0 0 0 0-1.84L3.4 3.6a.993.993 0 0 0-1.39.91L2 9.12c0 .5.37.93.87.99L17 12L2.87 13.88c-.5.07-.87.5-.87 1l.01 4.61c0 .71.73 1.2 1.39.91"/></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+          <path fill="currentColor"
+            d="m3.4 20.4l17.45-7.48a1 1 0 0 0 0-1.84L3.4 3.6a.993.993 0 0 0-1.39.91L2 9.12c0 .5.37.93.87.99L17 12L2.87 13.88c-.5.07-.87.5-.87 1l.01 4.61c0 .71.73 1.2 1.39.91" />
+        </svg>
       </a>
     </div>
   </div>
