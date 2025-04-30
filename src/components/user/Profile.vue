@@ -89,16 +89,6 @@
         </fieldset>
 
         <div class="flex justify-center mt-8 gap-4">
-          <!-- Botón Eliminar cuenta -->
-          <button 
-            v-if="!isEditing"
-            type="button"
-            @click="confirmDelete" 
-            class="btn btn-error text-accent"
-            :disabled="isDeleting"
-          >
-            {{ isDeleting ? 'Eliminando cuenta...' : 'Eliminar cuenta' }}
-          </button>
           <!-- Botón Editar -->
           <button
             v-if="!isEditing"
@@ -167,8 +157,6 @@ const user = ref({
 
 
 const isEditing = ref(false);
-const deleteModal = ref(null);
-const isDeleting = ref(false);
 
 const toggleEdit = () => {
   isEditing.value = true;
@@ -214,40 +202,6 @@ const storeUser = async () => {
   }
 };
 
-const confirmDelete = () => {
-  deleteModal.value.showModal();
-};
-
-const closeModal = () => {
-  deleteModal.value.close();
-};
-
-const handleDelete = async () => {
-  try {
-    isDeleting.value = true;
-    const storedUser = JSON.parse(localStorage.getItem("user"));
-
-    const response = await fetch(`http://localhost:3000/v1/users/${storedUser.id}`, {
-      method: 'DELETE',
-      credentials: 'include',
-    });
-
-    if (!response.ok) {
-      const data = await response.json();
-      throw new Error(data.error || 'Error al eliminar la cuenta');
-    }
-
-    // Limpiar localStorage y redirigir a la página de inicio
-    localStorage.removeItem("user");
-    window.location.href = '/';
-  } catch (err) {
-    console.error('Error:', err);
-    alert(err.message);
-  } finally {
-    isDeleting.value = false;
-    closeModal();
-  }
-};
 
 // Cargar datos guardados en localStorage al iniciar
 onMounted(() => {
