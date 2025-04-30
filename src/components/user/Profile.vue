@@ -89,6 +89,16 @@
         </fieldset>
 
         <div class="flex justify-center mt-8 gap-4">
+          <!-- Botón Eliminar cuenta -->
+          <button 
+            v-if="!isEditing"
+            type="button"
+            @click="confirmDelete" 
+            class="btn btn-error text-accent"
+            :disabled="isDeleting"
+          >
+            {{ isDeleting ? 'Eliminando cuenta...' : 'Eliminar cuenta' }}
+          </button>
           <!-- Botón Editar -->
           <button
             v-if="!isEditing"
@@ -98,6 +108,7 @@
           >
             Editar
           </button>
+
           <button
             v-if="isEditing"
             type="button"
@@ -118,6 +129,26 @@
         
       </div>      
   </form> 
+
+  <dialog ref="deleteModal" class="modal">
+    <div class="modal-box">
+      <h3 class="font-bold text-lg text-error">¿Eliminar cuenta?</h3>
+      <p class="py-4">Esta acción no se puede deshacer. ¿Estás seguro que deseas eliminar tu cuenta?</p>
+      <div class="modal-action">
+        <button class="btn" @click="closeModal">Cancelar</button>
+        <button 
+          class="btn btn-error text-white"
+          :disabled="isDeleting"
+          @click="handleDelete"
+        >
+          {{ isDeleting ? 'Eliminando...' : 'Eliminar' }}
+        </button>
+      </div>
+    </div>
+    <form method="dialog" class="modal-backdrop">
+      <button>close</button>
+    </form>
+  </dialog>
 </template>
 
 <script setup>
@@ -136,6 +167,8 @@ const user = ref({
 
 
 const isEditing = ref(false);
+const deleteModal = ref(null);
+const isDeleting = ref(false);
 
 const toggleEdit = () => {
   isEditing.value = true;
@@ -181,6 +214,40 @@ const storeUser = async () => {
   }
 };
 
+const confirmDelete = () => {
+  deleteModal.value.showModal();
+};
+
+const closeModal = () => {
+  deleteModal.value.close();
+};
+
+const handleDelete = async () => {
+  try {
+    isDeleting.value = true;
+    const storedUser = JSON.parse(localStorage.getItem("user"));
+
+    const response = await fetch(`http://localhost:3000/v1/users/${storedUser.id}`, {
+      method: 'DELETE',
+      credentials: 'include',
+    });
+
+    if (!response.ok) {
+      const data = await response.json();
+      throw new Error(data.error || 'Error al eliminar la cuenta');
+    }
+
+    // Limpiar localStorage y redirigir a la página de inicio
+    localStorage.removeItem("user");
+    window.location.href = '/';
+  } catch (err) {
+    console.error('Error:', err);
+    alert(err.message);
+  } finally {
+    isDeleting.value = false;
+    closeModal();
+  }
+};
 
 // Cargar datos guardados en localStorage al iniciar
 onMounted(() => {
