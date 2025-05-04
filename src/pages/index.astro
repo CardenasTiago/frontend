@@ -1,9 +1,155 @@
 ---
-import Layout from "../layouts/Layout.astro";
+import Layout from '../layouts/Layout.astro';
+import { Icon } from 'astro-icon/components';
 ---
 
+<Layout title="Suffgo" hideHeader={true}>
+  <main class="min-h-screen" style="background: #6f2fbd; background: radial-gradient(circle, rgba(111, 47, 189, 1) 0%, rgba(18, 2, 31, 1) 100%);">
+    <!-- Navbar -->
+    <nav class="fixed top-0 left-0 right-0 z-50 bg-[252525]/80 backdrop-blur-sm">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex items-center justify-between h-16">
+          <div class="flex-shrink-0">
+            <a href="/" class="text-[#CFCED9] text-2xl font-bold  hover:text-white transition-colors">
+              Suffgo
+            </a>
+          </div>
+        </div>
+      </div>
+    </nav>
 
-<Layout title="Suffgo">
-  <h1>bienvenido</h1>
+    <div class="min-h-screen bg-primary/20 flex flex-col" style="background: #6f2fbd;
+background: radial-gradient(circle, rgba(111, 47, 189, 1) 0%, rgba(18, 2, 31, 1) 100%);">
+      <div class="max-w-7xl mx-auto px-4 flex-grow flex items-center">
+        
+        <div class="flex flex-col md:flex-row items-center justify-between gap-8 md:gap-12 py-16 ms:py-0">
+          
+          <!--Inicio -->
+          <div class="text-center md:text-left md:w-1/2">
+            <h2
+              class="text-6xl sm:text-6xl font-mono text-[#CFCED9] gap-8" style="text-shadow: 2px 2px 6px rgba(0,0,0,0.3);" >
+              Suffgo
+            </h2>
+            <h3 class="text-xl sm:text-xl font-mono text-[#CFCED9]/80  leading-tight" style="text-shadow: 2px 2px 6px rgba(0,0,0,0.3);">
+              suffrage on the go
+            </h3>
+            <div class="font-mono max-w-xl text-base sm:text-lg text-[#CFCED9] mb-8 mt-8">
+              <p>Crea salas para votaciones multitudinarias</p>
+              <p>y obtén los resultados de forma inmediata</p>
+            </div>
+            <div class="flex flex-col sm:flex-row gap-4 justify-center md:justify-start">
+              <a href="/auth/register" transition:name="singUp" class="btn btn-primary px-6 sm:px-8 w-full sm:w-auto shadow-xl">Empezar Ahora</a>
+              <a href="/auth/login" transition:name="login" class="btn btn-secondary hover:bg-secondary/90 px-6 sm:px-8 w-full sm:w-auto shadow-xl">Ya tengo una cuenta</a>
+            </div>
+          </div>
+
+          <div class="md:w-1/2 flex justify-center">
+            <img
+              src="/images/landingPage.webp"
+              class="max-w-full h-auto w-[80%] md:w-full rounded-xl transition-transform duration-300 hover:scale-125"
+              style="filter: drop-shadow(0 0 20px rgba(139, 92, 246, 0.6));"
+              alt="Suffgo Landing Image"
+            />
+          </div>
+        </div>
+
+        <div class="absolute bottom-8 sm:bottom-16 left-1/2 transform -translate-x-1/2">
+          <button
+            id="scrollButton"
+            class="text-primary hover:text-primary/80 transition-colors"
+            aria-label="Scroll to content"
+          >
+            <Icon name="ic:round-keyboard-arrow-down" class="h-6 w-6 sm:h-8 sm:w-8 animate-bounce" />
+          </button>
+        </div>
+        
+      </div>
+    </div>
+
+    <!-- Tarjetas-->
+    <div id="infoSection" class="pt-32 sm:pt-40" style="background: #6f2fbd;
+background: radial-gradient(circle, rgba(111, 47, 189, 1) 0%, rgba(18, 2, 31, 1) 100%);">
+      <div class="max-w-7xl mx-auto px-4">
+        <div class="bg-secondary/20 rounded-3xl p-6 sm:p-8 lg:p-12 mb-8 sm:mb-12 lg:mb-20 shadow-lg">
+          <div class="grid md:grid-cols-2 gap-8 lg:gap-12 items-center">
+            <div class="aspect-video bg-white rounded-xl shadow-lg overflow-hidden">
+              <video 
+                class="w-full h-full object-cover"
+                autoplay
+                muted
+                loop
+                playsinline
+                poster="/video1-thumbnail.jpg"
+              >
+                <source src="/videos/landingPage1.mp4" type="video/mp4">
+              </video>
+            </div>
+            <div>
+              <h2 class="text-2xl sm:text-3xl font-mono text-[#FFFFFF] mb-4 sm:mb-6" style="text-shadow: 2px 2px 6px rgba(92,88,88,1);">¿Qué es Suffgo?</h2>
+              <p class="font-mono text-[#CFCED9] text-base sm:text-lg leading-relaxed">
+                Suffgo es una herramienta diseñada para facilitar la creación de salas de votación multitudinarias, permitiendo a los usuarios crear y gestionar sus propias salas de votación de manera sencilla y rápida.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div class="bg-secondary/20 rounded-3xl p-6 sm:p-8 lg:p-12 mb-8 sm:mb-12 lg:mb-20 shadow-lg">
+          <div class="grid md:grid-cols-2 gap-8 lg:gap-12 items-center">
+            <div>
+              <h2 class="text-2xl sm:text-3xl font-mono text-[#FFFFFF] mb-4 sm:mb-6" style="text-shadow: 2px 2px 6px rgba(92,88,88,1);">¿Cómo funciona?</h2>
+              <p class="font-mono text-[#CFCED9] text-base sm:text-lg leading-relaxed">
+                Con Suffgo, puedes crear salas de votación en minutos. Simplemente selecciona el tipo de votación, establece las opciones y comparte el código con los participantes.
+              </p>
+            </div>
+            <div class="aspect-video bg-white rounded-xl shadow-lg overflow-hidden">
+              <video 
+                class="w-full h-full object-cover"
+                autoplay
+                muted
+                loop
+                playsinline
+                poster="/video1-thumbnail.jpg"
+              >
+                <source src="/videos/landingPage2.mp4" type="video/mp4">
+              </video>
+            </div>
+          </div>
+        </div>
+
+        <div class="bg-secondary/20 rounded-3xl p-6 sm:p-8 lg:p-12 mb-8 sm:mb-12 lg:mb-20 shadow-lg">
+          <div class="grid md:grid-cols-2 gap-8 lg:gap-12 items-center">
+            <div class="aspect-video bg-[#0D0D0D] rounded-xl shadow-lg overflow-hidden relative">
+              <img
+                src="/images/Resultados2.jpeg"
+                alt="Suffgo Landing Image"
+                class="absolute inset-0 w-full h-full object-contain"
+              />
+            </div>
+            <div>
+              <h2 class="text-2xl sm:text-3xl font-mono text-[#FFFFFF] mb-4 sm:mb-6" style="text-shadow: 2px 2px 6px rgba(92,88,88,1);">
+                Resultados de las votaciones
+              </h2>
+              <p class="font-mono text-[#CFCED9] text-base sm:text-lg leading-relaxed">
+                Una vez que la votación ha finalizado, puedes ver los resultados en tiempo real. Suffgo te proporciona un resumen claro y conciso de los resultados, permitiéndote tomar decisiones informadas rápidamente.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <footer class="footer footer-center bg-[#10021C] p-4">
+      <aside>
+        <p class="text-[#FFFFFF] text-sm sm:text-base">Copyright © {new Date().getFullYear()} - All right reserved by Suffgo</p>
+      </aside>
+    </footer>
+  </main>
 </Layout>
 
+<script>
+  document.getElementById('scrollButton')?.addEventListener('click', () => {
+    document.getElementById('infoSection')?.scrollIntoView({ 
+      behavior: 'smooth'
+    });
+  });
+</script>
