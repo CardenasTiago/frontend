@@ -2,16 +2,24 @@
 FROM node:20-slim AS builder
 WORKDIR /app
 
-# 1) Copiamos sólo package.json y package-lock para cachear deps
+# 1) Instalar dependencias del sistema para Sharp
+RUN apt-get update && apt-get install -y \
+    python3 \
+    make \
+    g++ \
+    libvips-dev \
+    && rm -rf /var/lib/apt/lists/*
+
+# 2) Copiar package.json y lock para cachear deps
 COPY package.json package-lock.json ./
 
-# 2) Instalamos dependencias (incluye optionals)
-RUN npm install --legacy-peer-deps
+# 3) Instalar dependencias (incluye opcionales)
+RUN npm ci --legacy-peer-deps --include=optional
 
-# 3) Reconstruimos sharp para la plataforma linux-x64
+# 4) Reconstruir sharp para linux-x64
 RUN npm rebuild sharp --force
 
-# 4) Copiamos el resto y hacemos el build
+# 5) Copiar código y construir
 COPY . .
 RUN npm run build
 
@@ -19,7 +27,7 @@ RUN npm run build
 FROM node:20-slim AS runner
 WORKDIR /app
 
-# 5) Copiamos el dist estático generado
+# 6) Copiar salida estática
 COPY --from=builder /app/dist ./dist
 
 EXPOSE 3000
