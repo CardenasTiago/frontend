@@ -3,10 +3,11 @@
   "compilerOptions": {
     "jsx": "preserve",
     "allowSyntheticDefaultImports": true,
-    "esModuleInterop": true
+    "esModuleInterop": true,
+    "module": "es2020"
   },
   "include": [
     "src",
     "astro.config.mjs"
-  ]
-}
+  ],
+} 
