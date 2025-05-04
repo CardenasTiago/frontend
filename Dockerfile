@@ -1,16 +1,15 @@
 # -------- Build stage --------
 FROM node:20-alpine AS builder
 
-# 1) Directorio de trabajo
 WORKDIR /app
 
-# 2) Copiamos sólo lo necesario para cachear deps
+# Copiamos solo lockfile y package.json para cachear deps
 COPY package.json package-lock.json ./
 
-# 3) Instalamos las dependencias
-RUN npm ci
+# Instalamos dependencias con npm install en lugar de npm ci
+RUN npm install
 
-# 4) Copiamos el resto del código y hacemos la build de Astro
+# Copiamos el resto del código y hacemos la build de Astro
 COPY . .
 RUN npm run build
 
@@ -19,15 +18,14 @@ FROM node:20-alpine AS runner
 
 WORKDIR /app
 
-# 1) Instalamos un servidor estático ligero
+# Servidor estático
 RUN npm install -g serve
 
-# 2) Copiamos la carpeta dist ya construida
+# Traemos la carpeta dist generada
 COPY --from=builder /app/dist ./dist
 
-# 3) Puerto que usará Render (env $PORT)
+# Exponemos el puerto que Render inyecte en $PORT
 EXPOSE 3000
 
-# 4) Arrancamos el servidor estático apuntando a dist/
+# Arrancamos serve en 0.0.0.0:$PORT
 CMD ["serve", "-s", "dist", "-l", "0.0.0.0:$PORT"]
-    
