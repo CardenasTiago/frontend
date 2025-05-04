@@ -124,7 +124,7 @@
 
 <script setup>
 import { ref, onMounted, computed } from 'vue';
-import BackButton from '../reusable/BackButton.vue';
+import BackButton from '../reusable/BackButton2.vue';
 import ProposalService from '../../services/proposal.service';
 import OptionService   from '../../services/option.service';
 import RoomService     from '../../services/room.service';
