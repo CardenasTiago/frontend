@@ -37,7 +37,20 @@
           </button>
         </div>
 
-        <div class="flex justify-end">
+        <div class="flex justify-end gap-2">
+          <button  onclick="my_modal_2.showModal()" class="tooltip" data-tip="Mostrar QR">
+            <Icon class="text-primary" icon="ic:baseline-qr-code-scanner" width="24" height="24" />
+          </button>
+          <dialog id="my_modal_2" class="modal">
+            <div class="modal-box">
+              <form method="dialog">
+                <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
+              </form>
+              <div class="flex flex-col items-center justify-center">
+                <QrJoinCodeGenerator :id="room.id" />
+              </div>
+            </div>
+          </dialog>
           <div class="flex gap-2 group">
             <h2 class="text-secondary" :class="{ blurredText: isBlurred }">
               {{ room.room_code }}
@@ -77,6 +90,7 @@ import { ref, onMounted, computed } from 'vue';
 import { Icon } from "@iconify/vue";
 import BackButton from "../reusable/BackButton2.vue";
 import ColorThief from 'colorthief';
+import QrJoinCodeGenerator from './lobby/components/QrJoinCodeGenerator.vue';
 
 const props = defineProps({
   showImage: {
