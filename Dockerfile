@@ -25,5 +25,7 @@ WORKDIR /app
 COPY --from=builder /app/dist ./dist
 
 EXPOSE 3000
-CMD ["sh","-c","npx serve -s dist -l 0.0.0.0:$PORT"]
+# CMD para producción SSR
+CMD sh -c "node dist/server/entry.mjs --port $PORT"
+
 
