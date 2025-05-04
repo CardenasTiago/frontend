@@ -25,4 +25,5 @@ WORKDIR /app
 COPY --from=builder /app/dist ./dist
 
 EXPOSE 3000
-CMD ["npx", "serve", "-s", "dist", "-l", "0.0.0.0:$PORT"]
+CMD ["sh","-c","npx serve -s dist -l 0.0.0.0:$PORT"]
+
