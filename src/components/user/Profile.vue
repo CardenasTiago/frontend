@@ -98,6 +98,7 @@
           >
             Editar
           </button>
+
           <button
             v-if="isEditing"
             type="button"
@@ -118,6 +119,26 @@
         
       </div>      
   </form> 
+
+  <dialog ref="deleteModal" class="modal">
+    <div class="modal-box">
+      <h3 class="font-bold text-lg text-error">¿Eliminar cuenta?</h3>
+      <p class="py-4">Esta acción no se puede deshacer. ¿Estás seguro que deseas eliminar tu cuenta?</p>
+      <div class="modal-action">
+        <button class="btn" @click="closeModal">Cancelar</button>
+        <button 
+          class="btn btn-error text-white"
+          :disabled="isDeleting"
+          @click="handleDelete"
+        >
+          {{ isDeleting ? 'Eliminando...' : 'Eliminar' }}
+        </button>
+      </div>
+    </div>
+    <form method="dialog" class="modal-backdrop">
+      <button>close</button>
+    </form>
+  </dialog>
 </template>
 
 <script setup>
