@@ -54,7 +54,6 @@
         </div>
       </footer>
     </div>
-
   </div>
 </template>
 <script>
@@ -83,12 +82,10 @@ const {
   voting,
 } = storeToRefs(socketStore)
 
-
 const router = useRouter()
 const room = ref('');
 const user = ref('');
 const quorum = ref('');
-
 const theme = ref(localStorage.getItem('theme') || 'mytheme');
 
 onMounted(() => {
@@ -168,8 +165,6 @@ const extractDominantColor = () => {
 const containerStyle = computed(() => ({
   boxShadow: dominantColor.value ? `0 4px 10px ${dominantColor.value}` : 'none'
 }));
-
-
 </script>
 
 <style scoped>
@@ -227,5 +222,16 @@ button:hover {
   border-radius: 30px;
   cursor: pointer;
 
+}
+
+/* (Opcional) transición fade */
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity .2s;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
 }
 </style>
