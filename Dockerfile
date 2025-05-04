@@ -2,32 +2,26 @@
 FROM node:20-slim AS builder
 WORKDIR /app
 
-# 1) Instalar dependencias del sistema para Sharp
+# 1) Sistema: build-essential + Python para módulos nativos
 RUN apt-get update && apt-get install -y \
+    build-essential \
     python3 \
-    make \
-    g++ \
-    libvips-dev \
     && rm -rf /var/lib/apt/lists/*
 
-# 2) Copiar package.json y lock para cachear deps
+# 2) Copiar lockfiles
 COPY package.json package-lock.json ./
 
-# 3) Instalar dependencias (incluye opcionales)
+# 3) Instalación de deps (incluyendo opcionales) con permisos para scripts nativos
+ENV npm_config_unsafe_perm=true
 RUN npm ci --legacy-peer-deps --include=optional
 
-# 4) Reconstruir sharp para linux-x64
-RUN npm rebuild sharp --force
-
-# 5) Copiar código y construir
+# 4) Copiar resto y construir
 COPY . .
 RUN npm run build
 
 # -------- Runtime stage --------
 FROM node:20-slim AS runner
 WORKDIR /app
-
-# 6) Copiar salida estática
 COPY --from=builder /app/dist ./dist
 
 EXPOSE 3000
