@@ -2,13 +2,13 @@
 FROM node:20-alpine AS builder
 WORKDIR /app
 
-# 1) Copiamos package.json y lock
+# 1) Copy only package manifests
 COPY package.json package-lock.json ./
 
-# 2) Instalamos deps
-RUN npm install
+# 2) Install deps, telling npm to relax peer-dep checks
+RUN npm install --legacy-peer-deps
 
-# 3) Copiamos el resto y generamos build SSR
+# 3) Copy the rest and build
 COPY . .
 RUN npm run build
 
@@ -16,11 +16,7 @@ RUN npm run build
 FROM node:20-alpine AS runner
 WORKDIR /app
 
-# Copiamos la salida standalone de Astro
+# Serve your SSR output
 COPY --from=builder /app/.output/standalone ./
-
-# Exponemos el puerto que Render define
 EXPOSE 3000
-
-# Arrancamos el servidor Node
 CMD ["node", "server.js"]
