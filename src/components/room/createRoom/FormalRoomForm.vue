@@ -98,15 +98,10 @@
 
     <AdminField />
 
-    <div class="grid grid-cols-2 gap-6 pt-4">
-      <a :href="`/protected/proposal?id=${roomId}`" class="w-full">
-        <button type="button" class="btn btn-secondary w-full text-white">
-          Propuestas
-        </button>
-      </a>
+    <div class="flex justify-center pt-4">
       <button 
         type="submit" 
-        class="btn btn-primary w-full text-white"
+        class="btn btn-primary px-14 py-2"
         :disabled="isSubmitting"
       >
         {{ isSubmitting ? 'Guardando...' : 'Guardar' }}
