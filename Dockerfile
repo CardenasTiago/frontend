@@ -1,21 +1,21 @@
 FROM node:20-alpine AS builder
 WORKDIR /app
 
-# 1) Copiamos package.json y lock
-COPY package.json package-lock.json ./
+# 1) Instala dependencias nativas para sharp/libvips
+RUN apk add --no-cache \
+      vips-dev fftw-dev build-base pkgconfig python3
 
-# 2) Instalamos TODO (prod + dev)
+COPY package.json package-lock.json ./
 RUN npm install --legacy-peer-deps
 
-# 3) Copiamos el resto y construimos en SSR
 COPY . .
 RUN npm run build
 
+# -------- Runtime stage --------
 FROM node:20-alpine AS runner
 WORKDIR /app
 
-# 4) Traemos la salida standalone
-COPY --from=builder /app/.output/standalone ./
-
+RUN apk add --no-cache vips fftw
+COPY --from=builder /app/dist ./dist
 EXPOSE 3000
-CMD ["node", "server.js"]
+CMD ["npx", "serve", "-s", "dist", "-l", "0.0.0.0:$PORT"]
