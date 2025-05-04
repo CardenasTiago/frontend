@@ -44,6 +44,48 @@
           <input v-model="form.confirmPassword" type="password" required />
         </label>
       </div>
+      <div class="password-check text-sm mt-2 space-y-1">
+        <div class="flex items-center gap-2">
+          <Icon
+            :icon="passwordChecks.length ? 'mdi:check-circle' : 'mdi:close-circle'"
+            :class="['animated-check', passwordChecks.length ? 'success' : 'error']"
+          />
+          <span :class="passwordChecks.length ? 'text-green-500' : 'text-red-500'">
+            Al menos 8 caracteres
+          </span>
+        </div>
+        
+        <div class="flex items-center gap-2">
+          <Icon
+            :icon="passwordChecks.uppercase ? 'mdi:check-circle' : 'mdi:close-circle'"
+            :class="['animated-check', passwordChecks.uppercase ? 'success' : 'error']"
+          />
+          <span :class="passwordChecks.uppercase ? 'text-green-500' : 'text-red-500'">
+            Al menos 1 letra mayúscula (A-Z)
+          </span>
+        </div>
+
+        <div class="flex items-center gap-2">
+          <Icon
+            :icon="passwordChecks.lowercase ? 'mdi:check-circle' : 'mdi:close-circle'"
+            :class="['animated-check', passwordChecks.lowercase ? 'success' : 'error']"
+          />
+          <span :class="passwordChecks.lowercase ? 'text-green-500' : 'text-red-500'">
+            Al menos 1 letra minúscula (a-z)
+          </span>
+        </div>
+
+        <div class="flex items-center gap-2">
+          <Icon
+            :icon="passwordChecks.number ? 'mdi:check-circle' : 'mdi:close-circle'"
+            :class="['animated-check', passwordChecks.number ? 'success' : 'error']"
+          />
+          <span :class="passwordChecks.number ? 'text-green-500' : 'text-red-500'">
+            Al menos 1 número (0-9)
+          </span>
+        </div>
+      </div>
+
       <div v-if="error" style="color: red">{{ error }}</div>
       <div>
         <div>
@@ -70,7 +112,7 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { ref , watch} from "vue";
 import { Icon } from "@iconify/vue";
 import UserService from "../../services/user.service";
 
@@ -88,6 +130,20 @@ const form = ref({
 const error = ref("");
 
 const successMessage = ref("");
+
+const passwordChecks = ref({
+  length: false,
+  uppercase: false,
+  lowercase: false,
+  number: false,
+});
+
+watch(() => form.value.password, (newPassword) => {
+  passwordChecks.value.length = newPassword.length >= 8;
+  passwordChecks.value.uppercase = /[A-Z]/.test(newPassword);
+  passwordChecks.value.lowercase = /[a-z]/.test(newPassword);
+  passwordChecks.value.number = /[0-9]/.test(newPassword);
+});
 
 const handleSubmit = async () => {
   error.value = "";
@@ -148,4 +204,55 @@ input {
   font-weight: 500;
   @apply text-accent;
 }
+
+.password-check {
+  margin-top: 0.5rem;
+}
+
+.password-check .flex {
+  font-size: 0.875rem;
+}
+
+.animated-check {
+  transition: transform 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55), color 0.4s ease;
+  transform: scale(1);
+}
+
+.animated-check.success {
+  color: #22c55e;
+  transform: scale(1.35);
+  animation: pop 0.5s ease-in-out;
+}
+
+.animated-check.error {
+  color: #ef4444; /* rojo */
+  transform: scale(0.9) rotate(0deg);
+  animation: shake 0.5s ease-in-out;
+}
+
+/* Animación de éxito (pequeño rebote) */
+@keyframes pop {
+  0% {
+    transform: scale(1);
+    opacity: 0.7;
+  }
+  50% {
+    transform: scale(1.4);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1.2);
+    opacity: 1;
+  }
+}
+
+/* Animación de error (ligero movimiento de sacudida) */
+@keyframes shake {
+  0% { transform: translateX(0); }
+  25% { transform: translateX(-3px); }
+  50% { transform: translateX(3px); }
+  75% { transform: translateX(-3px); }
+  100% { transform: translateX(0); }
+}
+
 </style>
