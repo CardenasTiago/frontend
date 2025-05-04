@@ -13,10 +13,13 @@
           </label>
         </div>
       </div>
-      <div>
+      <div class="form-control">
         <label class="input input-bordered input-primary flex items-center gap-2 p-2">Nombre de Usuario
-          <input v-model="form.username" type="text" required />
+          <input v-model="form.username" type="text" required minlength="3" maxlength="30" @input="validateUsername"/>
         </label>
+        <div v-if="form.username.length > 0 && form.username.length < 3" class="text-error text-xs mt-1 ml-2">
+          El nombre de usuario debe tener al menos 3 caracteres
+        </div>
       </div>
       <div>
         <label class="input input-bordered input-primary flex items-center gap-2">
@@ -112,7 +115,7 @@
 </template>
 
 <script setup>
-import { ref , watch} from "vue";
+import { ref , watch, computed} from "vue";
 import { Icon } from "@iconify/vue";
 import UserService from "../../services/user.service";
 
@@ -129,6 +132,7 @@ const form = ref({
 
 const error = ref("");
 
+
 const successMessage = ref("");
 
 const passwordChecks = ref({
@@ -138,6 +142,25 @@ const passwordChecks = ref({
   number: false,
 });
 
+const validateUsername = () => {
+  if (form.value.username.length > 30) {
+    form.value.username = form.value.username.slice(0, 30);
+  }
+};
+
+const isFormValid = computed(() => {
+  return form.value.username.length >= 3 &&
+        form.value.username.length <= 30 &&
+        form.value.name &&
+        form.value.lastname &&
+        form.value.dni &&
+        form.value.email &&
+        form.value.confirmEmail &&
+        form.value.password &&
+        form.value.confirmPassword;
+});
+
+
 watch(() => form.value.password, (newPassword) => {
   passwordChecks.value.length = newPassword.length >= 8;
   passwordChecks.value.uppercase = /[A-Z]/.test(newPassword);
@@ -145,8 +168,14 @@ watch(() => form.value.password, (newPassword) => {
   passwordChecks.value.number = /[0-9]/.test(newPassword);
 });
 
+
 const handleSubmit = async () => {
   error.value = "";
+
+  if (form.value.username.length < 3) {
+    error.value = "El nombre de usuario debe tener al menos 3 caracteres";
+    return;
+  }
 
   if (form.value.email != form.value.confirmEmail) {
     error.value = "Los correos no coinciden";
