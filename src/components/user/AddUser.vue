@@ -49,7 +49,7 @@
 
         <div class="flex items-center">
           <Icon icon="mdi:garbage" class="h-6 w-6 text-error cursor-pointer" @click="openDeleteModal(user)" />
-          <ModalConfirm v-model="showDeleteModal" title="Eliminar votante"
+          <ModalConfirm v-model="showDeleteModal" title="Eliminar votante" 
             message="¿Estás seguro de que deseas eliminar el votante de la whitelist?" confirmText="Eliminar"
             cancelText="Cancelar" :confirmAction="removeVoter" />
         </div>
@@ -115,7 +115,7 @@ async function handleAddVoter(userInput: any) {
     alertType.value = 'success'
     isModalOpen.value = false
 
-    await fetchUsers()
+    await fetchUsers();
   } catch (err: any) {
     console.error('Error en handleAddVoter:', err)
     alertType.value = 'error'
@@ -136,12 +136,13 @@ async function handleAddVoter(userInput: any) {
 
 // abre modal de confirmación
 function openDeleteModal(user: any) {
-  selectedUser.value = user
+  selectedUser.value = user 
   showDeleteModal.value = true
 }
 
 // eliminar un votante
 async function removeVoter() {
+  console.log("ENTRE A LA FUNCION");
   try {
     const resp = await RoomService.removeUser({
       user_id: selectedUser.value.id,

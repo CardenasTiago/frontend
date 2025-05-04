@@ -10,24 +10,22 @@
               client.voted ? 'border-green-500' : 'border-gray-500'
             ]">
               <img v-if="client.image" :src="client.image" alt="Foto de perfil"
-                   class="w-full h-full rounded-full object-cover" />
-              <Icon v-else icon="ic:baseline-person" 
-                    class="w-full h-full rounded-full object-cover p-2 text-secondary"
-                    width="58" height="58" />
+                class="w-full h-full rounded-full object-cover" />
+              <Icon v-else icon="ic:baseline-person" class="w-full h-full rounded-full object-cover p-2 text-secondary"
+                width="58" height="58" />
             </div>
           </div>
         </template>
         <!-- Si no hay votos, se muestra el avatar sin tooltip -->
         <template v-else>
           <div :class="[
-              'w-16 h-16 rounded-full border-4',
-              client.voted ? 'border-green-500' : 'border-gray-500'
-            ]">
+            'w-16 h-16 rounded-full border-4',
+            client.voted ? 'border-green-500' : 'border-gray-500'
+          ]">
             <img v-if="client.image" :src="client.image" alt="Foto de perfil"
-                 class="w-full h-full rounded-full object-cover" />
-            <Icon v-else icon="ic:baseline-person" 
-                  class="w-full h-full rounded-full object-cover p-2 text-secondary"
-                  width="58" height="58" />
+              class="w-full h-full rounded-full object-cover" />
+            <Icon v-else icon="ic:baseline-person" class="w-full h-full rounded-full object-cover p-2 text-secondary"
+              width="58" height="58" />
           </div>
         </template>
         <p class="mt-2 font-semibold text-secondary">{{ client.username }}</p>
@@ -37,7 +35,7 @@
 </template>
 
 <script setup>
-import { computed, onMounted } from 'vue';
+import { computed, onMounted, watch } from 'vue';
 import { storeToRefs } from 'pinia';
 import { useWebSocketStore } from '../../stores/socketStore';
 import { Icon } from "@iconify/vue";
@@ -79,6 +77,25 @@ const getVoteValue = (username) => {
 const hasVotes = computed(() => {
   return results.value && results.value.length > 0;
 });
+
+
+/**
++ * Computed que comprueba si todos los clientes ya votaron.
++ */
+const allVoted = computed(() =>
+  userList.value.length > 0 &&
+  userList.value.every(client => client.voted)
+);
+
+/**
++ * Cuando allVoted pase a true, activamos resultsAvailable.
++ */
+watch(allVoted, (todos) => {
+  if (todos) {
+    socketStore.resultsAvailable = true;
+  }
+});
+
 
 onMounted(() => {
   console.log("Resultados:", results.value);

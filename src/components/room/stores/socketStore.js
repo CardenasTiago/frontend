@@ -157,7 +157,7 @@ export const useWebSocketStore = defineStore('webSocketStore', {
       if (this.timer) clearInterval(this.timer);
       // Inicia el timer que decrementa el contador cada segundo
       this.timer = setInterval(() => {
-        if (this.countdown > 0) {
+        if (this.countdown > 0 && !this.resultsAvailable) {
           this.countdown--;
         } else {
           clearInterval(this.timer);

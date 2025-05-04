@@ -1,5 +1,7 @@
 <template>
+  <div v-bind="$attrs">
     <RouterView />
+  </div>
 </template>
 
 <script setup>

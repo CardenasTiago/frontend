@@ -17,7 +17,10 @@ const OptionService = {
     return ApiService.delete(`/options/${id}`);
   },
   byRoom(room_id : string): Promise<string> {
-    return ApiService.get(`/options/byRoom/${room_id}`)
+    return ApiService.get(`/options/byRoom/${room_id}`);
+  },
+  byProposal(prop_id : string): Promise<string> {
+    return ApiService.get(`/options/byProposal/${prop_id}`);
   }
 };
 
