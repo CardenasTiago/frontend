@@ -1,31 +1,25 @@
 # -------- Build stage --------
 FROM node:20-alpine AS builder
-
 WORKDIR /app
 
-# Copiamos solo lockfile y package.json para cachear deps
-COPY package.json package-lock.json ./
+# 1) Copiamos sólo package + tsconfig + env.d.ts/shims
+COPY package.json package-lock.json tsconfig.json ./
+# También copia explícito del shim, por si acaso:
+COPY src/env.d.ts src/env.d.ts
 
-# Instalamos dependencias con npm install en lugar de npm ci
+# 2) Instalamos deps
 RUN npm install
 
-# Copiamos el resto del código y hacemos la build de Astro
+# 3) Copiamos el resto del código
 COPY . .
+
+# 4) Build de Astro
 RUN npm run build
 
 # -------- Production stage --------
 FROM node:20-alpine AS runner
-
 WORKDIR /app
-
-# Servidor estático
 RUN npm install -g serve
-
-# Traemos la carpeta dist generada
 COPY --from=builder /app/dist ./dist
-
-# Exponemos el puerto que Render inyecte en $PORT
 EXPOSE 3000
-
-# Arrancamos serve en 0.0.0.0:$PORT
 CMD ["serve", "-s", "dist", "-l", "0.0.0.0:$PORT"]
