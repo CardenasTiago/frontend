@@ -15,8 +15,9 @@ const { id } = defineProps({
 })
 
 // Computed para construir la URL dinámicamente
-const url = computed(() =>
-    `http://localhost:4321/protected/roomInfo/${id}`
-)
+const url = computed(() => {
+  const origin = window.location.origin  // e.g. "https://tu-frontend.onrender.com"
+  return `${origin}/protected/roomInfo/${id}`
+})
 
 </script>
