@@ -8,7 +8,6 @@
   "include": [
     "src/env.d.ts",
     "src",
-    "astro.config.mjs",
-    "vue-shims.d.ts"
+    "astro.config.mjs"
   ]
 }
