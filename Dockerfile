@@ -26,4 +26,5 @@ COPY --from=builder /app/dist ./dist
 EXPOSE 3000
 
 # 3) Arrancamos la app SSR con el entrypoint correcto
-CMD ["sh", "-c", "HOST=0.0.0.0 PORT=${PORT:-3000} node dist/server/entry.mjs"]
+CMD ["sh","-c","node dist/server/entry.mjs --port $PORT"]
+
