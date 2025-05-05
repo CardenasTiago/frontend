@@ -1,24 +1,26 @@
-# -------- Build stage --------
+# 1) Build stage
 FROM node:20-slim AS builder
 WORKDIR /app
+
+# Copia lockfiles e instala TODO (dev+prod)
 COPY package.json package-lock.json ./
 RUN npm ci --legacy-peer-deps
+
+# Copia el resto y construye
 COPY . .
 RUN npm run build
 
-# -------- Runtime stage --------
+# 2) Runtime stage
 FROM node:20-slim AS runner
 WORKDIR /app
 
-# 1) Copiar los package*.json para poder instalar prod deps
+# Copia sólo prod-deps para un contenedor más ligero
 COPY package.json package-lock.json ./
-
-# 2) Instalar SOLO production deps (incluye server-destroy, vue, @iconify/vue, etc)
 RUN npm ci --omit=dev
 
-# 3) Copiar la carpeta ya compilada
+# Copia la carpeta ya compilada
 COPY --from=builder /app/dist ./dist
 
 EXPOSE 3000
-# Lanzar el entrypoint de Astro
+# Usa el entrypoint real
 CMD ["node", "dist/server/entry.mjs", "--port", "${PORT:-3000}"]
