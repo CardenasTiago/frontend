@@ -22,5 +22,7 @@ RUN npm ci --omit=dev
 COPY --from=builder /app/dist ./dist
 
 EXPOSE 3000
-# Usa el entrypoint real
-CMD ["node", "dist/server/entry.mjs", "--port", "${PORT:-3000}"]
+
+ENV HOST=0.0.0.0
+
+CMD sh -c "node dist/server/entry.mjs --port ${PORT:-3000} --host ${HOST}"
