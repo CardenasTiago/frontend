@@ -1,7 +1,7 @@
 ---
 import "../global.css";
 import Header from "../components/reusable/Navbar.vue";
-import ViewTransitions from "astro/components/ViewTransitions.astro";
+import { ClientRouter } from "astro:transitions";
 interface Props {
   title: string;
   hideMenuItems?: boolean;
@@ -20,7 +20,7 @@ const { title, hideMenuItems = false, hideHeader = false } = Astro.props;
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="generator" content={Astro.generator} />
     <title>{title}</title>
-    <ViewTransitions />
+    <ClientRouter />
     <Header
       client:only="vue"
       hideMenuItems={hideMenuItems}

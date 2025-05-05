@@ -1,36 +1,28 @@
-# -------- Build stage --------
-FROM node:20-alpine AS builder
-
-# 1) Instala pnpm
-RUN npm install -g pnpm
-
-# 2) Directorio de trabajo
+# 1) Build stage
+FROM node:20-slim AS builder
 WORKDIR /app
 
-# 3) Copia lockfiles y package.json para cachear deps
-COPY package.json package-lock.json pnpm-lock.yaml ./
+# Copia lockfiles e instala TODO (dev+prod)
+COPY package.json package-lock.json ./
+RUN npm ci --legacy-peer-deps
 
-# 4) Instala dependencias
-RUN pnpm install --frozen-lockfile
-
-# 5) Copia el resto del código y genera la build
+# Copia el resto y construye
 COPY . .
-RUN pnpm run build
-    
-# -------- Production stage --------
-FROM node:20-alpine AS runner
+RUN npm run build
 
-# 1) Instala pnpm (necesario para preview)
-RUN npm install -g pnpm
-
+# 2) Runtime stage
+FROM node:20-slim AS runner
 WORKDIR /app
 
-# 2) Trae los archivos generados en dist/
+# Copia sólo prod-deps para un contenedor más ligero
+COPY package.json package-lock.json ./
+RUN npm ci --omit=dev
+
+# Copia la carpeta ya compilada
 COPY --from=builder /app/dist ./dist
 
-# 3) Expone el puerto que Render inyecta en $PORT
 EXPOSE 3000
 
-# 4) Arranca el preview server de Astro en 0.0.0.0 
-#    y en el puerto definido en la var. de entorno $PORT
-CMD ["sh", "-c", "pnpm run preview -- --host 0.0.0.0 --port $PORT"]
+ENV HOST=0.0.0.0
+
+CMD sh -c "node dist/server/entry.mjs --port ${PORT:-3000} --host ${HOST}"

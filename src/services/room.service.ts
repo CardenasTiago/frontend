@@ -1,10 +1,10 @@
 import ApiService from "./ApiService";
 
-const API_BASE = import.meta.env.PUBLIC_API_BASE_URL as string;
-// Si tu BACKEND corre en https, querrás wss, si no ws:
-const WS_SCHEME = API_BASE.startsWith("https") ? "wss" : "ws";
-// Y extrajimos host+puerto:
-const WS_HOST = API_BASE.replace(/^https?:\/\//, "");
+// const API_BASE = import.meta.env.PUBLIC_API_BASE_URL as string;
+// // Si tu BACKEND corre en https, querrás wss, si no ws:
+// const WS_SCHEME = API_BASE.startsWith("https") ? "wss" : "ws";
+// // Y extrajimos host+puerto:
+// const WS_HOST = API_BASE.replace(/^https?:\/\//, "");
 
 
 class RoomSocket {
@@ -15,7 +15,10 @@ class RoomSocket {
   private shouldReconnect = true;
 
   constructor(roomId: string) {
-    this.url = `${WS_SCHEME}://${WS_HOST}/rooms/ws/${roomId}`;
+    const base = import.meta.env.PUBLIC_API_BASE_URL ?? "";
+    const scheme = base.startsWith("https") ? "wss" : "ws";
+    const host  = base.replace(/^https?:\/\//, "");
+    this.url = `${scheme}://${host}/rooms/ws/${roomId}`;
     this.connect();
   }
 
