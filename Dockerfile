@@ -8,6 +8,8 @@ RUN npm ci --legacy-peer-deps
 
 # Copia el resto y construye
 COPY . .
+ARG PUBLIC_API_BASE_URL
+ENV PUBLIC_API_BASE_URL=$PUBLIC_API_BASE_URL
 RUN npm run build
 
 # 2) Runtime stage
