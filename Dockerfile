@@ -21,4 +21,4 @@ COPY --from=builder /app/dist ./dist
 
 EXPOSE 3000
 # Lanzar el entrypoint de Astro
-CMD ["node", "dist/server/index.mjs", "--port", "${PORT:-3000}"]
+CMD ["node", "dist/server/entry.mjs", "--port", "${PORT:-3000}"]
