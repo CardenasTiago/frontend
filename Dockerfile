@@ -1,14 +1,8 @@
 # -------- Build stage --------
 FROM node:20-slim AS builder
 WORKDIR /app
-
-RUN apt-get update && apt-get install -y build-essential python3 \
-    && rm -rf /var/lib/apt/lists/*
-
 COPY package.json package-lock.json ./
-ENV npm_config_unsafe_perm=true
-RUN npm ci --legacy-peer-deps --include=optional
-
+RUN npm ci --legacy-peer-deps
 COPY . .
 RUN npm run build
 
@@ -16,15 +10,15 @@ RUN npm run build
 FROM node:20-slim AS runner
 WORKDIR /app
 
-# 1) Copiamos las deps de producción
+# 1) Copiar los package*.json para poder instalar prod deps
 COPY package.json package-lock.json ./
+
+# 2) Instalar SOLO production deps (incluye server-destroy, vue, @iconify/vue, etc)
 RUN npm ci --omit=dev
 
-# 2) Copiamos el build
+# 3) Copiar la carpeta ya compilada
 COPY --from=builder /app/dist ./dist
 
 EXPOSE 3000
-
-# 3) Arrancamos la app SSR con el entrypoint correcto
-CMD ["sh","-c","node dist/server/entry.mjs --port $PORT"]
-
+# Lanzar el entrypoint de Astro
+CMD ["node", "dist/server/index.mjs", "--port", "${PORT:-3000}"]
