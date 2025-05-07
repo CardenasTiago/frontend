@@ -87,6 +87,7 @@
           v-model.number="form.voterLimit"
           type="number"
           min="2"
+          max="1000"
           class="input w-full bg-secondary/10 border-secondary/20 h-12 text-lg"
           required
         />

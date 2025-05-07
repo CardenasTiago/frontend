@@ -47,8 +47,8 @@
           <input v-model="form.confirmPassword" type="password" required />
         </label>
       </div>
-      <div class="password-check text-sm mt-2 space-y-1">
-        <div class="flex items-center gap-2">
+      <div class="password-check flex flex-col text-sm mt-2 space-y-1">
+        <div class="flex justify-center items-center gap-2">
           <Icon
             :icon="passwordChecks.length ? 'mdi:check-circle' : 'mdi:close-circle'"
             :class="['animated-check', passwordChecks.length ? 'success' : 'error']"
@@ -58,7 +58,7 @@
           </span>
         </div>
         
-        <div class="flex items-center gap-2">
+        <div class="flex justify-center items-center gap-2">
           <Icon
             :icon="passwordChecks.uppercase ? 'mdi:check-circle' : 'mdi:close-circle'"
             :class="['animated-check', passwordChecks.uppercase ? 'success' : 'error']"
@@ -68,7 +68,7 @@
           </span>
         </div>
 
-        <div class="flex items-center gap-2">
+        <div class="flex justify-center items-center gap-2">
           <Icon
             :icon="passwordChecks.lowercase ? 'mdi:check-circle' : 'mdi:close-circle'"
             :class="['animated-check', passwordChecks.lowercase ? 'success' : 'error']"
@@ -78,7 +78,7 @@
           </span>
         </div>
 
-        <div class="flex items-center gap-2">
+        <div class="flex justify-center items-center gap-2">
           <Icon
             :icon="passwordChecks.number ? 'mdi:check-circle' : 'mdi:close-circle'"
             :class="['animated-check', passwordChecks.number ? 'success' : 'error']"
@@ -105,7 +105,6 @@
       </div>
     </form>
     <!-- caja invisible para generar un espacio mas prolijo -->
-    <div class="h-4"></div>
 
     <div v-if="successMessage" role="alert" class="alert alert-success flex text-sm justify-center">
       <Icon icon="ix:success" class="h-6 w-6" />
