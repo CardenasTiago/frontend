@@ -17,7 +17,7 @@
     </div>
 
     <div v-else>
-      <div class="aspect-video bg-base-100-200 mb-6 rounded-lg flex items-center justify-center">
+      <div class="aspect-video bg-base-100-200 mb-6 rounded-lg flex flex-col items-center justify-center">
         <img
         v-if="form.imageBase64"
         :src="form.imageBase64"
