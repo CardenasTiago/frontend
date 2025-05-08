@@ -214,4 +214,8 @@ const containerStyle = computed(() => ({
 .blurredText {
   filter: blur(5px);
 }
+
+.btn-ghost{
+  @apply text-primary
+}
 </style>
