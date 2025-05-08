@@ -38,7 +38,7 @@
         </div>
 
         <div class="flex justify-end gap-2">
-          <button  onclick="my_modal_2.showModal()" class="tooltip" data-tip="Mostrar QR">
+          <button onclick="my_modal_2.showModal()" class="tooltip" data-tip="Mostrar QR">
             <Icon class="text-primary" icon="ic:baseline-qr-code-scanner" width="24" height="24" />
           </button>
           <dialog id="my_modal_2" class="modal">
@@ -91,11 +91,16 @@ import { Icon } from "@iconify/vue";
 import BackButton from "../reusable/BackButton2.vue";
 import ColorThief from 'colorthief';
 import QrJoinCodeGenerator from './lobby/components/QrJoinCodeGenerator.vue';
-
+import SettingRoomService from '../../services/settingroom.service';
 const props = defineProps({
   showImage: {
     type: Boolean,  // Nótese la B mayúscula: el constructor Boolean
     default: false
+  },
+  byQr: {
+    type: Boolean,
+    default: false,
+    required: false
   }
 })
 
@@ -108,6 +113,10 @@ onMounted(() => {
   if (storedRoom) {
     try {
       room.value = JSON.parse(storedRoom);
+      // Cargar configuración de la sala
+      const settingsString = SettingRoomService.byRoom(String(room.id));
+      const config = JSON.parse(settingsString);
+      localStorage.setItem('settingsRoom', JSON.stringify(config));
     } catch (e) {
       error.value = 'Error al leer los datos de la sala.';
       console.error(e);
@@ -213,5 +222,9 @@ const containerStyle = computed(() => ({
 
 .blurredText {
   filter: blur(5px);
+}
+
+.btn-ghost {
+  @apply text-primary
 }
 </style>

@@ -3,7 +3,7 @@
         <!-- Navbar de escritorio -->
         <div class="hidden md:flex justify-between items-center p-4">
             <div class="text-xl font-bold text-primary">
-                <a href="/protected/menu" class="text-primary/80">{{ title }}</a>
+                <a :href="homeLink" class="text-primary/80">{{ title }}</a>
             </div>
             <nav>
                 <ul class="flex gap-4 items-center">
@@ -48,7 +48,7 @@
             <div class="navbar bg-neutral flex justify-between">
 
                 <div class="text-xl font-bold text-primary mr-4">
-                    <a href="/protected/menu" class="text-primary/80">{{ title }}</a>
+                    <a :href="homeLink" class="text-primary/80">{{ title }}</a>
                 </div>
                 <!-- Cuando se oculta el menu esto se muestra -->
                 <!-- Contenido a la derecha -->
@@ -168,6 +168,11 @@ const handleLogout = async () => {
 };
 
 const isAuthenticated = ref("");
+const homeLink = computed(() =>
+  isAuthenticated.value
+    ? '/protected/menu'
+    : '/'
+);
 // Obtener el nombre de usuario desde localStorage al montar el componente
 onMounted(async () => {
     const loggedUser = localStorage.getItem('user');
