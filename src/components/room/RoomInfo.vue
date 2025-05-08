@@ -92,15 +92,15 @@ import BackButton from "../reusable/BackButton2.vue";
 import ColorThief from 'colorthief';
 import QrJoinCodeGenerator from './lobby/components/QrJoinCodeGenerator.vue';
 import SettingRoomService from '../../services/settingroom.service';
+import RoomService from '../../services/room.service';
 const props = defineProps({
   showImage: {
     type: Boolean,  // Nótese la B mayúscula: el constructor Boolean
     default: false
   },
-  byQr: {
-    type: Boolean,
-    default: false,
-    required: false
+  id: {
+    type: String,
+    required: true
   }
 })
 
@@ -114,16 +114,23 @@ onMounted(() => {
     try {
       room.value = JSON.parse(storedRoom);
       // Cargar configuración de la sala
-      const settingsString = SettingRoomService.byRoom(String(room.id));
-      const config = JSON.parse(settingsString);
-      localStorage.setItem('settingsRoom', JSON.stringify(config));
     } catch (e) {
       error.value = 'Error al leer los datos de la sala.';
       console.error(e);
     }
   } else {
-    error.value = 'No se encontraron datos de la sala en el almacenamiento local.';
+    //si estoy aca es porque entre con QR 
+    const roomStr = RoomService.find({ id: props.id });
+    const data = JSON.parse(roomStr);
+
+    // Guardar datos de la sala
+    localStorage.setItem('currentRoom', JSON.stringify(data.room));
   }
+
+  const settingsString = SettingRoomService.byRoom(String(room.id));
+  const config = JSON.parse(settingsString);
+  localStorage.setItem('settingsRoom', JSON.stringify(config));
+
 });
 
 // Propiedad computada para formatear la fecha
