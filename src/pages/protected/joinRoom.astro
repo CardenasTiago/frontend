@@ -3,11 +3,15 @@ import Layout from "../../layouts/Layout.astro";
 import ProtectedRoute from "../../components/authentication/ProtectedRoute.vue";
 import JoinByCode from "../../components/room/JoinByCode.vue";
 import { Icon } from 'astro-icon/components'
+import BackButton from "../../components/reusable/BackButton2.vue";
 ---
 
 <Layout title="Suffgo | Unirse a sala">
     <ProtectedRoute client:load>
-        <div class="min-h-[80vh] flex items-center justify-center">
+        <div class="min-h-[80vh] flex flex-col items-center justify-center">
+            <div class="self-start p-10">
+                <BackButton client:load/>
+            </div>
             <div class="h-fit p-10 main-container">
                 <div class="text-center items-center">
                     <h1>Unirse a sala</h1>
