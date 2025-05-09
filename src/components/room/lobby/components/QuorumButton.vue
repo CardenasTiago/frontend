@@ -2,7 +2,7 @@
     <a class="btn btn-primary initiliaze" @click="handleClick"
         :class="{ 'cursor-not-allowed opacity-50 pointer-events-none': isVotingDisabled }">
         {{ buttonText }}
-        <span :class="{
+        <span v-if="room.is_formal" :class="{
             'text-error': connectedUsersCount < quorum,
             'text-success': connectedUsersCount >= quorum
         }">
@@ -14,7 +14,7 @@
 </template>
 
 <script setup>
-import { computed, inject, onMounted } from "vue";
+import { computed, onMounted, inject } from "vue";
 import { Icon } from "@iconify/vue";
 import { useWebSocketStore } from '../../stores/socketStore';
 import { storeToRefs } from 'pinia';
@@ -36,6 +36,7 @@ const { userList, socket } = storeToRefs(socketStore);
 
 const quorum = inject('quorum');
 const user = inject('user');
+const room = inject('room');
 
 onMounted(() => {
     const settingsRoom = localStorage.getItem('settingsRoom');

@@ -80,7 +80,7 @@
     <h2 class="mb-2">Administrador</h2>
     <h1 class="font-semibold mb-4">{{ room.admin_name }}</h1>
   </div>
-  <div v-else>
+  <div class="flex flex-col items-center justify-center text-center" v-else>
     <p>No se encontraron datos de la sala. Por favor, únete a una sala primero.</p>
   </div>
 </template>
@@ -91,35 +91,53 @@ import { Icon } from "@iconify/vue";
 import BackButton from "../reusable/BackButton2.vue";
 import ColorThief from 'colorthief';
 import QrJoinCodeGenerator from './lobby/components/QrJoinCodeGenerator.vue';
-import SettingRoomService from '../../services/settingroom.service';
+import RoomService from '../../services/room.service';
+
 const props = defineProps({
-  showImage: {
-    type: Boolean,  // Nótese la B mayúscula: el constructor Boolean
-    default: false
-  },
+  showImage: { type: Boolean, default: false },
+  roomId:    { type: [String, Number], required: true }
 })
 
 const room = ref(null);
-const error = ref('');
 const copied = ref(false); // Estado para mostrar si el link fue copiado
 
-onMounted(() => {
-  const storedRoom = localStorage.getItem('currentRoom');
-  if (storedRoom) {
-    try {
-      room.value = JSON.parse(storedRoom);
-      // Cargar configuración de la sala
-      const settingsString = SettingRoomService.byRoom(String(room.value.id));
-      const config = JSON.parse(settingsString);
-      localStorage.setItem('settingsRoom', JSON.stringify(config));
-    } catch (e) {
-      error.value = 'Error al leer los datos de la sala.';
-      console.error(e);
-    }
-  } else {
-    error.value = 'No se encontraron datos de la sala en el almacenamiento local.';
-  }
+onMounted(async() => {
+  await fetchRoomData();
+  await checkWhitelist();
 });
+
+
+const checkWhitelist = async () => {
+  try {
+    // aquí sí tienes room.value.room_code
+    await RoomService.join({ room_code: room.value.room_code })
+    
+  } catch (err) {
+    const status = err.status
+    if (status === 403 || status === 400) {
+      // rediriges cuando tu API te diga que no está en la whitelist
+      window.location.href = '/protected/joinRoom'
+    } else {
+      // otro tipo de error
+      console.error('Error inesperado:', err)
+    }
+  }
+}
+
+const fetchRoomData = async () => {
+  try {
+    const response = await RoomService.find(props.roomId)
+    const data = JSON.parse(response);
+    room.value = data.room
+    localStorage.setItem('currentRoom', JSON.stringify(room.value));
+  } catch (err) {
+    console.error('Error:', err.error);
+  } 
+
+  if (!room) {
+    window.location.href = '/404'
+  }
+};
 
 // Propiedad computada para formatear la fecha
 const formattedDate = computed(() => {

@@ -4,8 +4,8 @@
       <button v-if="room.privileges && room.state != 'finished'" class="btn btn-primary start-room" @click="startRoom">
         Iniciar Sala
       </button>
-
-      <button v-if="room.state != 'created' && !room.privileges" class="btn btn-primary start-room" @click="startRoom">
+      
+      <button v-if="room.state != 'created' && !room.privileges && room.state != 'finished'" class="btn btn-primary start-room" @click="startRoom">
         Ingresar
       </button>
     </div>
@@ -15,20 +15,30 @@
 
 <script setup>
 import { ref, onMounted } from 'vue';
-
+import RoomService from '../../../../services/room.service';
 const room = ref('');
 
-onMounted(() => {
-  // Se asume que el ID de la sala se guarda en localStorage
-  const storedRoom = localStorage.getItem('currentRoom');
 
-  if (storedRoom) {
-    room.value = JSON.parse(storedRoom);
-  } else {
-    console.error('No se encontró el room ID en el almacenamiento local.');
-  }
+const props = defineProps({
+  roomId:    { type: [String, Number], required: true }
+})
+
+onMounted(async () => {
+  fetchRoomData()
 });
 
+const fetchRoomData = async () => {
+  try {
+    console.log("llego?");
+    const response = await RoomService.find(props.roomId)
+    const data = JSON.parse(response);
+    
+    room.value = data.room
+    localStorage.setItem('currentRoom', room);
+  } catch (err) {
+    console.error('Error:', err.error);
+  } 
+};
 function startRoom() {
   window.location.href = '/protected/lobby';
 }

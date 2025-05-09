@@ -145,6 +145,7 @@ watch(
 
 provide('user', user);
 provide('quorum', quorum);
+provide('room', room);
 
 const defaultImage = '/defaultRoomImage.png';
 const dominantColor = ref('');
