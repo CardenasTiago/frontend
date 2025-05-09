@@ -56,7 +56,7 @@
         </div>
       </div>
 
-      <div class="main-info bg-base-100 p-2">
+      <div class="main-info bg-secondary/10 p-2">
         <div class="flex flex-col justify-between p-4">
           <div class="flex flex-col">
             <div class="relative">
