@@ -126,7 +126,6 @@ export const useWebSocketStore = defineStore('webSocketStore', {
           this.currentProposal = eventData.payload;
           break;
         case "results":
-          console.log(eventData.payload);
           this.resultsReady = true;
           this.results = eventData.payload;
           break

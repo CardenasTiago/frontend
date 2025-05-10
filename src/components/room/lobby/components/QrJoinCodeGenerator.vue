@@ -9,7 +9,7 @@ import QrcodeVue from 'qrcode.vue'
 
 const { id } = defineProps({
     id: {
-        type: String,
+        type: [Number, String],
         required: true
     }
 })

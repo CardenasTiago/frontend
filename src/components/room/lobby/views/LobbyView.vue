@@ -99,6 +99,7 @@ onMounted(() => {
 
   if (storedRoom) {
     room.value = JSON.parse(storedRoom);
+    socketStore.room = room.value;
   } else {
     console.error('No se encontró el room ID en el almacenamiento local.');
   }
@@ -145,6 +146,7 @@ watch(
 
 provide('user', user);
 provide('quorum', quorum);
+provide('room', room);
 
 const defaultImage = '/defaultRoomImage.png';
 const dominantColor = ref('');

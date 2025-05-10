@@ -3,7 +3,7 @@ import Layout from '../layouts/Layout.astro';
 import { Icon } from 'astro-icon/components';
 import Footer from '../components/reusable/Footer.astro';
 ---
-<Layout title='Suffgo | Bienvenido' hideHeader={true} description='Suffgo es una aplicacion para tomar decisiones entre muchas personas de la forma mas ágil posible '>
+<Layout title='Suffgo | Bienvenido' hideHeader={true} description='Suffgo es una aplicación para tomar decisiones de forma rápida con resultados en tiempo real y sin importar la cantidad de personas.'>
   <main class="min-h-screen" style="background: #6f2fbd; background: radial-gradient(circle, rgba(111, 47, 189, 1) 0%, rgba(18, 2, 31, 1) 100%);">
     <!-- Navbar -->
     <nav class="fixed top-0 left-0 right-0 z-50 bg-[252525]/80 backdrop-blur-sm">
@@ -98,15 +98,14 @@ import Footer from '../components/reusable/Footer.astro';
               <h2 class="text-3xl font-mono text-white mb-4" style="text-shadow: 2px 2px 6px rgba(92,88,88,1);">
                 ¿Cómo funciona?
               </h2>
-              <p class="font-mono text-[#CFCED9] text-base sm:text-lg leading-relaxed">
+              <p class="font-mono text-white text-base sm:text-lg leading-relaxed">
                 ¿Cómo funciona?
                 En cuestión de minutos puedes lanzar tu votación: 
-                <ol>
+                <ol class="text-white">
                   <li>1. Configura y personaliza tu sala a gusto.</li>
-                  <li>2. Comparte código de invitación.</li>
+                  <li>2. Comparte código de invitación o comparte QR.</li>
                   <li>3. A votar!</li>
                 </ol>
-                
               </p>
             </div>
             <div class="aspect-video bg-white rounded-xl shadow-lg overflow-hidden">
