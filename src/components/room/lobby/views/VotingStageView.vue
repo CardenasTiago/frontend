@@ -77,8 +77,6 @@ function confirmVote() {
   if (selectedIndex.value === null) return;
   // Envía el voto a través del socket
   socketStore.socket.sendEvents("vote", { option_id: currentProposal.value.options[selectedIndex.value].id });
-  console.log("Voto confirmado:", currentProposal.value.options[selectedIndex.value].value);
-
   socket.voting = false;
   router.push('/awaitResults');
 }

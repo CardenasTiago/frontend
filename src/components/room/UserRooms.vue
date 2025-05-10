@@ -151,7 +151,6 @@ const obtenerDatosSala = async () => {
     const data = JSON.parse(response)
 
     if (data === null) {
-      console.log('No se encontraron salas.');
       salas.value = [];
     } else {
       // Asignar los datos     
