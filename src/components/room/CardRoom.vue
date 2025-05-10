@@ -72,7 +72,7 @@
                 </div>
 
                 <!-- Boton de DropDown -->
-                <div v-if="sala.room.state != 'finished'" class="dropdown dropdown-left ">
+                <div v-if="sala.room.state === 'created'" class="dropdown dropdown-left ">
                   <div tabindex="0" role="button"
                     class="btn rounded-full bg-transparent border-none hover:bg-transparent shadow-none">
                     <Icon icon="iconamoon:menu-kebab-horizontal-circle-bold"
