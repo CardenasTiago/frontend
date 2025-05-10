@@ -11,8 +11,8 @@ const { id } = Astro.params;
   <ProtectedRoute client:load />
   <div class="mt-5  min-h-[90vh]">
     <div class=" main-container bg-neutral">
-      <RoomInfo client:load showImage={true} room-id={id}/>       
-      <StartRoom client:load room-id={id}/>
+      <RoomInfo client:load showImage={true} :roomId={id}/>       
+      <StartRoom client:load :roomId={id}/>
     </div>
   </div>
 </Layout>
