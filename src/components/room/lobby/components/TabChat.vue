@@ -10,14 +10,23 @@
         <div v-else class="text-error">
             Desconectado.
         </div>
-        <div class="messages flex-1 w-full justify-start gap-2 overflow-y-auto" ref="messagesContainer">
-            <ul>
-                <li v-for="(msg, index) in messages" :key="index"
-                    :class="['text-start', msg.isCurrentUser ? 'bg-primary' : 'bg-secondary']" class="p-2 m-2 rounded">
-                    {{ msg.text }}
-                </li>
-            </ul>
-        </div>
+           <div class="messages flex-1 w-full flex flex-col gap-2 overflow-y-auto"
+        ref="messagesContainer">
+     <ul class="flex flex-col">
+       <li
+         v-for="(msg, i) in messages"
+         :key="i"
+         :class="[
+           'p-2 m-2 rounded text-white max-w-[80vw] break-words',
+           msg.isCurrentUser
+             ? 'bg-primary self-end text-right'
+             : 'bg-secondary self-start text-left'
+         ]"
+       >
+         {{ msg.text }}
+       </li>
+     </ul>
+   </div>
 
         <div class="send-message flex justify-between items-center w-full">
             <div class="flex-1">
