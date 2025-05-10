@@ -13,6 +13,7 @@
 
           <!-- Botón para cambiar imagen (solo visible en pantallas grandes al hacer hover) -->
           <label for="fileInput"
+            v-if="sala.room.state === 'created'"
             class="z-11 absolute bottom-4 right-4 flex items-center font-bold py-1 px-4 rounded-full lg:opacity-0 group-hover:opacity-100 transition-opacity btn-primary btn-xs cursor-pointer">
             Cambiar Foto
           </label>
@@ -28,7 +29,8 @@
         <div class="relative flex  gap-2">
 
           <!-- Botón de editar (solo visible cuando NO se está editando) -->
-          <button v-if="!isEditing" @click="toggleEdit()"
+          <button v-if="!isEditing && sala.room.state === 'created'" @click="toggleEdit()"
+          
             class="bg-primary text-neutral btn btn-xs btn-circle group-hover:opacity-100 lg:opacity-0 lg:group-hover:opacity-100 sm:block  ">
             <Icon icon="proicons:pencil" class="w-6 h-5" />
           </button>
