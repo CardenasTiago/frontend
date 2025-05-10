@@ -95,50 +95,50 @@ import RoomService from '../../services/room.service';
 
 const props = defineProps({
   showImage: { type: Boolean, default: false },
-  roomId:    { type: [String, Number], required: true }
+  roomId: { type: [String, Number], required: true }
 })
 
 const room = ref(null);
 const copied = ref(false); // Estado para mostrar si el link fue copiado
 
-onMounted(async() => {
+onMounted(async () => {
   await fetchRoomData();
   await checkWhitelist();
 });
 
-
-const checkWhitelist = async () => {
-  try {
-    // aquí sí tienes room.value.room_code
-    await RoomService.join({ room_code: room.value.room_code })
-    
-  } catch (err) {
-    const status = err.status
-    if (status === 403 || status === 400) {
-      // rediriges cuando tu API te diga que no está en la whitelist
-      window.location.href = '/protected/joinRoom'
-    } else {
-      // otro tipo de error
-      console.error('Error inesperado:', err)
-    }
-  }
-}
-
 const fetchRoomData = async () => {
   try {
-    const response = await RoomService.find(props.roomId)
+    localStorage.removeItem('currentRoom');
+    const response = await RoomService.find(String(props.roomId))
     const data = JSON.parse(response);
     room.value = data.room
-    localStorage.setItem('currentRoom', JSON.stringify(room.value));
+    localStorage.setItem('currentRoom', JSON.stringify(data.room));
   } catch (err) {
+    window.location.href = '/404'
     console.error('Error:', err.error);
-  } 
+  }
 
   if (!room) {
     window.location.href = '/404'
   }
 };
 
+const checkWhitelist = async () => {
+    try {
+      // aquí sí tienes room.value.room_code
+      await RoomService.join({ room_code: room.value.room_code })
+
+    } catch (err) {
+      const status = err.status
+      if (status === 403 || status === 400) {
+        // rediriges cuando tu API te diga que no está en la whitelist
+        window.location.href = '/protected/joinRoom'
+      } else {
+        // otro tipo de error
+        console.error('Error inesperado:', err)
+      }
+    }
+  }
 // Propiedad computada para formatear la fecha
 const formattedDate = computed(() => {
   if (!room.value || !room.value.start_time) {
