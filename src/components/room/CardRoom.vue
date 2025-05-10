@@ -83,7 +83,7 @@
                     <li v-if="sala.room.is_formal"><a :href="`../formalSettingRoom?id=${sala.room.id}`"
                         class="btn btn-primary btn-xs lg:btn-sm pb-1">Otras
                         Configuraciones</a></li>
-                    <li v-if="settingsRoom.privacy"><a :href="`../user/addUser/${sala.room.id}`"
+                    <li v-if="settingsRoom?.privacy"><a :href="`../user/addUser/${sala.room.id}`"
                         class="btn btn-primary btn-xs lg:btn-sm">Votantes</a>
                     </li>
                   </ul>
@@ -134,7 +134,7 @@
         </div>
       </div>
       <div v-if="hasProposal" class="flex justify-center p-2 ">
-        <StartRoom client:load />
+        <StartRoom client:load :room-id="props.roomId"/>
       </div>
       <div v-else class="flex justify-center p-2 ">
         <a :href="`../proposal?id=${sala.room.id}`" class="btn btn-primary">Crear Propuesta</a>
@@ -169,7 +169,9 @@ import RoomService from '../../services/room.service';
 import SettingRoomService from '../../services/settingroom.service';
 import ProposalService from '../../services/proposal.service';
 
-const props = defineProps({ id: String });
+const props = defineProps({
+  roomId: { type: [String, Number], required: true }
+})
 
 const sala = ref(null);
 const error = ref(null);
@@ -208,21 +210,24 @@ const copyToClipboard = () => {
 // Carga de datos
 onMounted(async () => {
   try {
-    const roomTxt = await RoomService.find(props.id);
+    const roomTxt = await RoomService.find(props.roomId);
     sala.value = JSON.parse(roomTxt);
+    if (!sala.value.room.privileges) {
+      window.location.href = '/protected/menu';
+    }
     state.value = sala.value.room.state;
     localStorage.setItem('currentRoom', JSON.stringify(sala.value.room));
 
-    const settingsTxt = await SettingRoomService.byRoom(props.id);
+    const settingsTxt = await SettingRoomService.byRoom(props.roomId);
     settingsRoom.value = JSON.parse(settingsTxt);
     localStorage.setItem('settingsRoom', settingsTxt);
 
-    const proposalsTxt = await ProposalService.byRoom(props.id);
+    const proposalsTxt = await ProposalService.byRoom(props.roomId);
     const proposals = JSON.parse(proposalsTxt);
     hasProposal.value = proposals.length > 0;
 
     if (state.value === 'finished') {
-      const resultsTxt = await ProposalService.results(props.id);
+      const resultsTxt = await ProposalService.results(props.roomId);
       resultados.value = JSON.parse(resultsTxt);
     }
 
