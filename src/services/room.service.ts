@@ -31,7 +31,6 @@ class RoomSocket {
     this.sock = new WebSocket(this.url);
 
     this.sock.onopen = () => {
-      console.log('WS conectado a', this.url);
       // restablecemos el back‐off
       this.reconnectDelay = 1000;
       if (this.onOpen) this.onOpen();
@@ -47,7 +46,6 @@ class RoomSocket {
     };
 
     this.sock.onclose = (ev) => {
-      console.log('WS cerrado con código', ev.code);
       this.onClose?.(ev);
 
       // Si el backend rechaza duplicados (4001 o 4002), no reintentamos

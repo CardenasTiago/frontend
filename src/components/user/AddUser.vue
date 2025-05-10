@@ -109,7 +109,6 @@ async function handleAddVoter(userInput: any) {
       room_id: Number(props.id),
     })
     const data = JSON.parse(resp)
-    console.log('Votante agregado:', data)
 
     alertMessage.value = data.success || 'Votante agregado correctamente'
     alertType.value = 'success'
@@ -142,14 +141,12 @@ function openDeleteModal(user: any) {
 
 // eliminar un votante
 async function removeVoter() {
-  console.log("ENTRE A LA FUNCION");
   try {
     const resp = await RoomService.removeUser({
       user_id: selectedUser.value.id,
       room_id: Number(props.id),
     })
     const data = JSON.parse(resp)
-    console.log('Votante eliminado:', data)
 
     alertMessage.value = data.success || 'Votante eliminado correctamente'
     alertType.value = 'success'
