@@ -1,5 +1,5 @@
 <template>
-    <div class="chat-container flex justify-between bg-base-100 border-secondary p-2 shadow-md shadow-secondary gap-2 "
+    <div class="chat-container flex justify-between bg-secondary/10 border-secondary p-2 shadow-md shadow-secondary gap-2 "
         :style="{ maxHeight: props.maxVh + 'vh' }">
         <div v-if="socketStore.connected" class="text-success font-semibold flex items-end text-end">
             Conectado

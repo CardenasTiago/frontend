@@ -17,7 +17,7 @@
       <div v-for="(sala, index) in paginatedSalas" :key="index"
         class="md:w-full lg:min-w-[60vw] lg:max-w-[70vw] lg:mx-auto px-4 mt-8 bg-neutral rounded-lg">
         <a :href="`/protected/room/${sala.id}`" @click="handleCardClick"
-          class="card card-side bg-neutral flex items-stretch h-[150px] lg:h-[180px] md:h-[180px] hover:shadow-lg hover:-translate-y-1 transition duration-300 border-2 border-secondary/30">
+          class="card card-side bg-secondary/10 flex items-stretch h-[150px] lg:h-[180px] md:h-[180px] hover:shadow-lg hover:-translate-y-1 transition duration-300 border-2 border-secondary/30">
 
           <div class="mt-1 p-3 w-2/3 ml-3 flex flex-col gap-3">
             <p class="self-start inline-block text-xs font-bold px-3 py-1 rounded-[15px] capitalize"
