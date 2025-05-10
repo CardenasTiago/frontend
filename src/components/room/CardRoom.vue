@@ -232,7 +232,6 @@ onMounted(async () => {
     }
 
   } catch (err) {
-    window.location.href = '/404';
     error.value = err.error;
   }
 });
