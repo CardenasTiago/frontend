@@ -123,12 +123,13 @@ import Footer from '../components/reusable/Footer.astro';
         <section class="bg-secondary/20 rounded-3xl p-6 sm:p-8 lg:p-12 shadow-lg">
           <div class="grid md:grid-cols-2 gap-8 items-center">
             <div class="aspect-video bg-[#0D0D0D] rounded-xl shadow-lg overflow-hidden relative">
-              <img
-                src="/images/Resultados2.jpeg"
-                loading="lazy"
-                alt="Resultados de votaciones en tiempo real"
-                class="absolute inset-0 w-full h-full object-contain"
-              />
+              <video 
+                class="w-full h-full object-cover"
+                src="videos/resultados-suffgo.mp4"
+                autoplay muted loop playsinline poster="/video1-thumbnail.jpg"
+              >
+                <source src="/videos/landingPage1.mp4" type="video/mp4" />
+              </video>
             </div>
             <div>
               <h2 class="text-3xl font-mono text-white mb-4" style="text-shadow: 2px 2px 6px rgba(92,88,88,1);">
