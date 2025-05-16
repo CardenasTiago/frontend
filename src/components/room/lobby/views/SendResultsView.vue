@@ -1,6 +1,6 @@
 <template>
     <div class="flex flex-col items-center justify-center h-screen">
-        <div class="flex flex-col items-center justify-center bg-base-100 rounded-lg p-6">
+        <div class="flex flex-col items-center justify-center bg-secondary/10 rounded-lg p-6">
         <div class="flex flex-row text-primary gap-2 items-center">
             <h1>Mostrar resultados</h1>
             <Icon icon="mdi:graph-pie" width="24" height="24" />

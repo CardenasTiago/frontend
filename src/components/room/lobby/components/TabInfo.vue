@@ -1,5 +1,5 @@
 <template>
-    <div v-if="room" class="bg-base-100 rounded-xl p-5 mb-5">
+    <div v-if="room" class="bg-secondary/10 rounded-xl p-5 mb-5">
       <h1 class="font-semibold text-center">{{ room.room_title }}</h1>
   
       <div class="flex justify-between">

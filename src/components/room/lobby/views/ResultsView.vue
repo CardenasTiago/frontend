@@ -43,7 +43,6 @@ onMounted(() => {
         user.value = JSON.parse(loggedUser);
     }
     const storedRoom = localStorage.getItem('currentRoom');
-
     if (storedRoom) {
         room.value = JSON.parse(storedRoom);
     } else {
@@ -57,6 +56,8 @@ onMounted(() => {
     }
 });
 
+
+provide('room', room);
 const displayResults = computed(() => {
     if (!socketStore.currentProposal || !socketStore.currentProposal.options) {
         return []
@@ -77,7 +78,6 @@ function nextProposal() {
 const currentProposal = computed(() => socketStore.currentProposal);
 
 watch(currentProposal, (newVal, oldVal) => {
-    console.log("currentProposal cambió de", oldVal, "a", newVal);
     if (newVal) {
         router.push('/voting');
     }

@@ -23,18 +23,15 @@ const props = defineProps({
   roomId:    { type: [String, Number], required: true }
 })
 
-onMounted(async () => {
+onMounted(async() => {
   fetchRoomData()
 });
 
 const fetchRoomData = async () => {
   try {
-    console.log("llego?");
     const response = await RoomService.find(props.roomId)
     const data = JSON.parse(response);
-    
     room.value = data.room
-    localStorage.setItem('currentRoom', room);
   } catch (err) {
     console.error('Error:', err.error);
   } 

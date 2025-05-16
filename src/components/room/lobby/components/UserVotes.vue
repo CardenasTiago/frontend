@@ -28,7 +28,7 @@ const props = defineProps({
 
 <style scoped>
 .user-votes {
-  @apply bg-base-100;
+  @apply bg-secondary/10;
   max-width: 800px;
   margin: 0 auto;
 }
