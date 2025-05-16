@@ -136,7 +136,7 @@
         </div>
       </div>
       <div v-if="hasProposal" class="flex justify-center p-2 ">
-        <StartRoom client:load :room-id="props.roomId"/>
+        <StartRoom client:load :roomId="props.roomId"/>
       </div>
       <div v-else class="flex justify-center p-2 ">
         <a :href="`../proposal?id=${sala.room.id}`" class="btn btn-primary">Crear Propuesta</a>

@@ -2,12 +2,12 @@
 import CardRoom from "../../../components/room/CardRoom.vue";
 import ProtectedRoute from "../../../components/authentication/ProtectedRoute.vue";
 import Layout from "../../../layouts/Layout.astro";
-const { id } = Astro.params;
+const  id  = Astro.params.id as string;
 ---
 
 <Layout title="Sala">
   <ProtectedRoute client:load>
-    <CardRoom client:load room-id={id} />
+    <CardRoom client:load roomId={id} />
   </ProtectedRoute>
 </Layout>
 
