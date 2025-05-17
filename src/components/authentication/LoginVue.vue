@@ -1,9 +1,11 @@
 <template>
   <form @submit.prevent="handleSubmit">
     <div>
-      <label class="input input-bordered input-primary flex items-center gap-2">
+      <label for="username" class="input input-bordered input-primary flex items-center gap-2">
         <Icon icon="ic:baseline-person" width="24" height="24" />
         <input
+          id="username"
+          name="username"
           v-model="form.username"
           type="text"
           class="grow"
@@ -13,9 +15,12 @@
       </label>
     </div>
     
-      <label class="input input-bordered input-primary flex items-center gap-2">
+      <label for="password" class="input input-bordered input-primary flex items-center gap-2">
         <Icon icon="ic:baseline-key" width="24" height="24" />
         <input
+          id="password"
+          autocomplete="current-password"
+          name="password"
           type="password"
           class="grow"
           placeholder="Password"
@@ -27,7 +32,14 @@
     <div class="text-xs text-primary flex justify-end">¿Has olvidado tu constraseña?</div>
     
     <div v-if="error" style="color: red">{{ error }}</div>
-    <button type="submit" class="btn btn-primary">Iniciar Sesión</button>
+    <button
+      type="submit"
+      class="btn btn-primary w-full"
+      :disabled="!isFormValid || isSubmitting"
+      :aria-disabled="!isFormValid || isSubmitting"
+    >
+      {{ isSubmitting ? 'Ingresando…' : 'Iniciar Sesión' }}
+    </button>
     <p className="text-slate-600">
       Todavía no tienes cuenta?
       <a
@@ -42,7 +54,7 @@
 </template>
 
 <script setup>
-import { reactive, ref } from 'vue';
+import { reactive, ref, computed } from 'vue';
 import {Icon} from "@iconify/vue";
 import UserService from '../../services/user.service';
 
@@ -50,7 +62,9 @@ const form = reactive({
   username: '',
   password: '',
 });
+
 const error = ref('');
+const isSubmitting = ref(false);
 
 const handleSubmit = async () => {
   error.value = '';
@@ -69,6 +83,11 @@ const handleSubmit = async () => {
     error.value = err.error || 'Error en la conexión con el servidor';
   }
 };
+
+const isFormValid = computed(() =>
+  form.username.trim().length > 0 &&
+  form.password.trim().length > 0
+);
 
 const redirectToRegister = () => {
   window.location.href = '/auth/register';
