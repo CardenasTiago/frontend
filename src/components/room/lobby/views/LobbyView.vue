@@ -9,7 +9,7 @@
         :src="room.image || defaultImage" alt="Imagen de la sala" @load="extractDominantColor"
         crossOrigin="anonymous" />
     </div>
-    <div class="overflow-y-auto w-full">
+    <div class="overflow-y-auto w-full mb-16">
       <v-card flat elevation="0" class="flex items-center justify-center">
         <v-tabs v-model="tab" align-tabs="center" class="w-full">
           <div class="custom-buttons mb-4 pl-6">
@@ -27,7 +27,7 @@
         <v-tabs-window v-model="tab">
           <v-tabs-window-item :key="1" :value="1">
             <v-container>
-              <TabChat :max-vh="50" />
+              <TabChat :max-vh="40" />
             </v-container>
           </v-tabs-window-item>
           <v-tabs-window-item :key="2" :value="2">
@@ -42,7 +42,7 @@
           </v-tabs-window-item>
         </v-tabs-window>
       </v-card>
-      <footer class="absolute bottom-0 z-10 flex flex-row justify-between py-2 px-4 w-full">
+      <footer class="fixed bottom-0 z-10 flex flex-row justify-between py-2 px-4 w-full bg-transparent">
         <div>
           <ExitButton />
           <a v-if="!socketStore.connected" @click="connect" class="btn btn-warning text-white">
