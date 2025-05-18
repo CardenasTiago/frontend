@@ -1,26 +1,28 @@
 ---
 import "../global.css";
 import Header from "../components/reusable/Navbar.vue";
-import ViewTransitions from "astro/components/ViewTransitions.astro";
+import { ClientRouter } from "astro:transitions";
 interface Props {
   title: string;
   hideMenuItems?: boolean;
   hideHeader?: boolean;
+  description?: string;
 }
 
 const { title, hideMenuItems = false, hideHeader = false } = Astro.props;
 ---
-
 <!doctype html>
 <html lang="es" data-theme="mytheme" class="bg-neutral">
   <head>
     <meta charset="UTF-8" />
-    <meta name="description" content="Astro description" />
+    <meta name="description" content={Astro.props.description} />
     <meta name="viewport" content="width=device-width" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" sizes="32x32" type="image/png" href="/favicon.png" />
+    <!-- <link rel="icon" type="image/svg+xml" sizes="32x32" href="/favicon.svg"> -->
     <meta name="generator" content={Astro.generator} />
     <title>{title}</title>
-    <ViewTransitions />
+    
+    <ClientRouter />
     <Header
       client:only="vue"
       hideMenuItems={hideMenuItems}

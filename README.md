@@ -6,7 +6,7 @@ Prerrequisito
 
 ## Iniciar aplicacion por primera vez
 
-Completar variable de entorno del path base de la API
+Completar variable de entorno del path base de la API "http://localhost:PORT/v1".
 
     cp .env.sample .env
 

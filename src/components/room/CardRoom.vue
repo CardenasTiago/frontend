@@ -13,6 +13,7 @@
 
           <!-- Botón para cambiar imagen (solo visible en pantallas grandes al hacer hover) -->
           <label for="fileInput"
+            v-if="sala.room.state === 'created'"
             class="z-11 absolute bottom-4 right-4 flex items-center font-bold py-1 px-4 rounded-full lg:opacity-0 group-hover:opacity-100 transition-opacity btn-primary btn-xs cursor-pointer">
             Cambiar Foto
           </label>
@@ -28,7 +29,8 @@
         <div class="relative flex  gap-2">
 
           <!-- Botón de editar (solo visible cuando NO se está editando) -->
-          <button v-if="!isEditing" @click="toggleEdit()"
+          <button v-if="!isEditing && sala.room.state === 'created'" @click="toggleEdit()"
+          
             class="bg-primary text-neutral btn btn-xs btn-circle group-hover:opacity-100 lg:opacity-0 lg:group-hover:opacity-100 sm:block  ">
             <Icon icon="proicons:pencil" class="w-6 h-5" />
           </button>
@@ -56,7 +58,7 @@
         </div>
       </div>
 
-      <div class="main-info bg-base-100 p-2">
+      <div class="main-info bg-secondary/10 p-2">
         <div class="flex flex-col justify-between p-4">
           <div class="flex flex-col">
             <div class="relative">
@@ -70,7 +72,7 @@
                 </div>
 
                 <!-- Boton de DropDown -->
-                <div v-if="sala.room.state != 'finished'" class="dropdown dropdown-left ">
+                <div v-if="sala.room.state === 'created'" class="dropdown dropdown-left ">
                   <div tabindex="0" role="button"
                     class="btn rounded-full bg-transparent border-none hover:bg-transparent shadow-none">
                     <Icon icon="iconamoon:menu-kebab-horizontal-circle-bold"
@@ -83,7 +85,7 @@
                     <li v-if="sala.room.is_formal"><a :href="`../formalSettingRoom?id=${sala.room.id}`"
                         class="btn btn-primary btn-xs lg:btn-sm pb-1">Otras
                         Configuraciones</a></li>
-                    <li v-if="settingsRoom.privacy"><a :href="`../user/addUser/${sala.room.id}`"
+                    <li v-if="settingsRoom?.privacy"><a :href="`../user/addUser/${sala.room.id}`"
                         class="btn btn-primary btn-xs lg:btn-sm">Votantes</a>
                     </li>
                   </ul>
@@ -134,7 +136,7 @@
         </div>
       </div>
       <div v-if="hasProposal" class="flex justify-center p-2 ">
-        <StartRoom client:load />
+        <StartRoom client:load :roomId="props.roomId"/>
       </div>
       <div v-else class="flex justify-center p-2 ">
         <a :href="`../proposal?id=${sala.room.id}`" class="btn btn-primary">Crear Propuesta</a>
@@ -169,7 +171,9 @@ import RoomService from '../../services/room.service';
 import SettingRoomService from '../../services/settingroom.service';
 import ProposalService from '../../services/proposal.service';
 
-const props = defineProps({ id: String });
+const props = defineProps({
+  roomId: { type: [String, Number], required: true }
+})
 
 const sala = ref(null);
 const error = ref(null);
@@ -208,21 +212,24 @@ const copyToClipboard = () => {
 // Carga de datos
 onMounted(async () => {
   try {
-    const roomTxt = await RoomService.find(props.id);
+    const roomTxt = await RoomService.find(props.roomId);
     sala.value = JSON.parse(roomTxt);
+    if (!sala.value.room.privileges) {
+      window.location.href = '/protected/menu';
+    }
     state.value = sala.value.room.state;
     localStorage.setItem('currentRoom', JSON.stringify(sala.value.room));
 
-    const settingsTxt = await SettingRoomService.byRoom(props.id);
+    const settingsTxt = await SettingRoomService.byRoom(props.roomId);
     settingsRoom.value = JSON.parse(settingsTxt);
     localStorage.setItem('settingsRoom', settingsTxt);
 
-    const proposalsTxt = await ProposalService.byRoom(props.id);
+    const proposalsTxt = await ProposalService.byRoom(props.roomId);
     const proposals = JSON.parse(proposalsTxt);
     hasProposal.value = proposals.length > 0;
 
     if (state.value === 'finished') {
-      const resultsTxt = await ProposalService.results(props.id);
+      const resultsTxt = await ProposalService.results(props.roomId);
       resultados.value = JSON.parse(resultsTxt);
     }
 

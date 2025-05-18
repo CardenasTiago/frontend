@@ -1,6 +1,13 @@
 {
   "extends": "astro/tsconfigs/strict",
   "compilerOptions": {
-    "jsx": "preserve"
-  }
-}
+    "jsx": "preserve",
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
+    "module": "es2020"
+  },
+  "include": [
+    "src",
+    "astro.config.mjs"
+  ],
+} 

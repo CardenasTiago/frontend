@@ -20,36 +20,37 @@
       </label>
     </div>
 
-    <div>
-      <label class="form-control w-full">
-        <div class="label">
-          <span class="label-text text-accent/80 text-lg">Tiempo por propuesta (segundos)</span>
-        </div>
-        <input
-          v-model.number="form.proposalTimer"
-          type="number"
-          min="1"
-          max="10000"
-          class="input w-full bg-secondary/10 border-secondary/20 h-12 text-lg"
-          required
-        />
-      </label>
-    </div>
-
-    <div>
-      <label class="form-control w-full">
-        <div class="label">
-          <span class="label-text text-accent/80 text-lg">Quórum</span>
-        </div>
-        <input
-          v-model.number="form.quorum"
-          type="number"
-          min="2"
-          max="100"
-          class="input w-full bg-secondary/10 border-secondary/20 h-12 text-lg"
-          required
-        />
-      </label>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div>
+        <label class="form-control w-full">
+          <div class="label">
+            <span class="label-text text-accent/80 text-lg">Tiempo por propuesta (segundos)</span>
+          </div>
+          <input
+            v-model.number="form.proposalTimer"
+            type="number"
+            min="1"
+            max="10000"
+            class="input w-full bg-secondary/10 border-secondary/20 h-12 text-lg"
+            required
+          />
+        </label>
+      </div>
+      <div>
+        <label class="form-control w-full">
+          <div class="label">
+            <span class="label-text text-accent/80 text-lg">Quórum</span>
+          </div>
+          <input
+            v-model.number="form.quorum"
+            type="number"
+            min="2"
+            max="100"
+            class="input w-full bg-secondary/10 border-secondary/20 h-12 text-lg"
+            required
+          />
+        </label>
+      </div>
     </div>
 
     <div>
@@ -71,13 +72,13 @@
             class="input w-full bg-secondary/10 border-secondary/20 h-12 text-lg"
             required
           />
-          <div class="label">
-            <span v-if="dateError" class="label-text-alt text-error">{{ dateError }}</span>
-          </div>
+        </div>
+        <div class="label -mt-3">
+          <span v-if="dateError" class="label-text-alt text-error">{{ dateError }}</span>
         </div>
       </label>
-    </div>
-
+    </div> 
+    
     <div>
       <label class="form-control w-full">
         <div class="label">
@@ -87,6 +88,7 @@
           v-model.number="form.voterLimit"
           type="number"
           min="2"
+          max="1000"
           class="input w-full bg-secondary/10 border-secondary/20 h-12 text-lg"
           required
         />
@@ -98,15 +100,10 @@
 
     <AdminField />
 
-    <div class="grid grid-cols-2 gap-6 pt-4">
-      <a :href="`/protected/proposal?id=${roomId}`" class="w-full">
-        <button type="button" class="btn btn-secondary w-full text-white">
-          Propuestas
-        </button>
-      </a>
+    <div class="flex justify-center pt-4">
       <button 
         type="submit" 
-        class="btn btn-primary w-full text-white"
+        class="btn btn-primary px-14 py-2"
         :disabled="isSubmitting"
       >
         {{ isSubmitting ? 'Guardando...' : 'Guardar' }}

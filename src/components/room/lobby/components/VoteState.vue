@@ -95,10 +95,4 @@ watch(allVoted, (todos) => {
     socketStore.resultsAvailable = true;
   }
 });
-
-
-onMounted(() => {
-  console.log("Resultados:", results.value);
-  console.log("Current Proposal:", currentProposal.value);
-});
 </script>

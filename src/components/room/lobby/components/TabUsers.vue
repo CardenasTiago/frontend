@@ -70,7 +70,7 @@ function kickUser(id) {
 
 <style>
 .users {
-    @apply text-primary bg-base-100;
+    @apply text-primary bg-secondary/10;
     padding: 8px;
     margin: 8px auto;
     /* Auto en los laterales centra el elemento */

@@ -17,7 +17,13 @@
     </div>
 
     <div v-else>
-      <div class="aspect-video bg-base-100-200 mb-6 rounded-lg flex items-center justify-center">
+      <div class="aspect-video bg-base-100-200 mb-6 rounded-lg flex flex-col items-center justify-center">
+        <img
+        v-if="form.imageBase64"
+        :src="form.imageBase64"
+        alt="Vista previa"
+        class="w-full h-full object-contain rounded-lg mb-4"
+      />
         <input type="file" accept="image/*" class="file-input file-input-ghost w-full max-w-xs" @change="handleFileChange" />
       </div>
 

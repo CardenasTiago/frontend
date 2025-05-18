@@ -1,6 +1,8 @@
 services:
   astro-app:
-    build: .
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
     volumes:
       - .:/app:rw
     ports:

@@ -1,19 +1,42 @@
 ---
+// Props
 interface Props {
-    title: string;
-    description: string;
-    type: 'formal' | 'informal';
+  title: string;
+  description: string;
+  type: 'formal' | 'informal';
 }
 
 const { title, description, type } = Astro.props;
-import CreateButton from '../createRoom/CreateButton.vue'
 ---
 
-<div class={`bg-base-100 p-8 rounded-lg text-center flex flex-col h-full shadow-lg ${type === 'formal' ? 'border-2 border-primary/30' : 'border-2 border-secondary/30'}`}>
-    <h2 class={`font-medium text-xl mb-4 ${type === 'formal' ? 'text-primary' : 'text-secondary'}`}>{title}</h2>
-    <p class="text-accent/80 mb-4">{description}</p>
-    <ul class="text-left mb-8 flex-grow">
-    </ul>
+<div
+  class={[
+    'bg-secondary/10 p-8 rounded-lg text-center flex flex-col h-full shadow-lg',
+    type === 'formal' ? 'border-2 border-primary/30' : 'border-2 border-secondary/30',
+  ].join(' ')}
+>
+  <h2
+    class={[
+      'font-medium text-xl mb-4',
+      type === 'formal' ? 'text-primary' : 'text-secondary',
+    ].join(' ')}
+  >
+    {title}
+  </h2>
 
-    <CreateButton client:load type={type} />
+  <p class="text-accent/80 mb-4">{description}</p>
+
+  <ul class="text-left mb-8 flex-grow">
+    {/* aquí irían items, si los necesitas */}
+  </ul>
+
+  <a
+    href={`/protected/editRoom?tipo=${type}`}
+    class={[
+      'btn w-full text-white',
+      type === 'formal' ? 'btn-primary' : 'btn-secondary',
+    ].join(' ')}
+  >
+    {`Crear sala ${type === 'formal' ? 'formal' : 'informal'}`}
+  </a>
 </div>

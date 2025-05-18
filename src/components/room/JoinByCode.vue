@@ -17,7 +17,6 @@
 import { ref } from 'vue';
 import { Icon } from '@iconify/vue';
 import RoomService from '../../services/room.service';
-import SettingRoomService from '../../services/settingroom.service';
 
 const room_code = ref('');
 const error = ref('');
@@ -30,13 +29,8 @@ const handleSubmit = async () => {
     const respString = await RoomService.join({ room_code: room_code.value });
     const data = JSON.parse(respString);
 
-    // Guardar datos de la sala
-    localStorage.setItem('currentRoom', JSON.stringify(data.room));
-
-    // Cargar configuración de la sala
-    const settingsString = await SettingRoomService.byRoom(String(data.room.id));
-    const config = JSON.parse(settingsString);
-    localStorage.setItem('settingsRoom', JSON.stringify(config));
+    // // Guardar datos de la sala
+    // localStorage.setItem('currentRoom', JSON.stringify(data.room));
 
     // Redirigir según privilegios
     if (data.room.privileges) {
