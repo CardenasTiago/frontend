@@ -241,14 +241,14 @@ onMounted(async () => {
 
 // Edición de sala
 const toggleEdit = () => (isEditing.value = !isEditing.value);
-const updateRoom = () => {
-  const payload = {
+const updateRoom = () => {  
+  const payload = {    
     name: sala.value.room.room_title,
     description: sala.value.room.description,
     link_invite: sala.value.room.link_invite,
     image: sala.value.room.image
   };
-  RoomService.update(props.id, payload).then(() => (isEditing.value = false));
+  RoomService.update(props.roomId, payload).then(() => (isEditing.value = false));
 };
 const cancelEdit = () => {
   const stored = JSON.parse(localStorage.getItem('currentRoom'));
