@@ -3,7 +3,7 @@
     <div class="flex justify-between items-center mb-6">
       <BackButton />
       <div v-if="isFormal" class="dropdown dropdown-end tooltip tooltip-secondary  tooltip-left" data-tip="subir archivo" >
-        <button tabindex="0" class="btn btn-circle bg-secondary/20 hover:bg-secondary/30 border-none">
+        <button tabindex="0" class="btn btn-circle bg-secondary hover:bg-secondary/30 border-none">
           <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
           </svg>
@@ -100,7 +100,7 @@
           </button>
         </div>
 
-        <button type="button" @click="addOption" class="btn w-full bg-secondary/20 hover:bg-secondary/30"
+        <button type="button" @click="addOption" class="btn w-full bg-secondary hover:bg-secondary/30"
           :disabled="form.options.length >= 5">
           + Añadir más opciones
         </button>
