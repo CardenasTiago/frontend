@@ -61,7 +61,10 @@ const settingsRoom = ref(null);
 
 // Función para verificar si el archivo existe y abrirlo en una nueva pestaña
 const openFile = (fileName) => {
-  const fileURL = `http://localhost:3000/uploads/proposalFiles/${fileName}`;
+  // Fallback opcional si no estuviera definida:
+  const baseUrl = import.meta.env.PUBLIC_API_BASE_URL || 'http://localhost:3000';
+
+  const fileURL = `${baseUrl}/uploads/proposalFiles/${fileName}`;
   window.open(fileURL, '_blank');
 };
 
