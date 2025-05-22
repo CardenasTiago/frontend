@@ -4,19 +4,19 @@
       <div class="flex flex-col lg:flex-row gap-4">
         <div>
           <label for="name" class="flex input input-bordered input-primary items-center p-2">Nombre
-            <input name="name" v-model="form.name" type="text" class="p-2" required />
+            <input @keydown="blockNumbers" @paste="blockPasteNumbers" name="name" v-model="form.name" type="text" class="p-2" required />
           </label>
         </div>
         <div>
           <label for="lastname" class="flex input input-bordered input-primary items-center p-2">Apellido
-            <input name="lastname" v-model="form.lastname" type="text" class="p-2" required />
+            <input @keydown="blockNumbers" @paste="blockPasteNumbers" name="lastname" v-model="form.lastname" type="text" class="p-2" required />
           </label>
         </div>
       </div>
       <div class="form-control">
         <label for="username" class="input input-bordered input-primary flex items-center gap-2 p-2">Nombre de Usuario
           <input name="username" v-model="form.username" type="text" required minlength="3" maxlength="30"
-            @input="validateUsername" />
+            @input="validateUsername" @keydown="blockSpaces" @paste="blockPasteSpaces" />
         </label>
         <div v-if="form.username.length > 0 && form.username.length < 3" class="text-error text-xs mt-1 ml-2">
           El nombre de usuario debe tener al menos 3 caracteres
@@ -25,7 +25,7 @@
       <div>
         <label for="dni" class="input input-bordered input-primary flex items-center gap-2">
           DNI
-          <input name="dni" inputmode="numeric" v-model="form.dni" type="text" required maxlength="10" minlength="8" />
+          <input @keydown="blockLetters" @paste="blockPasteLetters" name="dni" inputmode="numeric" v-model="form.dni" type="text" required maxlength="8" minlength="8" />
         </label>
         <p v-if="form.dni.length > 0 && form.dni.length !== 8" class="text-error text-xs mt-4" role="alert">
           El DNI debe tener exactamente 8 dígitos.
@@ -115,7 +115,6 @@ import { reactive, watch, computed, ref } from "vue";
 import { Icon } from "@iconify/vue";
 import UserService from "../../services/user.service";
 
-// 1. Formulario como reactive
 const form = reactive({
   name: "",
   lastname: "",
@@ -127,7 +126,6 @@ const form = reactive({
   confirmPassword: "",
 });
 
-// 2. Chequeos de contraseña también como reactive
 const passwordChecks = reactive({
   length: false,
   uppercase: false,
@@ -135,14 +133,10 @@ const passwordChecks = reactive({
   number: false,
 });
 
-// Flag de envío para deshabilitar botón mientras submit
 const isSubmitting = ref(false);
-
-// Estado de error y éxito
 const error = ref("");
 const successMessage = ref("");
 
-// Labels de las reglas de contraseña
 const passwordRules = [
   { key: "length", label: "Al menos 8 caracteres" },
   { key: "uppercase", label: "Al menos 1 mayúscula (A-Z)" },
@@ -150,7 +144,7 @@ const passwordRules = [
   { key: "number", label: "Al menos 1 número (0-9)" },
 ];
 
-// 3. Observamos form.password para actualizar passwordChecks
+
 watch(
   () => form.password,
   (pwd) => {
@@ -161,7 +155,6 @@ watch(
   }
 );
 
-// 4. Validación reactiva del formulario completo
 const isFormValid = computed(() => {
   return (
     form.name &&
@@ -177,26 +170,18 @@ const isFormValid = computed(() => {
   );
 });
 
-// 5. Mensaje inline para username
+
 const usernameError = computed(() =>
   form.username && form.username.length < 3 ? "Mínimo 3 caracteres" : ""
 );
 
-// 6. Limitar username a 30 chars
-const validateUsername = () => {
-  if (form.username.length > 30) {
-    form.username = form.username.slice(0, 30);
-  }
-};
 
-// 7. Submit handler
 const handleSubmit = async () => {
   if (!isFormValid.value) return;
   error.value = "";
   isSubmitting.value = true;
 
   try {
-    // enviamos directamente el objeto reactive
     const responseJson = await UserService.create(JSON.stringify(form));
     const response = JSON.parse(responseJson);
 
@@ -212,6 +197,80 @@ const handleSubmit = async () => {
   } finally {
     isSubmitting.value = false;
   }
+};
+
+//control de input de usuario
+const controlKeys = [
+  'Backspace','Delete','ArrowLeft','ArrowRight','ArrowUp','ArrowDown',
+  'Home','End','Tab'
+];
+
+const validateUsername = () => {
+  if (form.username.length > 30) {
+    form.username = form.username.slice(0, 30);
+  }
+};
+
+const blockLetters = (e) => {
+  if (
+    controlKeys.includes(e.key) ||
+    e.ctrlKey || e.metaKey
+  ) {
+    return;
+  }
+  if (e.key.length === 1 && !/\d/.test(e.key)) {
+    e.preventDefault();
+  }
+};
+
+const blockNumbers = (e) => {
+  if (
+    controlKeys.includes(e.key) ||
+    e.ctrlKey || e.metaKey
+  ) {
+    return;
+  }
+  if (e.key.length === 1 && /\d/.test(e.key)) {
+    e.preventDefault();
+  }
+};
+
+const blockPasteLetters = (e) => {
+  e.preventDefault();
+  const el = e.target;
+  const pasted = (e.clipboardData || window.clipboardData).getData('text');
+  const digitsOnly = pasted.replace(/\D/g, '');
+  const { selectionStart: start, selectionEnd: end, value } = el;
+  const newVal = value.slice(0, start) + digitsOnly + value.slice(end);
+  el.value = newVal;
+  form[el.name] = newVal;
+};
+
+const blockPasteNumbers = (e) => {
+  e.preventDefault();
+  const el = e.target;
+  const pasted = (e.clipboardData || window.clipboardData).getData('text');
+  const noDigits = pasted.replace(/\d/g, '');
+  const { selectionStart: start, selectionEnd: end, value } = el;
+  const newVal = value.slice(0, start) + noDigits + value.slice(end);
+  el.value = newVal;
+  form[el.name] = newVal;
+};
+
+const blockSpaces = (e) => {
+  if (controlKeys.includes(e.key) || e.ctrlKey || e.metaKey) return;
+  if (e.key === ' ') e.preventDefault();
+};
+
+const blockPasteSpaces = (e) => {
+  e.preventDefault();
+  const el = e.target;
+  const pasted = (e.clipboardData || window.clipboardData).getData('text');
+  const noSpaces = pasted.replace(/\s+/g, '');
+  const { selectionStart: start, selectionEnd: end, value } = el;
+  const newVal = value.slice(0, start) + noSpaces + value.slice(end);
+  el.value = newVal;
+  form[el.name] = newVal;
 };
 </script>
 

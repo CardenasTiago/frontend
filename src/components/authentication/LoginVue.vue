@@ -10,6 +10,8 @@
           type="text"
           class="grow"
           placeholder="Nombre de usuario"
+          @keydown="blockSpaces"
+          @paste="blockPasteSpaces"
           required
         />
       </label>
@@ -91,6 +93,28 @@ const isFormValid = computed(() =>
 
 const redirectToRegister = () => {
   window.location.href = '/auth/register';
+};
+
+const controlKeys = [
+  'Backspace','Delete','ArrowLeft','ArrowRight','ArrowUp','ArrowDown',
+  'Home','End','Tab'
+];
+
+
+const blockSpaces = (e) => {
+  if (controlKeys.includes(e.key) || e.ctrlKey || e.metaKey) return;
+  if (e.key === ' ') e.preventDefault();
+};
+
+const blockPasteSpaces = (e) => {
+  e.preventDefault();
+  const el = e.target;
+  const pasted = (e.clipboardData || window.clipboardData).getData('text');
+  const noSpaces = pasted.replace(/\s+/g, '');
+  const { selectionStart: start, selectionEnd: end, value } = el;
+  const newVal = value.slice(0, start) + noSpaces + value.slice(end);
+  el.value = newVal;
+  form[el.name] = newVal;
 };
 </script>
 
