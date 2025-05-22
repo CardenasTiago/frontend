@@ -59,12 +59,18 @@ const room = ref(null);
 const error = ref("");
 const settingsRoom = ref(null);
 
-// Función para verificar si el archivo existe y abrirlo en una nueva pestaña
 const openFile = (fileName) => {
-  // Fallback opcional si no estuviera definida:
-  const baseUrl = import.meta.env.PUBLIC_API_BASE_URL || 'http://localhost:3000';
+  // 1) cogemos la URL API (con /v1 al final)
+  const apiBase = import.meta.env.PUBLIC_API_BASE_URL
+    || 'https://api-4618.onrender.com/v1';
 
-  const fileURL = `${baseUrl}/uploads/uploadsArchives/${fileName}`;
+  // 2) si acaba en "/v1", lo quitamos (slice corta los últimos 3 caracteres)
+  const staticBase = apiBase.endsWith('/v1')
+    ? apiBase.slice(0, -3)
+    : apiBase;
+
+  // 3) construimos la ruta de archivos estáticos
+  const fileURL = `${staticBase}/uploads/uploadsArchives/${fileName}`;
   window.open(fileURL, '_blank');
 };
 
