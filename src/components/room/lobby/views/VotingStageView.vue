@@ -64,7 +64,7 @@ const openFile = (fileName) => {
   // Fallback opcional si no estuviera definida:
   const baseUrl = import.meta.env.PUBLIC_API_BASE_URL || 'http://localhost:3000';
 
-  const fileURL = `${baseUrl}/uploads/proposalFiles/${fileName}`;
+  const fileURL = `${baseUrl}/uploads/uploadsArchives/${fileName}`;
   window.open(fileURL, '_blank');
 };
 
